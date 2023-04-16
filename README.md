@@ -2,6 +2,7 @@
 # fcstat <img src="man/figures/logo.png" align="right" height="170"/>
 
 <!-- badges: start -->
+[![R-CMD-check](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of **fcstat** is to provide classical statistical methods for estimating

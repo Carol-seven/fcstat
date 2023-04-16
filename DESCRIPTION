@@ -1,6 +1,6 @@
 Package: fcstat
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Statistical Methods for Functional Connectivity
+Version: 0.1.0
 Authors@R: c(
     person("Shiying", "Xiao", email = "shiying.xiao@outlook.com",
            role = c("aut", "cre")),
@@ -11,5 +11,6 @@ Authors@R: c(
 Description: Classical statistical methods for fMRI-based functional connectivity analysis.
 License: GPL (>= 3)
 Encoding: UTF-8
-Roxygen: list(markdown = TRUE)
+URL: https://github.com/Carol-seven/fcstat
+BugReports: https://github.com/Carol-seven/fcstat/issues
 RoxygenNote: 7.2.3
