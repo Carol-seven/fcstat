@@ -19,9 +19,7 @@ pkgdown:
   Rscript -e "library(methods); pkgdown::build_site();"
 
 $(tar): $(objects)
-@$(RM) -rf src/RcppExports.cpp R/RcppExports.R
 @Rscript -e "library(methods);" \
--e "Rcpp::compileAttributes()" \
 -e "devtools::document();";
 R CMD build .
 
