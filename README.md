@@ -1,5 +1,5 @@
 
-# fcstat <img src="man/figures/logo.png" align="right" height="170"/>
+# fcstat <img src="man/figure/logo.png" align="right" alt="" width="150"/>
 
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml)

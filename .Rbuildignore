@@ -2,5 +2,7 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^\.github$
-^README\.md$
 ^Makefile$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
