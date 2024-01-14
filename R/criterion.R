@@ -1,6 +1,7 @@
-#' Tuning parameter selection criteria
+#' Tuning parameter selection information criteria
 #'
-#' Provide criteria for selecting tuning parameters.
+#' @description
+#' Provide information criteria for selecting tuning parameters.
 #'
 #' @param hatOmega The estimated precision matrix.
 #'
@@ -43,9 +44,12 @@
 #' Calibrating Nonconvex Penalized Regression in Ultra-High Dimension.
 #' \emph{The Annals of Statistics}, 41(5), 2505--2536.
 #' }
+#'
 #' @export
 
 criterion <- function(hatOmega, S, n, crit, ebic.tuning = 0.5) {
+  ## dimensionality
+  p <- ncol(S)
   ## Gaussian log-likelihood
   loglik <- (n/2) * (log(det(hatOmega)) - sum(diag(S%*%hatOmega)))
   ## cardinality of the edge set
@@ -55,9 +59,9 @@ criterion <- function(hatOmega, S, n, crit, ebic.tuning = 0.5) {
   } else if (crit == "BIC") {
     result <- -2*loglik + log(n)*edges
   } else if (crit == "EBIC") {
-    result <- -2*loglik + log(n)*edges + 4*ebic.tuning*log(ncol(S))*edges
+    result <- -2*loglik + log(n)*edges + 4*ebic.tuning*log(p)*edges
   } else if (crit == "HBIC") {
-    result <- -2*loglik + log(log(n))*log(ncol(S))*edges
+    result <- -2*loglik + log(log(n))*log(p)*edges
   }
   return(result)
 }

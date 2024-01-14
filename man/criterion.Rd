@@ -2,7 +2,7 @@
 % Please edit documentation in R/criterion.R
 \name{criterion}
 \alias{criterion}
-\title{Tuning parameter selection criteria}
+\title{Tuning parameter selection information criteria}
 \usage{
 criterion(hatOmega, S, n, crit, ebic.tuning = 0.5)
 }
@@ -28,7 +28,7 @@ calculate when \code{crit = "EBIC"}.}
 A numeric value.
 }
 \description{
-Provide criteria for selecting tuning parameters.
+Provide information criteria for selecting tuning parameters.
 }
 \references{
 \itemize{
