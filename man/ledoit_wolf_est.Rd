@@ -11,8 +11,9 @@ ledoit_wolf_est(X, method = "lin", res = "cov")
 
 \item{method}{A string (default = "lin") specifying the method used in shrinkage,
 includes: \enumerate{
-\item Linear shrinkage: "lin" (Ledoit and Wolf, 2004)
-\item Non-linear shrinkage (Ledoit and Wolf, 2015, 2017): \itemize{
+\item Linear shrinkage: "lin" \insertCite{ledoit2004well}{fcstat}.
+\item Non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}:
+\itemize{
 \item "nlminb": non-linear shrinakge using the optimization routine "nlminb".
 \item "nloptr": non-linear shrainkage using the optimization routine "nloptr".
 }
@@ -29,16 +30,5 @@ A numeric matrix.
 Compute the Ledoit-Wolf shrinkage estimator for the covariance or correlation matrix.
 }
 \references{
-\itemize{
-\item Ledoit, Olivier and Wolf, Michael. (2004).
-A Well-Conditioned Estimator for Large-Dimensional Covariance Matrices.
-\emph{Journal of Multivariate Analysis}, 88(2), 365--411.
-\item Ledoit, Olivier and Wolf, Michael. (2015).
-Spectrum Estimation: A Unified Framework for Covariance Matrix Estimation and PCA in
-Large dimensions.
-\emph{Journal of Multivariate Analysis}, 139, 360--384.
-\item Ledoit, Olivier and Wolf, Michael. (2017).
-Numerical Implementation of the QuEST Function.
-\emph{Computational Statistics & Data Analysis}, 115, 199--223.
-}
+\insertAllCited{}
 }
