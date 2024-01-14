@@ -3,6 +3,7 @@
 export(criterion)
 export(deriv)
 export(ledoit_wolf_est)
+export(pen)
 import(nlshrink)
 importFrom(Rdpack,reprompt)
 importFrom(stats,cov2cor)
