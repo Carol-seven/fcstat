@@ -27,16 +27,18 @@ fcstat(
 
 \item{method}{A character string specifying the statistical methods for estimating
 precision matrix. Available options include: \enumerate{
-\item "glasso": graphical lasso
-\item "ridge": graphical ridge
-\item "elnet": graphical elastic net
+\item "glasso": graphical lasso \insertCite{friedman2008sparse}{fcstat}.
+\item "ridge": graphical ridge \insertCite{vanwieringen2016ridge}{fcstat}.
+\item "elnet": graphical elastic net \insertCite{zou2005regularization}{fcstat}.
 \item "clime": constrained L1-minimization for inverse (covariance) matrix estimation
+\insertCite{cai2011aconstrained}{fcstat}.
 \item "tiger": tuning-insensitive graph estimation and regression
-\item "adapt": adaptive lasso
-\item "atan": arctangent type penalty
-\item "exp": exponential type penalty
-\item "mcp": minimax concave penalty
-\item "scad": smoothly clipped absolute deviation
+\insertCite{liu2017tiger}{fcstat}.
+\item "adapt": adaptive lasso \insertCite{zou2006adaptive,fan2009network}{fcstat}.
+\item "atan": arctangent type penalty \insertCite{wang2016variable}{fcstat}.
+\item "exp": exponential type penalty \insertCite{wang2018variable}{fcstat}.
+\item "mcp": minimax concave penalty \insertCite{zou2006adaptive}{fcstat}.
+\item "scad": smoothly clipped absolute deviation \insertCite{fan2001variable,fan2009network}{fcstat}.
 }}
 
 \item{base}{A character string (default = "cov") specifying the calculation base,
@@ -45,9 +47,11 @@ either the covariance matrix ("cov") or the correlation matrix ("cor").}
 \item{approach}{A character string (default = "smp") specifying the approach used to
 compute the calculation base. Available options include: \enumerate{
 \item "smp": sample (conventional approach).
-\item "lin": linear shrinkage.
-\item "nlminb": non-linear shrinkage using the optimization routine "nlminb".
-\item "nloptr": non-linear shrinkage using the optimization routine "nloptr".
+\item "lin": linear shrinkage \insertCite{ledoit2004well}{fcstat}.
+\item "nlminb": non-linear shrinkage using the optimization routine "nlminb"
+\insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
+\item "nloptr": non-linear shrinkage using the optimization routine "nloptr"
+\insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 }}
 
 \item{lambda}{Grid of non-negative scalars for the regularization parameter.
@@ -94,7 +98,7 @@ for all elements, specifying the target matrix for \code{method = "ridge"} or
 matrix estimate derived from the graphical lasso for \eqn{p \geq n}.
 }
 \item The adaptive weight for \code{method = "adapt"}, calculated as
-\eqn{w_{ij} = |\tilde{w}_{ij}|^{-\gamma}}, where \eqn{\tilde{\Omega} := (\tilde{w}_{ij})}.
+\eqn{|\tilde{\omega}_{ij}|^{-\gamma}}, where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
 \itemize{
 \item "glasso": use the precision matrix estimate derived from the graphical lasso as
 \eqn{\tilde{\Omega}}.
@@ -119,9 +123,7 @@ calculate when \code{crit = "EBIC"}.}
 the \code{lambda} grid by multiplying the minimum and maximum with the scaling ratio
 for the case where the optimal regularization parameter \code{lambda} is found at the
 first index of \code{lambda} grid, make the process run iteratively with the expanded
-grid until the optimal parameter is no longer at the first index.
-process with the adjusted expanded lambda grid until the optimal regularization parameter
-\code{lambda} is not the first index.}
+grid until the optimal parameter is no longer at the first index.}
 }
 \value{
 A list containing the following components: \describe{
