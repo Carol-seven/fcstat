@@ -9,19 +9,19 @@ ledoit_wolf_est(X, method = "lin", res = "cov")
 \arguments{
 \item{X}{A data matrix.}
 
-\item{method}{A string (default = "lin") specifying the method used in shrinkage,
-includes: \enumerate{
+\item{method}{A character string (default = "lin") specifying the method used in
+shrinkage, includes: \enumerate{
 \item Linear shrinkage: "lin" \insertCite{ledoit2004well}{fcstat}.
 \item Non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}:
 \itemize{
-\item "nlminb": non-linear shrinakge using the optimization routine "nlminb".
-\item "nloptr": non-linear shrainkage using the optimization routine "nloptr".
+\item "nlminb": non-linear shrinkage using the optimization routine "nlminb".
+\item "nloptr": non-linear shrinkage using the optimization routine "nloptr".
 }
 }
 See \code{\link[stats]{nlminb}} and \code{\link[nloptr]{nloptr}} for details.}
 
-\item{res}{A string (default = "cov") specifying the result matrix to be obtained,
-either the covariance matrix ("cov") or the correlation matrix ("cor").}
+\item{res}{A character string (default = "cov") specifying the result matrix to be
+obtained, either the covariance matrix ("cov") or the correlation matrix ("cor").}
 }
 \value{
 A numeric matrix.

@@ -17,12 +17,12 @@
 #' \item "HBIC": high dimensional Bayesian information criterion \insertCite{wang2013calibrating,fan2017high}{fcstat}.
 #' }
 #'
-#' @param ebic.tuning A numeric value (default = 0.5) specifying the tuning parameter to
-#' calculate when \code{crit = "EBIC"}.
+#' @param ebic.tuning A scalar (default = 0.5) specifying the tuning parameter to
+#' calculate for \code{crit = "EBIC"}.
 #'
 #' @importFrom Rdpack reprompt
 #'
-#' @return A numeric value.
+#' @return A scalar.
 #'
 #' @references
 #' \insertAllCited{}

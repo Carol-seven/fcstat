@@ -7,8 +7,8 @@
 pen(penalty, Omega, lambda, gamma)
 }
 \arguments{
-\item{penalty}{A string specifying the non-convex penalty to use. Options include:
-\enumerate{
+\item{penalty}{A character string specifying the non-convex penalty to use.
+Available options include: \enumerate{
 \item "atan": arctangent type penalty \insertCite{wang2016variable}{fcstat}.
 \item "exp": exponential type penalty \insertCite{wang2018variable}{fcstat}.
 \item "mcp": minimax concave penalty \insertCite{zou2006adaptive}{fcstat}.
@@ -17,9 +17,9 @@ pen(penalty, Omega, lambda, gamma)
 
 \item{Omega}{The precision matrix.}
 
-\item{lambda}{A numeric value representing the regularization parameter.}
+\item{lambda}{A scalar specifying the regularization parameter.}
 
-\item{gamma}{A numeric value representing the hyperparameter for the penalty function.
+\item{gamma}{A scalar specifying the hyperparameter for the penalty function.
 The defaults are: \enumerate{
 \item "atan": 0.005
 \item "exp": 0.01

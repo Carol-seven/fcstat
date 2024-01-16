@@ -21,11 +21,11 @@ Available options include: \enumerate{
 \item "HBIC": high dimensional Bayesian information criterion \insertCite{wang2013calibrating,fan2017high}{fcstat}.
 }}
 
-\item{ebic.tuning}{A numeric value (default = 0.5) specifying the tuning parameter to
-calculate when \code{crit = "EBIC"}.}
+\item{ebic.tuning}{A scalar (default = 0.5) specifying the tuning parameter to
+calculate for \code{crit = "EBIC"}.}
 }
 \value{
-A numeric value.
+A scalar.
 }
 \description{
 Provide information criteria for selecting tuning parameters.

@@ -18,6 +18,13 @@ URL: https://github.com/Carol-seven/fcstat
 BugReports: https://github.com/Carol-seven/fcstat/issues
 RoxygenNote: 7.2.3
 Imports: 
+    GLassoElnetFast,
     Rdpack,
-    nlshrink
+    clime,
+    flare,
+    foreach,
+    glassoFast,
+    nlshrink,
+    rags2ridges
 RdMacros: Rdpack
+Remotes: TobiasRuckstuhl/GLassoElnetFast

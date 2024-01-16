@@ -3,8 +3,8 @@
 #' @description
 #' Compute the specified non-convex regularization penalty.
 #'
-#' @param penalty A string specifying the non-convex penalty to use. Options include:
-#' \enumerate{
+#' @param penalty A character string specifying the non-convex penalty to use.
+#' Available options include: \enumerate{
 #' \item "atan": arctangent type penalty \insertCite{wang2016variable}{fcstat}.
 #' \item "exp": exponential type penalty \insertCite{wang2018variable}{fcstat}.
 #' \item "mcp": minimax concave penalty \insertCite{zou2006adaptive}{fcstat}.
@@ -13,9 +13,9 @@
 #'
 #' @param Omega The precision matrix.
 #'
-#' @param lambda A numeric value representing the regularization parameter.
+#' @param lambda A scalar specifying the regularization parameter.
 #'
-#' @param gamma A numeric value representing the hyperparameter for the penalty function.
+#' @param gamma A scalar specifying the hyperparameter for the penalty function.
 #' The defaults are: \enumerate{
 #' \item "atan": 0.005
 #' \item "exp": 0.01
