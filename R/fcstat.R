@@ -312,6 +312,7 @@ fcstat <- function(X, method, base = "cov", approach = "smp",
     }
     lambda <- exp(seq(log(lambda.min), log(lambda.max), length = nlambda))
   }
+  nlambda <- length(lambda)
 
   ## gamma grid
   if(is.null(gamma)) {
@@ -381,7 +382,7 @@ fcstat <- function(X, method, base = "cov", approach = "smp",
     index <- which.min(score)
 
     ## if the optimal lambda is not at the beginning, exit the loop
-    if (parameter$lambda[index] != min(lambda)) {
+    if (nlambda == 1 | parameter$lambda[index] != min(lambda)) {
       break
     }
 
@@ -398,7 +399,8 @@ fcstat <- function(X, method, base = "cov", approach = "smp",
                  gamma_opt = parameter$gamma[index],
                  score_opt = score[index],
                  lambda = unique(parameter$lambda),
-                 gamma = unique(parameter$gamma))
+                 gamma = unique(parameter$gamma),
+                 score = score)
   return(result)
 
 }
