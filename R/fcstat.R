@@ -315,7 +315,7 @@ fcstat <- function(X, method, base = "cov", approach = "smp",
   nlambda <- length(lambda)
 
   ## gamma grid
-  if(is.null(gamma)) {
+  if(is.na(gamma)) {
     if (method == "elnet") {
       gamma <- seq(0.1, 0.9, 0.1)
     } else if (method == "adapt") {
