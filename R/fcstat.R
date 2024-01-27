@@ -350,7 +350,7 @@ fcstat <- function(X, method, base = "cov", approach = "smp",
         hatOmega <- foreach(k = 1:nrow(parameter)) %do% {
           Omega <- glassoFast::glassoFast(S, rho = parameter$lambda[k])$wi
           lambda_mat <- eval(parse(text = paste0(
-            "deriv(penalty = ", method, "Omega = Omega, lambda = parameter$lambda[k], gamma = parameter$gamma[k])"
+            "deriv(penalty = '", method, "', Omega = Omega, lambda = parameter$lambda[k], gamma = parameter$gamma[k])"
           )))
           glassoFast::glassoFast(S, rho = lambda_mat)$wi
         }
