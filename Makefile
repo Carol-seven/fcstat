@@ -12,23 +12,23 @@ build: $(tar)
 
 .PHONY: install
 install: $(tar)
-R CMD INSTALL $(tar)
+	R CMD INSTALL $(tar)
 
 .PHONY: pkgdown
 pkgdown:
-  Rscript -e "library(methods); pkgdown::build_site();"
+	Rscript -e "library(methods); pkgdown::build_site();"
 
 $(tar): $(objects)
-@Rscript -e "library(methods);" \
--e "devtools::document();";
-R CMD build .
+	@Rscript -e "library(methods);" \
+	-e "devtools::document();";
+	R CMD build .
 
 $(checkLog): $(tar)
-R CMD check $(tar)
+	R CMD check $(tar)
 
 .PHONY: check-as-cran
 check-as-cran: $(tar)
-R CMD check --as-cran $(tar)
+	R CMD check --as-cran $(tar)
 
 .PHONY: readme
 readme: README.md
@@ -41,4 +41,4 @@ TAGS:
 
 .PHONY: clean
 clean:
-  @$(RM) -rf *~ */*~ *.Rhistroy *.tar.gz src/*.so src/*.o *.Rcheck/ .\#*
+	@$(RM) -rf *~ */*~ *.Rhistroy *.tar.gz src/*.so src/*.o *.Rcheck/ .\#*

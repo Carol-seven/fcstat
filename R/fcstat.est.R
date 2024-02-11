@@ -1,11 +1,12 @@
-#' Statistical methods for estimating precision matrix
+#' Estimation for precision matrix
 #'
 #' @description
-#' Provide a collection of statistical methods to estimate a precision matrix.
+#' Provide a collection of statistical methods to obtain a series of precision matrix
+#' estimates across the grid of tuning parameters.
 #'
 #' @param X An n-by-p data matrix with sample size n and dimension p.
 #'
-#' @param method A character string specifying the statistical methods for estimating
+#' @param method A character string specifying the statistical method for estimating
 #' precision matrix. Available options include: \enumerate{
 #' \item "glasso": graphical lasso \insertCite{friedman2008sparse}{fcstat}.
 #' \item "ridge": graphical ridge \insertCite{vanwieringen2016ridge}{fcstat}.
@@ -88,50 +89,25 @@
 #' }
 #' }
 #'
-#' @param crit A string (default = "CV") specifying the parameter selection method to use.
-#' Available options include: \enumerate{
-#' \item "AIC": Akaike information criterion \insertCite{akaike1973information}{fcstat}.
-#' \item "BIC": Bayesian information criterion \insertCite{schwarz1978estimating}{fcstat}.
-#' \item "EBIC": extended Bayesian information criterion \insertCite{foygel2010extended}{fcstat}.
-#' \item "HBIC": high dimensional Bayesian information criterion \insertCite{wang2013calibrating,fan2017high}{fcstat}.
-#' \item "CV": k-fold cross validation.
-#' }
-#'
-#' @param fold An integer (default = 5) specifying the number of folds used for \code{crit = "CV"}.
-#'
-#' @param ebic.tuning A scalar (default = 0.5) specifying the tuning parameter to
-#' calculate when \code{crit = "EBIC"}.
-#'
 #' @note
 #' For the method \code{tiger}, the estimation process solely relies on the raw n-by-p
 #' data \code{X} and does not utilize the arguments \code{base} and \code{approach}.
 #' These arguments are not applicable for \code{tiger} and will have no effect if provided.
 #'
+#' @import foreach
+#' @import glassoFast
 #' @importFrom Rdpack reprompt
 #'
-#' @return
-#' \itemize{
-#' \item For \code{crit = "CV"}, an object with S3 class "fcstat.sel" containing the
-#' following components: \describe{
-#' \item{hatOmega_opt}{The estimated precision matrix.}
-#' \item{lambda_opt}{The optimal regularization parameter.}
-#' \item{gamma_opt}{The optimal hyperparameter.}
-#' \item{loss_opt}{The optimal k-fold loss.}
-#' \item{lambda}{The actual lambda grid used in the program.}
-#' \item{gamma}{The actual gamma grid used in the program.}
-#' \item{loss.mean}{The mean of k-fold loss for each parameter grid value.}
-#' \item{loss.sd}{The standard deviation of k-fold loss for each parameter grid value.}
-#' }
-#' \item For other criteria, an object with S3 class "fcstat.sel" containing the following
-#' components: \describe{
-#' \item{hatOmega_opt}{The estimated precision matrix.}
-#' \item{lambda_opt}{The optimal regularization parameter.}
-#' \item{gamma_opt}{The optimal hyperparameter.}
-#' \item{score_opt}{The optimal information criterion score.}
-#' \item{lambda}{The actual lambda grid used in the program.}
-#' \item{gamma}{The actual gamma grid used in the program.}
-#' \item{score}{The information criterion score for each parameter grid value.}
-#' }
+#' @return An object with S3 class "fcstat.est" containing the following components: \describe{
+#' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and \code{gamma} grid.}
+#' \item{X}{The raw n-by-p data matrix.}
+#' \item{method}{The statistical method used for estimating precision matrix.}
+#' \item{base}{The calculation base.}
+#' \item{approach}{The approach used to compute the calculation base.}
+#' \item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
+#' \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
+#' \item{target}{The target matrix.}
+#' \item{intial}{The initial estimate or the adaptie weight.}
 #' }
 #'
 #' @references
@@ -139,25 +115,127 @@
 #'
 #' @export
 
-fcstat <- function(
+fcstat.est <- function(
     X, method,
     base = "cov", approach = "smp",
     lambda = NULL, nlambda = 50, lambda.min.ratio = NULL,
     lambda.min = NULL, lambda.max = NULL, ## for clime
-    gamma = NA, ## for elnet, adapt (with adapt.weight = "Fan"), atan, exp, scad, mcp
+    gamma = NA, ## for elnet, adapt (with adapt.weight = "Fan"), atan, exp, mcp, scad
     target = 0, ## for ridge, elnet
-    initial = "glasso", ## initial estimator for atan, exp, scad, mcp; adaptive weight for adapt
-    crit = "CV", fold = 5, ebic.tuning = 0.5) {
+    initial = "glasso") { ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
 
-  est.obj <- fcstat.est(
-    X = X, method = method, base = base, approach = approach,
-    lambda = lambda, nlambda = nlambda, lambda.min.ratio = lambda.min.ratio,
-    lambda.min = lambda.min, lambda.max = lambda.max,
-    gamma = gamma, target = target, initial = initial)
+  if (!method %in% c("glasso", "ridge", "elnet", "clime", "tiger",
+                     "adapt", "atan", "exp", "mcp", "scad")) {
+    stop("Error in method.
+         Available options: glasso, ridge, elnet, clime, tiger, adapt, atan, exp, mcp, scad")
+  }
 
-  result <- fcstat.sel(est.obj = est.obj, crit = crit, fold = fold, ebic.tuning = ebic.tuning)
-  class(result) <- "fcstat"
+  ## sample size
+  n <- nrow(X)
+  ## dimensionality
+  p <- ncol(X)
 
+  ## the calculation base S is a customized combination of 'base' and 'approach'
+  if (method == "tiger") {
+    S <- base <- approach <- NULL
+  } else {
+    if (approach == "smp") {
+      S <- eval(parse(text =  paste0(base, "(X)")))
+    } else if (approach %in% c("lin", "nlminb", "nloptr")) {
+      S <- ledoit_wolf_est(X, method = approach, res = base)
+    }
+  }
+
+  ## lambda grid
+  if(is.null(lambda)) {
+    if (method == "clime") { ## pkg:clime
+      if (is.null(lambda.min)) {
+        lambda.min <- ifelse(n > p, 1e-4, 1e-2)
+      }
+      if (is.null(lambda.max)) {
+        lambda.max <- 0.8
+      }
+    } else if (method == "tiger") { ## pkg:flare
+      if (is.null(lambda.min.ratio)) {
+        lambda.min.ratio <- 0.4
+      }
+      lambda.max <- pi*sqrt(log(p)/n)
+      lambda.min <- lambda.min.ratio*lambda.max
+    } else {
+      if (is.null(lambda.min.ratio)) {
+        lambda.min.ratio <- 0.01
+      }
+      lambda.max <- max(abs(S - diag(p))) ## max(max(S-diag(p)), -min(S-diag(p)))
+      lambda.min <- lambda.min.ratio*lambda.max
+    }
+    lambda <- exp(seq(log(lambda.min), log(lambda.max), length = nlambda))
+  }
+  nlambda <- length(lambda)
+
+  ## gamma grid
+  if(all(is.na(gamma))) {
+    if (method == "elnet") {
+      gamma <- seq(0.1, 0.9, 0.1)
+    } else if (method == "adapt") {
+      gamma <- 0.5
+    } else if (method == "atan") {
+      gamma <- 0.005
+    } else if (method == "exp") {
+      gamma <- 0.01
+    } else if (method == "scad") {
+      gamma <- 3.7
+    } else if (method == "mcp") {
+      gamma <- 3
+    }
+  }
+
+  ## parameter grid combination
+  parameter <- expand.grid(lambda = unique(lambda), gamma = unique(gamma))
+
+  ## compute the precision matrix estimator hatOmega along the parameter grid
+  if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
+    hatOmega <- foreach(k = 1:nrow(parameter)) %do% {
+      eval(parse(text = paste0(
+        "fcstat_", method,
+        "(X = X, S = S, lambda = parameter$lambda[k], gamma = parameter$gamma[k], target = target)"
+      )))
+    }
+  } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
+    if (initial == "glasso") {
+      hatOmega <- foreach(k = 1:nrow(parameter)) %do% {
+        Omega <- glassoFast::glassoFast(S, rho = parameter$lambda[k])$wi
+        lambda_mat <- eval(parse(text = paste0(
+          "deriv(penalty = '", method, "', Omega = Omega, lambda = parameter$lambda[k], gamma = parameter$gamma[k])"
+        )))
+        glassoFast::glassoFast(S, rho = lambda_mat)$wi
+      }
+    } else if (initial == "Fan") {
+      ## Fan, J., Y. Feng, and Y. Wu (2009). Network exploration via the adaptive LASSO
+      ## and SCAD penalties. The Annals of Applied Statistics, 3 (2), 521–541.
+      hatOmega <- foreach(k = 1:nrow(parameter)) %do% {
+        if (p < n) {
+          Omega <- solve(S)
+        } else {
+          Omega <- glassoFast::glassoFast(S, rho = parameter$lambda[k])$wi
+        }
+        lambda_mat <- eval(parse(text = paste0(
+          "deriv(penalty = ", method, "Omega = Omega, lambda = parameter$lambda[k], gamma = parameter$gamma[k])"
+        )))
+        glassoFast::glassoFast(S, rho = lambda_mat)$wi
+      }
+    }
+  }
+
+  result <- list(hatOmega = hatOmega,
+                 X = X,
+                 method = method, base = base, approach = approach,
+                 lambda = parameter$lambda, gamma = parameter$gamma,
+                 target = if (method %in% c("ridge", "elnet")) target else NULL,
+                 initial = if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) initial else NULL)
+  class(result) <- c("fcstat.est")
   return(result)
+
 }
+
+utils::globalVariables("k")
 
