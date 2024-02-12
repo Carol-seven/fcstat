@@ -2,7 +2,7 @@ pandoc: 3.1.1
 pkgdown: 2.0.7
 pkgdown_sha: ~
 articles: {}
-last_built: 2024-02-11T22:01Z
+last_built: 2024-02-12T09:34Z
 urls:
   reference: https://github.com/Carol-seven/fcstat/reference
   article: https://github.com/Carol-seven/fcstat/articles

@@ -20,7 +20,7 @@
 #' calculate for \code{crit = "EBIC"}.
 #'
 #' @import foreach
-#' @importFrom stats sd
+#' @importFrom stats cov sd
 #' @importFrom Rdpack reprompt
 #'
 #' @return
@@ -87,10 +87,14 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
       X.test <- X[mat.test[,j],]
 
       ## the calculation base S is a customized combination of 'base' and 'approach'
-      if (approach == "smp") {
-        S.test <- eval(parse(text =  paste0(base, "(X.test)")))
-      } else if (approach %in% c("lin", "nlminb", "nloptr")) {
-        S.test <- ledoit_wolf_est(X.test, method = approach, res = base)
+      if (method == "tiger") {
+        S.test <- cov(X.test)
+      } else {
+        if (approach == "smp") {
+          S.test <- eval(parse(text =  paste0(base, "(X.test)")))
+        } else if (approach %in% c("lin", "nlminb", "nloptr")) {
+          S.test <- ledoit_wolf_est(X.test, method = approach, res = base)
+        }
       }
 
       ## compute the precision matrix estimate
