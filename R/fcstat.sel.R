@@ -109,6 +109,8 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
       }
     }
 
+    loss[!is.finite(loss)] <- Inf
+
     ## the mean and sd of the k-fold loss for each parameter grid value
     loss.mean <- apply(loss, 2, mean)
     loss.sd <- apply(loss, 2, sd)
