@@ -51,6 +51,8 @@
 #' @references
 #' \insertAllCited{}
 #'
+#' @autoglobal
+#'
 #' @export
 
 fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
@@ -59,7 +61,7 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
 
   n <- nrow(X)
   p <- ncol(X)
-  n.para <- length(lambda)
+  n.para <- length(hatOmega)
 
   if (crit == "CV") {
 
@@ -105,7 +107,8 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
 
       ## loss: negative log-likelihood
       for (k in 1:n.para) {
-        loss[j,k] <- - log(det(cvlist$hatOmega[[k]])) + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
+        loss[j,k] <- - determinant(cvlist$hatOmega[[k]])$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
+        # log(det(cvlist$hatOmega[[k]]))
       }
     }
 
@@ -161,5 +164,3 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
 
 }
 
-utils::globalVariables(
-  c("X", "approach", "base", "hatOmega", "initial", "lambda", "method", "score", "target"))

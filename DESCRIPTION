@@ -26,5 +26,11 @@ Imports:
     glassoFast,
     nlshrink,
     rags2ridges
+Suggests: 
+    roxyglobals
+Roxygen: list(roclets = c("collate", "namespace", "rd",
+    "roxyglobals::global_roclet"))
 RdMacros: Rdpack
 Remotes: TobiasRuckstuhl/GLassoElnetFast
+Config/roxyglobals/filename: globals.R
+Config/roxyglobals/unique: FALSE

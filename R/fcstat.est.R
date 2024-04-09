@@ -113,6 +113,8 @@
 #' @references
 #' \insertAllCited{}
 #'
+#' @autoglobal
+#'
 #' @export
 
 fcstat.est <- function(
@@ -236,6 +238,4 @@ fcstat.est <- function(
   return(result)
 
 }
-
-utils::globalVariables("k")
 

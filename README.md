@@ -9,6 +9,7 @@ The goal of **fcstat** is to provide classical statistical methods for estimatin
 functional connectivity analysis in brain networks, making them user-friendly
 and useful for researchers and practitioners in the field of neuroimaging.
 
+
 ## Installation
 
 You can install the development version of **fcstat** from
@@ -17,4 +18,17 @@ You can install the development version of **fcstat** from
 ``` r
 # install.packages("devtools")
 devtools::install_github("Carol-seven/fcstat")
+```
+
+
+## Example
+
+``` r
+library(fcstat)
+
+X <- matrix(rnorm(200), 10, 20)
+
+## Statistical methods for estimating the precision matrix,
+## including the estimation and selection process
+fcstat(X, method = "glasso", crit = "CV", fold = 5)
 ```
