@@ -221,7 +221,7 @@ fcstat.est <- function(
           Omega <- glassoFast::glassoFast(S, rho = parameter$lambda[k])$wi
         }
         lambda_mat <- eval(parse(text = paste0(
-          "deriv(penalty = ", method, "Omega = Omega, lambda = parameter$lambda[k], gamma = parameter$gamma[k])"
+          "deriv(penalty = '", method, "', Omega = Omega, lambda = parameter$lambda[k], gamma = parameter$gamma[k])"
         )))
         glassoFast::glassoFast(S, rho = lambda_mat)$wi
       }
