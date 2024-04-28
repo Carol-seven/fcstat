@@ -95,7 +95,7 @@
 #' These arguments are not applicable for \code{tiger} and will have no effect if provided.
 #'
 #' @import foreach
-#' @import glassoFast
+#' @importFrom glassoFast glassoFast
 #' @importFrom Rdpack reprompt
 #'
 #' @return An object with S3 class "fcstat.est" containing the following components: \describe{

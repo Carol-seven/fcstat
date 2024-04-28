@@ -11,7 +11,7 @@
 #'
 #' @param ... Additional arguments passed to \code{fcstat}.
 #'
-#' @import glassoFast
+#' @importFrom glassoFast glassoFast
 #'
 #' @return Estimated precision matrix.
 #'
@@ -100,14 +100,15 @@ fcstat_elnet <- function(S, lambda, gamma, target = 0, ...) {
 #'
 #' @param ... Additional arguments passed to \code{fcstat}.
 #'
-#' @import clime
+#' @importFrom flare sugm
 #'
 #' @return Estimated precision matrix.
 #'
 #' @noRd
 
 fcstat_clime <- function(S, lambda, ...) {
-  hatOmega <- clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE)$Omegalist[[1]]
+  hatOmega <- flare::sugm(S, lambda = lambda, method = "clime")$icov[[1]]
+  # clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE)$Omegalist[[1]]
   return(hatOmega)
 }
 

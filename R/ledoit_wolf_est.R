@@ -19,7 +19,7 @@
 #' @param res A character string (default = "cov") specifying the result matrix to be
 #' obtained, either the covariance matrix ("cov") or the correlation matrix ("cor").
 #'
-#' @import nlshrink
+#' @importFrom nlshrink linshrink_cov nlshrink_cov
 #' @importFrom stats cov2cor
 #' @importFrom Rdpack reprompt
 #'
