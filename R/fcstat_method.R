@@ -107,7 +107,7 @@ fcstat_elnet <- function(S, lambda, gamma, target = 0, ...) {
 #' @noRd
 
 fcstat_clime <- function(S, lambda, ...) {
-  hatOmega <- flare::sugm(S, lambda = lambda, method = "clime")$icov[[1]]
+  hatOmega <- flare::sugm(S, lambda = lambda, method = "clime", verbose = FALSE)$icov[[1]]
   # clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE)$Omegalist[[1]]
   return(hatOmega)
 }
