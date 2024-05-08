@@ -63,7 +63,7 @@ performance <- function(Omega, Sigma = NULL, hatOmega) {
   Specificity <- TN / (TN + FP)
   F1 <- 2*TP / (FN+FP+2*TP)
   # F1 <- 2*Precision*Recall / (Precision+Recall)
-  MCC <- (TN*TP-FN*FP) / sqrt((FN+TN)*(FN+TP)*(FP+TN)*(FP+TP))
+  MCC <- (TN*TP-FN*FP) / (sqrt(FN+TN)*sqrt(FN+TP)*sqrt(FP+TN)*sqrt(FP+TP))
   result <- c(Fnorm1 = Fnorm1, Fnorm2 = Fnorm2,
               KL = KL, Ql = Ql, Snorm = Snorm,
               Precision = Precision, "Recall/Sensitivity" = Recall, Specificity = Specificity,
