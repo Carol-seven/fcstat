@@ -38,6 +38,8 @@ fcstat_glasso <- function(S, lambda, ...) {
 #'
 #' @param ... Additional arguments passed to \code{fcstat}.
 #'
+#' @import RBGL
+#' @import graph
 #' @importFrom rags2ridges ridgeP
 #'
 #' @return Estimated precision matrix.

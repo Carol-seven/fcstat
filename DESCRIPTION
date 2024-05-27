@@ -19,10 +19,12 @@ BugReports: https://github.com/Carol-seven/fcstat/issues
 RoxygenNote: 7.3.1
 Imports: 
     GLassoElnetFast,
+    RBGL,
     Rdpack,
     flare,
     foreach,
     glassoFast,
+    graph,
     nlshrink,
     rags2ridges
 Suggests: 
@@ -30,6 +32,7 @@ Suggests:
 Roxygen: list(roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
 RdMacros: Rdpack
+biocViews: RBGL, graph
 Remotes: TobiasRuckstuhl/GLassoElnetFast
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
