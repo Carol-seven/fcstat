@@ -126,14 +126,14 @@ fcstat_clime <- function(S, lambda, ...) {
 #'
 #' @param lambda A non-negative scalar specifying the regularization parameter.
 #'
-#' @importFrom flare sugm
+#' @importFrom huge huge.tiger
 #'
 #' @return Estimated precision matrix.
 #'
 #' @noRd
 
 fcstat_tiger <- function(X, lambda, ...) {
-  hatOmega <- flare::sugm(X, lambda = lambda, method = "tiger", verbose = FALSE)$icov[[1]]
+  hatOmega <- huge::huge.tiger(X, lambda = lambda, verbose = FALSE)$icov[[1]]
   return(hatOmega)
 }
 

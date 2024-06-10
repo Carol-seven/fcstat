@@ -5,16 +5,13 @@
 #'
 #' @param X A data matrix.
 #'
-#' @param method A character string (default = "lin") specifying the method used in
+#' @param method A character string (default = "linshrink") specifying the method used in
 #' shrinkage, includes: \enumerate{
-#' \item Linear shrinkage: "lin" \insertCite{ledoit2004well}{fcstat}.
-#' \item Non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}:
-#' \itemize{
-#' \item "nlminb": non-linear shrinkage using the optimization routine "nlminb".
-#' \item "nloptr": non-linear shrinkage using the optimization routine "nloptr".
+#' \item "linshrink": linear shrinkage \insertCite{ledoit2004well}{fcstat}.
+#' \item "nlshrink": non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}
 #' }
-#' }
-#' See \code{\link[stats]{nlminb}} and \code{\link[nloptr]{nloptr}} for details.
+#' See \code{\link[nlshrink]{linshrink_cov}} and \code{\link[nlshrink]{nlshrink_cov}} for
+#' details.
 #'
 #' @param res A character string (default = "cov") specifying the result matrix to be
 #' obtained, either the covariance matrix ("cov") or the correlation matrix ("cor").
@@ -30,13 +27,11 @@
 #'
 #' @export
 
-ledoit_wolf_est <- function(X, method = "lin", res = "cov") {
-  if (method == "lin") {
+ledoit_wolf_est <- function(X, method = "linshrink", res = "cov") {
+  if (method == "linshrink") {
     Sigma <- nlshrink::linshrink_cov(X)
-  } else if (method == "nlminb") {
+  } else if (method == "nlshrink") {
     Sigma <- nlshrink::nlshrink_cov(X, method = "nlminb")
-  } else if (method == "nloptr") {
-    Sigma <- nlshrink::nlshrink_cov(X, method = "nloptr")
   }
   if (res == "cov") {
     result <- Sigma

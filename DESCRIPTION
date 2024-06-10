@@ -25,8 +25,10 @@ Imports:
     foreach,
     glassoFast,
     graph,
+    huge,
     nlshrink,
-    rags2ridges
+    rags2ridges,
+    methods
 Suggests: 
     roxyglobals
 Roxygen: list(roclets = c("collate", "namespace", "rd",

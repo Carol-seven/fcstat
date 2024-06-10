@@ -4,21 +4,18 @@
 \alias{ledoit_wolf_est}
 \title{Ledoit-Wolf shrinkage estimator}
 \usage{
-ledoit_wolf_est(X, method = "lin", res = "cov")
+ledoit_wolf_est(X, method = "linshrink", res = "cov")
 }
 \arguments{
 \item{X}{A data matrix.}
 
-\item{method}{A character string (default = "lin") specifying the method used in
+\item{method}{A character string (default = "linshrink") specifying the method used in
 shrinkage, includes: \enumerate{
-\item Linear shrinkage: "lin" \insertCite{ledoit2004well}{fcstat}.
-\item Non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}:
-\itemize{
-\item "nlminb": non-linear shrinkage using the optimization routine "nlminb".
-\item "nloptr": non-linear shrinkage using the optimization routine "nloptr".
+\item "linshrink": Linear shrinkage \insertCite{ledoit2004well}{fcstat}.
+\item "nlshrink": Non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}
 }
-}
-See \code{\link[stats]{nlminb}} and \code{\link[nloptr]{nloptr}} for details.}
+See \code{\link[nlshrink]{linshrink_cov}} and \code{\link[nlshrink]{nlshrink_cov}} for
+details.}
 
 \item{res}{A character string (default = "cov") specifying the result matrix to be
 obtained, either the covariance matrix ("cov") or the correlation matrix ("cor").}

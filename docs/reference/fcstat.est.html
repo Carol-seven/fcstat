@@ -55,22 +55,21 @@ estimates across the grid of tuning parameters.</p>
 <span>  <span class="va">X</span>,</span>
 <span>  <span class="va">method</span>,</span>
 <span>  base <span class="op">=</span> <span class="st">"cov"</span>,</span>
-<span>  approach <span class="op">=</span> <span class="st">"smp"</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nlambda <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  lambda.min.ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  lambda.min <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  lambda.max <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  gamma <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  target <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  initial <span class="op">=</span> <span class="st">"glasso"</span></span>
+<span>  initial <span class="op">=</span> <span class="st">"linshrink"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>X</dt>
-<dd><p>An n-by-p data matrix with sample size n and dimension p.</p></dd>
+<dd><ol><li><p>An n-by-p data matrix with sample size n and dimension p.</p></li>
+<li><p>A p-by-p sample covariance/correlation matrix with dimension p.</p></li>
+</ol></dd>
 
 
 <dt>method</dt>
@@ -86,7 +85,8 @@ precision matrix. Available options include:</p><ol><li><p>"glasso": graphical l
 .</p></li>
 <li><p>"tiger": tuning-insensitive graph estimation and regression
 (Liu and Wang 2017)
-.</p></li>
+, which is only applicable when <code>X</code> is the n-by-p
+data matrix.</p></li>
 <li><p>"adapt": adaptive lasso (Zou 2006; Fan et al. 2009)
 .</p></li>
 <li><p>"atan": arctangent type penalty (Wang and Zhu 2016)
@@ -102,28 +102,14 @@ precision matrix. Available options include:</p><ol><li><p>"glasso": graphical l
 
 <dt>base</dt>
 <dd><p>A character string (default = "cov") specifying the calculation base,
-either the covariance matrix ("cov") or the correlation matrix ("cor").</p></dd>
-
-
-<dt>approach</dt>
-<dd><p>A character string (default = "smp") specifying the approach used to
-compute the calculation base. Available options include:</p><ol><li><p>"smp": sample (conventional approach).</p></li>
-<li><p>"lin": linear shrinkage (Ledoit and Wolf 2004)
-.</p></li>
-<li><p>"nlminb": non-linear shrinkage using the optimization routine "nlminb"
-(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
-.</p></li>
-<li><p>"nloptr": non-linear shrinkage using the optimization routine "nloptr"
-(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
-.</p></li>
-</ol></dd>
+either the covariance matrix ("cov") or the correlation matrix ("cor"). This is only
+applicable when <code>X</code> is the n-by-p data matrix.</p></dd>
 
 
 <dt>lambda</dt>
 <dd><p>Grid of non-negative scalars for the regularization parameter.
 The default is <code>NULL</code>, which generates its own <code>lambda</code> sequence based on
-<code>nlambda</code> and <code>lambda.min.ratio</code>. For <code>method = "clime"</code>, the
-<code>lambda</code> sequence is based on <code>nlambda</code>, <code>lambda.min</code> and <code>lambda.max</code>.</p></dd>
+<code>nlambda</code> and <code>lambda.min.ratio</code>.</p></dd>
 
 
 <dt>nlambda</dt>
@@ -136,23 +122,12 @@ to be generated when <code>lambda = NULL</code>.</p></dd>
 value \(\lambda_{max}\) to generate the minimum <code>lambda</code> \(\lambda_{min}\).
 If <code>lambda = NULL</code>, the program automatically generates a <code>lambda</code> grid as a
 sequence of length <code>nlambda</code> in log scale, starting from \(\lambda_{min}\) to
-\(\lambda_{max}\), expect for <code>method = "clime"</code>. The default value is 0.4 for
-<code>method = "tiger"</code> and 0.01 for others.</p></dd>
-
-
-<dt>lambda.min</dt>
-<dd><p>A scalar specifying the minimum value of program generated
-<code>lambda</code> grid for <code>method = "clime"</code>. Default is 1e-4 (\(n&gt;p\)) or 1e-2
-(\(n&lt;p\)).</p></dd>
-
-
-<dt>lambda.max</dt>
-<dd><p>A scalar (default = 0.8) specifying the maximum value of program
-generated <code>lambda</code> grid for <code>method = "clime"</code>.</p></dd>
+\(\lambda_{max}\). The default value is 0.4 for <code>method = "clime"</code>, 0.1 for
+<code>method = "tiger"</code> and 0.01 for other methods.</p></dd>
 
 
 <dt>gamma</dt>
-<dd><p>A scalar specifying the hyperparameter for the chosen <code>method</code>.
+<dd><p>Grid of scalars specifying the hyperparameter for the chosen <code>method</code>.
 Default values:</p><ol><li><p>"elnet": a sequence from 0.1 to 0.9 with increments of 0.1</p></li>
 <li><p>"adapt": 0.5</p></li>
 <li><p>"atan": 0.005</p></li>
@@ -169,18 +144,34 @@ for all elements, specifying the target matrix for <code>method = "ridge"</code>
 
 
 <dt>initial</dt>
-<dd><p>A character string (default = "glasso") specifying</p><ul><li><p>The initial estimate for <code>method</code> set to <code>"atan"</code>, <code>"exp"</code>,
-<code>"scad"</code>, or <code>"mcp"</code>.</p><ul><li><p>"glasso": use the precision matrix estimate derived from the graphical lasso.</p></li>
-<li><p>"Fan": use the inverse calculation base matrix for \(p &lt; n\); use the precision
-matrix estimate derived from the graphical lasso for \(p \geq n\).</p></li>
-</ul></li>
-<li><p>The adaptive weight for <code>method = "adapt"</code>, calculated as
-\(|\tilde{\omega}_{ij}|^{-\gamma}\), where \(\tilde{\Omega} := (\tilde{\omega}_{ij})\).</p><ul><li><p>"glasso": use the precision matrix estimate derived from the graphical lasso as
-\(\tilde{\Omega}\).</p></li>
-<li><p>"Fan": use the inverse calculation base matrix as \(\tilde{\Omega}\) for
-\(p &lt; n\);  use the precision matrix estimate derived from the graphical lasso as
-\(\tilde{\Omega}\) for \(p \geq n\).</p></li>
-</ul></li>
+<dd><p>A p-by-p matrix or a p-by-p-by-npara (the number of all combinations of
+<code>lambda</code> and <code>gamma</code>) array specifying the initial estimate for <code>method</code>
+set to <code>"atan"</code>, <code>"exp"</code>, <code>"scad"</code>, or <code>"mcp"</code>; or specifying
+\(\tilde{\Omega}\) of the adaptive weight for <code>method = "adapt"</code>, calculated as
+\(|\tilde{\omega}_{ij}|^{-\gamma}\), where \(\tilde{\Omega} := (\tilde{\omega}_{ij})\).
+Some options are also offered when a character string is provided (default "linshrink"),
+including:</p><ul><li><p>"glasso": use the precision matrix estimate derived from the graphical lasso.</p></li>
+<li><p>"linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
+shrinakge estimator of the population covariance matrix
+(Ledoit and Wolf 2004)
+.</p></li>
+<li><p>"nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
+shrinakge estimator of the population covariance matrix
+(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
+.</p></li>
+<li><p>"invS-glasso": use the inverse calculation base matrix if the matrix is
+invertible; otherwise, use the precision matrix estimate derived from the graphical
+lasso.</p></li>
+<li><p>"invS-linshrink": use the inverse calculation base matrix if the matrix is
+invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
+linear shrinakge estimator of the population covariance matrix
+(Ledoit and Wolf 2004)
+.</p></li>
+<li><p>"invS-nlshrink": use the inverse calculation base matrix if the matrix is
+invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
+non-linear shrinkage estimator of the population covariance matrix
+(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
+.</p></li>
 </ul></dd>
 
 </dl></div>
@@ -192,16 +183,16 @@ matrix estimate derived from the graphical lasso for \(p \geq n\).</p></li>
 <dd><p>A list of estimated precision matrices for <code>lambda</code> grid and <code>gamma</code> grid.</p></dd>
 
 <dt>X</dt>
-<dd><p>The raw n-by-p data matrix.</p></dd>
+<dd><p>The actual n-by-p data matrix used in the program.</p></dd>
+
+<dt>S</dt>
+<dd><p>The p-by-p calculation base matrix used in the program.</p></dd>
 
 <dt>method</dt>
 <dd><p>The statistical method used for estimating precision matrix.</p></dd>
 
 <dt>base</dt>
 <dd><p>The calculation base.</p></dd>
-
-<dt>approach</dt>
-<dd><p>The approach used to compute the calculation base.</p></dd>
 
 <dt>lambda</dt>
 <dd><p>The actual lambda grid used in the program, corresponding to <code>hatOmega</code>.</p></dd>
@@ -213,15 +204,15 @@ matrix estimate derived from the graphical lasso for \(p \geq n\).</p></li>
 <dd><p>The target matrix.</p></dd>
 
 <dt>intial</dt>
-<dd><p>The initial estimate or the adaptie weight.</p></dd>
+<dd><p>The initial estimate or \(\tilde{\Omega}\) of the adaptive weight.</p></dd>
 
 
 </dl></div>
     <div class="section level2">
     <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
     <p>For the method <code>tiger</code>, the estimation process solely relies on the raw n-by-p
-data <code>X</code> and does not utilize the arguments <code>base</code> and <code>approach</code>.
-These arguments are not applicable for <code>tiger</code> and will have no effect if provided.</p>
+data <code>X</code> and does not utilize the argument <code>base</code>. This argument is not
+applicable for <code>tiger</code> and will have no effect if provided.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

@@ -4,10 +4,14 @@
 \alias{fcstat.sel}
 \title{Selection for precision matrix estimates}
 \usage{
-fcstat.sel(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5)
+fcstat.sel(est.obj, n = NULL, crit = "CV", fold = 5, ebic.tuning = 0.5)
 }
 \arguments{
 \item{est.obj}{The \code{fcstat.est} object output from \code{fcstat.est()}.}
+
+\item{n}{An integer (default - NULL) specifying the sample size. This is only required
+when the input matrix \code{X} in \code{fcstat.est} is a p-by-p sample
+covariance/correlation matrix with dimension p.}
 
 \item{crit}{A string (default = "CV") specifying the parameter selection method to use.
 Available options include: \enumerate{

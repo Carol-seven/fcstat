@@ -5,6 +5,10 @@
 #'
 #' @param est.obj The \code{fcstat.est} object output from \code{fcstat.est()}.
 #'
+#' @param n An integer (default - NULL) specifying the sample size. This is only required
+#' when the input matrix \code{X} in \code{fcstat.est} is a p-by-p sample
+#' covariance/correlation matrix with dimension p.
+#'
 #' @param crit A string (default = "CV") specifying the parameter selection method to use.
 #' Available options include: \enumerate{
 #' \item "AIC": Akaike information criterion \insertCite{akaike1973information}{fcstat}.
@@ -55,15 +59,25 @@
 #'
 #' @export
 
-fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
+fcstat.sel <- function(est.obj, n = NULL, crit = "CV", fold = 5, ebic.tuning = 0.5) {
 
   list2env(est.obj, envir = environment())
 
-  n <- nrow(X)
-  p <- ncol(X)
+  if (is.null(X)) {
+    if (is.null(n)) {
+      stop("The input X is the p-by-p sample covariance/correlation matrix.
+           The selection requires the sample size n.")
+    }
+  } else {
+    n <- nrow(X)
+  }
   n.para <- length(hatOmega)
 
   if (crit == "CV") {
+
+    if(is.null(X)) {
+      stop("CV requires the n-by-p data matrix!")
+    }
 
     ## indices for test and training sets
     n.test <- floor(n/fold)
@@ -88,20 +102,12 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
       X.train <- X[mat.train[,j],]
       X.test <- X[mat.test[,j],]
 
-      ## the calculation base S is a customized combination of 'base' and 'approach'
-      if (method == "tiger") {
-        S.test <- cov(X.test)
-      } else {
-        if (approach == "smp") {
-          S.test <- eval(parse(text =  paste0(base, "(X.test)")))
-        } else if (approach %in% c("lin", "nlminb", "nloptr")) {
-          S.test <- ledoit_wolf_est(X.test, method = approach, res = base)
-        }
-      }
+      ## sample covariance/correlation matrix
+      S.test <- eval(parse(text =  paste0(base, "(X.test)")))
 
       ## compute the precision matrix estimate
       cvlist <- fcstat.est(X = X.train,
-                           method = method, base = base, approach = approach,
+                           method = method, base = base,
                            lambda = lambda, gamma = gamma,
                            target = target, initial = initial)
 
@@ -131,13 +137,6 @@ fcstat.sel <- function(est.obj, crit = "CV", fold = 5, ebic.tuning = 0.5) {
                    loss.sd = loss.sd)
 
   } else {
-
-    ## the calculation base S is a customized combination of 'base' and 'approach'
-    if (approach == "smp") {
-      S <- eval(parse(text =  paste0(base, "(X)")))
-    } else if (approach %in% c("lin", "nlminb", "nloptr")) {
-      S <- ledoit_wolf_est(X, method = approach, res = base)
-    }
 
     ## select the optimal parameters among a set of possible values
     eval(parse(text = paste0(
