@@ -11,8 +11,8 @@ ledoit_wolf_est(X, method = "linshrink", res = "cov")
 
 \item{method}{A character string (default = "linshrink") specifying the method used in
 shrinkage, includes: \enumerate{
-\item "linshrink": Linear shrinkage \insertCite{ledoit2004well}{fcstat}.
-\item "nlshrink": Non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}
+\item "linshrink": linear shrinkage \insertCite{ledoit2004well}{fcstat}.
+\item "nlshrink": non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 }
 See \code{\link[nlshrink]{linshrink_cov}} and \code{\link[nlshrink]{nlshrink_cov}} for
 details.}

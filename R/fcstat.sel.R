@@ -113,8 +113,8 @@ fcstat.sel <- function(est.obj, n = NULL, crit = "CV", fold = 5, ebic.tuning = 0
 
       ## loss: negative log-likelihood
       for (k in 1:n.para) {
-        loss[j,k] <- - determinant(cvlist$hatOmega[[k]])$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
-        # log(det(cvlist$hatOmega[[k]]))
+        loss[j,k] <- - log(det(cvlist$hatOmega[[k]])) + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
+        # determinant(cvlist$hatOmega[[k]])$modulus[1]
       }
     }
 
