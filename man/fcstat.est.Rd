@@ -102,11 +102,12 @@ non-linear shrinkage estimator of the population covariance matrix
 
 \item{utilopt}{A character string specifying the utility option to use for
 \code{method = "clime"}: \itemize{
-\item "clime_primaldual": utility function from the package \code{\link[clime]{clime}}
-with the linsolver primaldual.
-\item "clime_simplex": utility function from the package \code{\link[clime]{clime}}
-with the linsolver simplex.
-\item "flare": use the utility function from the package \code{\link[flare]{sugm}}.
+\item "clime_primaldual": the utility function \code{\link[clime]{clime}} from
+the package \code{clime} with the linsolver \code{primaldual}.
+\item "clime_simplex": the utility function \code{\link[clime]{clime}} from
+the package \code{clime} with the linsolver \code{simplex}.
+\item "flare": the utility function \code{\link[flare]{sugm}} from
+the package \code{flare}.
 }}
 }
 \value{

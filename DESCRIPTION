@@ -7,11 +7,9 @@ Authors@R: c(
     person(given = "Jun", family = "Yan", email = "jun.yan@uconn.edu",
            role = "aut", comment = c(ORCID = "0000-0003-4401-7296")),
     person(given = "Panpan", family = "Zhang", email = "panpan.zhang@vumc.org",
-           role = "aut", comment = c(ORCID = "0000-0002-8211-5930")),
-    person(given = "William", family = "Robb", middle = "Hudson", email = "william.h.robb@vanderbilt.edu",
-           role = "aut", comment = c(ORCID = "0000-0002-8952-7719")))
+           role = "aut", comment = c(ORCID = "0000-0002-8211-5930")))
 Maintainer: Shiying Xiao <shiying.xiao@outlook.com>
-Description: Classical statistical methods for fMRI-based functional connectivity analysis.
+Description: Statistical methods for estimating functional connectivity analysis in brain networks.
 License: GPL (>= 3)
 Encoding: UTF-8
 URL: https://github.com/Carol-seven/fcstat
