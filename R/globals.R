@@ -8,6 +8,7 @@ utils::globalVariables(c(
   "lambda", # <fcstat.sel>
   "target", # <fcstat.sel>
   "initial", # <fcstat.sel>
+  "utilopt", # <fcstat.sel>
   "score", # <fcstat.sel>
   NULL
 ))

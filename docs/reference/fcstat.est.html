@@ -60,7 +60,8 @@ estimates across the grid of tuning parameters.</p>
 <span>  lambda.min.ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gamma <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  target <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  initial <span class="op">=</span> <span class="st">"linshrink"</span></span>
+<span>  initial <span class="op">=</span> <span class="st">"linshrink"</span>,</span>
+<span>  utilopt <span class="op">=</span> <span class="st">"flare"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -174,6 +175,16 @@ non-linear shrinkage estimator of the population covariance matrix
 .</p></li>
 </ul></dd>
 
+
+<dt>utilopt</dt>
+<dd><p>A character string specifying the utility option to use for
+<code>method = "clime"</code>:</p><ul><li><p>"clime_primaldual": utility function from the package <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
+with the linsolver primaldual.</p></li>
+<li><p>"clime_simplex": utility function from the package <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
+with the linsolver simplex.</p></li>
+<li><p>"flare": use the utility function from the package <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
+</ul></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -205,6 +216,9 @@ non-linear shrinkage estimator of the population covariance matrix
 
 <dt>intial</dt>
 <dd><p>The initial estimate or \(\tilde{\Omega}\) of the adaptive weight.</p></dd>
+
+<dt>utilopt</dt>
+<dd><p>The utility option.</p></dd>
 
 
 </dl></div>

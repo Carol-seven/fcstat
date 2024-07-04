@@ -109,7 +109,7 @@ fcstat.sel <- function(est.obj, n = NULL, crit = "CV", fold = 5, ebic.tuning = 0
       cvlist <- fcstat.est(X = X.train,
                            method = method, base = base,
                            lambda = lambda, gamma = gamma,
-                           target = target, initial = initial)
+                           target = target, initial = initial, utilopt = utilopt)
 
       ## loss: negative log-likelihood
       for (k in 1:n.para) {

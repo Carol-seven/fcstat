@@ -14,6 +14,7 @@ fcstat(
   gamma = NA,
   target = 0,
   initial = "linshrink",
+  utilopt = "flare",
   n = NULL,
   crit = "CV",
   fold = 5,
@@ -101,6 +102,15 @@ linear shrinakge estimator of the population covariance matrix
 invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
 non-linear shrinkage estimator of the population covariance matrix
 \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
+}}
+
+\item{utilopt}{A character string specifying the utility option to use for
+\code{method = "clime"}: \itemize{
+\item "clime_primaldual": utility function from the package \code{\link[clime]{clime}}
+with the linsolver primaldual.
+\item "clime_simplex": utility function from the package \code{\link[clime]{clime}}
+with the linsolver simplex.
+\item "flare": use the utility function from the package \code{\link[flare]{sugm}}.
 }}
 
 \item{n}{An integer (default - NULL) specifying the sample size. This is only required

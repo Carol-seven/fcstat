@@ -58,6 +58,7 @@
 <span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  target <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  initial <span class="op">=</span> <span class="st">"linshrink"</span>,</span>
+<span>  utilopt <span class="op">=</span> <span class="st">"flare"</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  crit <span class="op">=</span> <span class="st">"CV"</span>,</span>
 <span>  fold <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -173,6 +174,16 @@ invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wol
 non-linear shrinkage estimator of the population covariance matrix
 (Ledoit and Wolf 2015; Ledoit and Wolf 2017)
 .</p></li>
+</ul></dd>
+
+
+<dt>utilopt</dt>
+<dd><p>A character string specifying the utility option to use for
+<code>method = "clime"</code>:</p><ul><li><p>"clime_primaldual": utility function from the package <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
+with the linsolver primaldual.</p></li>
+<li><p>"clime_simplex": utility function from the package <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
+with the linsolver simplex.</p></li>
+<li><p>"flare": use the utility function from the package <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
 </ul></dd>
 
 

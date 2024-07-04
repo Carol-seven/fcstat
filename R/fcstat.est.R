@@ -86,6 +86,15 @@
 #' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 #' }
 #'
+#' @param utilopt A character string specifying the utility option to use for
+#' \code{method = "clime"}: \itemize{
+#' \item "clime_primaldual": utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver primaldual.
+#' \item "clime_simplex": utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver simplex.
+#' \item "flare": use the utility function from the package \code{\link[flare]{sugm}}.
+#' }
+#'
 #' @note
 #' For the method \code{tiger}, the estimation process solely relies on the raw n-by-p
 #' data \code{X} and does not utilize the argument \code{base}. This argument is not
@@ -105,6 +114,7 @@
 #' \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
 #' \item{target}{The target matrix.}
 #' \item{intial}{The initial estimate or \eqn{\tilde{\Omega}} of the adaptive weight.}
+#' \item{utilopt}{The utility option.}
 #' }
 #'
 #' @references
@@ -117,7 +127,8 @@ fcstat.est <- function(
     lambda = NULL, nlambda = 50, lambda.min.ratio = NULL,
     gamma = NULL, ## for elnet, adapt, atan, exp, mcp, scad
     target = 0, ## for ridge, elnet
-    initial = "linshrink") { ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
+    initial = "linshrink", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
+    utilopt = "flare") { ## utility option for clime
 
   if (!method %in% c("glasso", "ridge", "elnet", "clime", "tiger",
                      "adapt", "atan", "exp", "mcp", "scad")) {
@@ -201,7 +212,7 @@ fcstat.est <- function(
     hatOmega <- foreach(k = 1:nrow(parameter)) %do% {
       eval(parse(text = paste0(
         "fcstat_", method,
-        "(X = X, S = S, lambda = parameter$lambda[k], gamma = parameter$gamma[k], target = target)"
+        "(X = X, S = S, lambda = parameter$lambda[k], gamma = parameter$gamma[k], target = target, utilopt = utilopt)"
       )))
     }
   } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
@@ -226,7 +237,8 @@ fcstat.est <- function(
                  method = method, base = base,
                  lambda = parameter$lambda, gamma = parameter$gamma,
                  target = if (method %in% c("ridge", "elnet")) target else NULL,
-                 initial = if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) initial else NULL)
+                 initial = if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) initial else NULL,
+                 utilopt = if (method == "clime") utilopt else NULL)
   class(result) <- c("fcstat.est")
   return(result)
 

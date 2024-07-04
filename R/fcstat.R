@@ -85,6 +85,15 @@
 #' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 #' }
 #'
+#' @param utilopt A character string specifying the utility option to use for
+#' \code{method = "clime"}: \itemize{
+#' \item "clime_primaldual": utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver primaldual.
+#' \item "clime_simplex": utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver simplex.
+#' \item "flare": use the utility function from the package \code{\link[flare]{sugm}}.
+#' }
+#'
 #' @param n An integer (default - NULL) specifying the sample size. This is only required
 #' when the input matrix \code{X} is a p-by-p sample covariance/correlation matrix with
 #' dimension p.
@@ -146,12 +155,13 @@ fcstat <- function(
     gamma = NA, ## for elnet, adapt, atan, exp, mcp, scad
     target = 0, ## for ridge, elnet
     initial = "linshrink", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
+    utilopt = "flare", ## utility option for clime
     n = NULL, crit = "CV", fold = 5, ebic.tuning = 0.5) {
 
   est.obj <- fcstat.est(
     X = X, method = method, base = base,
     lambda = lambda, nlambda = nlambda, lambda.min.ratio = lambda.min.ratio,
-    gamma = gamma, target = target, initial = initial)
+    gamma = gamma, target = target, initial = initial, utilopt = utilopt)
 
   result <- fcstat.sel(est.obj = est.obj, n = n, crit = crit, fold = fold, ebic.tuning = ebic.tuning)
   class(result) <- "fcstat"

@@ -13,7 +13,8 @@ fcstat.est(
   lambda.min.ratio = NULL,
   gamma = NULL,
   target = 0,
-  initial = "linshrink"
+  initial = "linshrink",
+  utilopt = "flare"
 )
 }
 \arguments{
@@ -98,6 +99,15 @@ invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wol
 non-linear shrinkage estimator of the population covariance matrix
 \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 }}
+
+\item{utilopt}{A character string specifying the utility option to use for
+\code{method = "clime"}: \itemize{
+\item "clime_primaldual": utility function from the package \code{\link[clime]{clime}}
+with the linsolver primaldual.
+\item "clime_simplex": utility function from the package \code{\link[clime]{clime}}
+with the linsolver simplex.
+\item "flare": use the utility function from the package \code{\link[flare]{sugm}}.
+}}
 }
 \value{
 An object with S3 class "fcstat.est" containing the following components: \describe{
@@ -110,6 +120,7 @@ An object with S3 class "fcstat.est" containing the following components: \descr
 \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
 \item{target}{The target matrix.}
 \item{intial}{The initial estimate or \eqn{\tilde{\Omega}} of the adaptive weight.}
+\item{utilopt}{The utility option.}
 }
 }
 \description{

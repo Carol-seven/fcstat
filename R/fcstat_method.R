@@ -100,17 +100,34 @@ fcstat_elnet <- function(S, lambda, gamma, target = 0, ...) {
 #'
 #' @param lambda A non-negative scalar specifying the regularization parameter.
 #'
+#' @param utilopt A character string specifying the utility option to use for
+#' \code{method = "clime"}: \itemize{
+#' \item "clime_primaldual": utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver primaldual.
+#' \item "clime_simplex": utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver simplex.
+#' \item "flare": use the utility function from the package \code{\link[flare]{sugm}}.
+#' }
+#'
 #' @param ... Additional arguments passed to \code{fcstat}.
 #'
+#' @importFrom clime clime
 #' @importFrom flare sugm
 #'
 #' @return Estimated precision matrix.
 #'
 #' @noRd
 
-fcstat_clime <- function(S, lambda, ...) {
-  hatOmega <- flare::sugm(S, lambda = lambda, method = "clime", verbose = FALSE)$icov[[1]]
-  # clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE)$Omegalist[[1]]
+fcstat_clime <- function(S, lambda, utilopt,...) {
+  if (utilopt == "clime_primaldual") {
+    hatOmega <- clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE,
+                             linsolver = "primaldual")$Omegalist[[1]]
+  } else if (utilopt == "clime_simplex") {
+    hatOmega <- clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE,
+                             linsolver = "simplex")$Omegalist[[1]]
+  } else if (utilopt == "flare") {
+    hatOmega <- flare::sugm(S, lambda = lambda, method = "clime", verbose = FALSE)$icov[[1]]
+  }
   return(hatOmega)
 }
 
