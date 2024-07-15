@@ -9,12 +9,13 @@ fcstat.est(
   method,
   base = "cov",
   lambda = NULL,
-  nlambda = 50,
+  nlambda = 20,
   lambda.min.ratio = NULL,
   gamma = NULL,
   target = 0,
-  initial = "linshrink",
-  utilopt = "flare"
+  initial = "glasso",
+  utilopt = "flare",
+  cores = 1
 )
 }
 \arguments{
@@ -48,7 +49,7 @@ applicable when \code{X} is the n-by-p data matrix.}
 The default is \code{NULL}, which generates its own \code{lambda} sequence based on
 \code{nlambda} and \code{lambda.min.ratio}.}
 
-\item{nlambda}{An integer (default = 50) specifying the number of \code{lambda} values
+\item{nlambda}{An integer (default = 20) specifying the number of \code{lambda} values
 to be generated when \code{lambda = NULL}.}
 
 \item{lambda.min.ratio}{A scalar specifying the fraction of the maximum \code{lambda}
@@ -77,7 +78,7 @@ for all elements, specifying the target matrix for \code{method = "ridge"} or
 set to \code{"atan"}, \code{"exp"}, \code{"scad"}, or \code{"mcp"}; or specifying
 \eqn{\tilde{\Omega}} of the adaptive weight for \code{method = "adapt"}, calculated as
 \eqn{|\tilde{\omega}_{ij}|^{-\gamma}}, where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
-Some options are also offered when a character string is provided (default "linshrink"),
+Some options are also offered when a character string is provided (default "glasso"),
 including:
 \itemize{
 \item "glasso": use the precision matrix estimate derived from the graphical lasso.
@@ -109,19 +110,19 @@ the package \code{clime} with the linsolver \code{simplex}.
 \item "flare": the utility function \code{\link[flare]{sugm}} from
 the package \code{flare}.
 }}
+
+\item{cores}{An integer (default = 1) specifying the number of cores to use for
+parallel execution.}
 }
 \value{
-An object with S3 class "fcstat.est" containing the following components: \describe{
-\item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and \code{gamma} grid.}
-\item{X}{The actual n-by-p data matrix used in the program.}
-\item{S}{The p-by-p calculation base matrix used in the program.}
-\item{method}{The statistical method used for estimating precision matrix.}
-\item{base}{The calculation base.}
+An object with S3 class "fcstat.est" containing the following components:
+\describe{
+\item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
+\code{gamma} grid.}
 \item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
 \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
-\item{target}{The target matrix.}
-\item{intial}{The initial estimate or \eqn{\tilde{\Omega}} of the adaptive weight.}
-\item{utilopt}{The utility option.}
+\item{X}{The n-by-p data matrix used in the program.}
+\item{S}{The p-by-p calculation base matrix used in the program.}
 }
 }
 \description{

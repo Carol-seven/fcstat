@@ -1,3 +1,89 @@
+#' Estimation for precision matrix
+#'
+#' @description
+#' Estimate a sparse precision matrix using a collection of statistical methods.
+#'
+#' @param method A character string specifying the statistical method for estimating
+#' precision matrix. Available options include: \enumerate{
+#' \item "glasso": graphical lasso \insertCite{friedman2008sparse}{fcstat}.
+#' \item "ridge": graphical ridge \insertCite{vanwieringen2016ridge}{fcstat}.
+#' \item "elnet": graphical elastic net \insertCite{zou2005regularization}{fcstat}.
+#' \item "clime": constrained L1-minimization for inverse (covariance) matrix estimation
+#' \insertCite{cai2011aconstrained}{fcstat}.
+#' \item "tiger": tuning-insensitive graph estimation and regression
+#' \insertCite{liu2017tiger}{fcstat}.
+#' }
+#'
+#' @param X An n-by-p data matrix with sample size n and dimension p.
+#'
+#' @param S A p-by-p sample covariance/correlation matrix with dimension p.
+#'
+#' @param lambda A non-negative scalar specifying the regularization parameter.
+#'
+#' @param gamma A scalar specifying the hyperparameter for \code{method} set to
+#' \code{"elnet"}.
+#'
+#' @param target A p-by-p symmetric matrix or a scalar (default = 0) serves as the value
+#' for all elements, specifying the target matrix for \code{method = "ridge"} and
+#' \code{method = "elnet"}.
+#'
+#' @param utilopt A character string specifying the utility option to use for
+#' \code{method = "clime"}: \itemize{
+#' \item "clime_primaldual": the utility function \code{\link[clime]{clime}} from
+#' the package \code{clime} with the linsolver \code{primaldual}.
+#' \item "clime_simplex": the utility function \code{\link[clime]{clime}} from
+#' the package \code{clime} with the linsolver \code{simplex}.
+#' \item "flare": the utility function \code{\link[flare]{sugm}} from
+#' the package \code{flare}.
+#' }
+#'
+#' @import RBGL
+#' @import graph
+#' @importFrom GLassoElnetFast gelnet
+#' @importFrom clime clime
+#' @importFrom flare sugm
+#' @importFrom glassoFast glassoFast
+#' @importFrom huge huge.tiger
+#' @importFrom rags2ridges ridgeP
+#' @importFrom Rdpack reprompt
+#'
+#' @return Estimated precision matrix.
+#'
+#' @noRd
+
+fcstat_method <- function(method, X = NULL, S = NULL,
+                          lambda = NULL, gamma = NULL,
+                          target = 0, utilopt = NULL) {
+  if (method == "glasso") {
+    hatOmega <- glassoFast::glassoFast(S, rho = lambda)$wi
+  } else if (method == "ridge") {
+    if (is.numeric(target) & length(target) == 1) {
+      target <- matrix(target, ncol(S), ncol(S))
+    }
+    hatOmega <- rags2ridges::ridgeP(S, lambda = lambda, target = target)
+  } else if (method == "elnet") {
+    if (is.numeric(target) & length(target) == 1) {
+      target <- matrix(target, ncol(S), ncol(S))
+    }
+    hatOmega <- GLassoElnetFast::gelnet(S, lambda = lambda, alpha = gamma, Target = target)$Theta
+  } else if (method == "clime") {
+    if (utilopt == "clime_primaldual") {
+      hatOmega <- clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE,
+                               linsolver = "primaldual")$Omegalist[[1]]
+    } else if (utilopt == "clime_simplex") {
+      hatOmega <- clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE,
+                               linsolver = "simplex")$Omegalist[[1]]
+    } else if (utilopt == "flare") {
+      hatOmega <- flare::sugm(S, lambda = lambda, method = "clime", verbose = FALSE)$icov[[1]]
+    }
+  } else if (method == "tiger") {
+    hatOmega <- huge::huge.tiger(X, lambda = lambda, verbose = FALSE)$icov[[1]]
+  }
+  return(hatOmega)
+}
+
+
+##----------------------------------------------------------------------------------------
 #' Graphical lasso
 #'
 #' @description
@@ -27,7 +113,7 @@ fcstat_glasso <- function(S, lambda, ...) {
 #' Graphical ridge
 #'
 #' @description
-#' Estimate a precision matrix using a ridge penalty.
+#' Estimate a precision matrix using a ridge (L2) penalty.
 #'
 #' @param S The sampmle covariance or correlation matrix, a p-by-p symmetric matrix.
 #'

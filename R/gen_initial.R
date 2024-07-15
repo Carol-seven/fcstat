@@ -2,7 +2,7 @@
 #'
 #' @description
 #' The initial estimate for \code{method} set to \code{"atan"}, \code{"exp"},
-#' \code{"scad"}, or \code{"mcp"}; or specifies \eqn{\tilde{\Omega}} of the adaptive
+#' \code{"scad"}, and \code{"mcp"}; or specifies \eqn{\tilde{\Omega}} of the adaptive
 #' weight for \code{method = "adapt"}, calculated as \eqn{|\tilde{\omega}_{ij}|^{-\gamma}},
 #' where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
 #'
@@ -28,7 +28,7 @@
 #' \item "glasso": use the precision matrix estimate derived from the graphical lasso.
 #' }
 #'
-#' @param parameter The parameter grid.
+#' @param lambda Grid of non-negative scalars for the regularization parameter.
 #'
 #' @importFrom glassoFast glassoFast
 #' @importFrom methods is
@@ -37,30 +37,31 @@
 #'
 #' @noRd
 
-gen_initial <- function(X, S, base, initial, parameter) {
+gen_initial <- function(X, S, base, initial, lambda) {
 
   if (is(initial, "matrix")) {
-    Omega <- replicate(nrow(parameter), initial, simplify = FALSE)
+    Omega <- replicate(length(lambda), initial, simplify = FALSE)
 
   } else if (is(initial, "array")) {
     Omega <- lapply(1:dim(initial)[3], function(z) initial[,,z])
 
   } else if (initial == "invS") {
-    Omega <- replicate(nrow(parameter), solve(S), simplify = FALSE)
+    Omega <- replicate(length(lambda), solve(S), simplify = FALSE)
 
   } else if (initial == "linshrink") {
-    Omega <- replicate(nrow(parameter),
+    Omega <- replicate(length(lambda),
                        solve(ledoit_wolf_est(X, method = "linshrink", res = base)),
                        simplify = FALSE)
 
   } else if (initial == "nlshrink") {
-    Omega <- replicate(nrow(parameter),
+    Omega <- replicate(length(lambda),
                        solve(ledoit_wolf_est(X, method = "nlshrink", res = base)),
                        simplify = FALSE)
 
   } else if (initial == "glasso") {
-    Omega <- lapply(parameter$lambda, function(z) glassoFast::glassoFast(S, rho = z)$wi)
+    Omega <- lapply(lambda, function(z) glassoFast::glassoFast(S, rho = z)$wi)
   }
 
   return(Omega)
 }
+

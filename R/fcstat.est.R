@@ -34,7 +34,7 @@
 #' The default is \code{NULL}, which generates its own \code{lambda} sequence based on
 #' \code{nlambda} and \code{lambda.min.ratio}.
 #'
-#' @param nlambda An integer (default = 50) specifying the number of \code{lambda} values
+#' @param nlambda An integer (default = 20) specifying the number of \code{lambda} values
 #' to be generated when \code{lambda = NULL}.
 #'
 #' @param lambda.min.ratio A scalar specifying the fraction of the maximum \code{lambda}
@@ -63,7 +63,7 @@
 #' set to \code{"atan"}, \code{"exp"}, \code{"scad"}, or \code{"mcp"}; or specifying
 #' \eqn{\tilde{\Omega}} of the adaptive weight for \code{method = "adapt"}, calculated as
 #' \eqn{|\tilde{\omega}_{ij}|^{-\gamma}}, where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
-#' Some options are also offered when a character string is provided (default "linshrink"),
+#' Some options are also offered when a character string is provided (default "glasso"),
 #' including:
 #' \itemize{
 #' \item "glasso": use the precision matrix estimate derived from the graphical lasso.
@@ -96,45 +96,52 @@
 #' the package \code{flare}.
 #' }
 #'
+#' @param cores An integer (default = 1) specifying the number of cores to use for
+#' parallel execution.
+#'
 #' @note
 #' For the method \code{tiger}, the estimation process solely relies on the raw n-by-p
 #' data \code{X} and does not utilize the argument \code{base}. This argument is not
 #' applicable for \code{tiger} and will have no effect if provided.
 #'
 #' @import foreach
+#' @importFrom doParallel registerDoParallel
 #' @importFrom glassoFast glassoFast
+#' @importFrom parallel detectCores
+#' @importFrom parallel makeCluster
+#' @importFrom parallel stopCluster
 #' @importFrom Rdpack reprompt
 #'
-#' @return An object with S3 class "fcstat.est" containing the following components: \describe{
-#' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and \code{gamma} grid.}
-#' \item{X}{The actual n-by-p data matrix used in the program.}
-#' \item{S}{The p-by-p calculation base matrix used in the program.}
-#' \item{method}{The statistical method used for estimating precision matrix.}
-#' \item{base}{The calculation base.}
+#' @return An object with S3 class "fcstat.est" containing the following components:
+#' \describe{
+#' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
+#' \code{gamma} grid.}
 #' \item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
 #' \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
-#' \item{target}{The target matrix.}
-#' \item{intial}{The initial estimate or \eqn{\tilde{\Omega}} of the adaptive weight.}
-#' \item{utilopt}{The utility option.}
+#' \item{X}{The n-by-p data matrix used in the program.}
+#' \item{S}{The p-by-p calculation base matrix used in the program.}
 #' }
 #'
 #' @references
 #' \insertAllCited{}
 #'
+#' @autoglobal
+#'
 #' @export
 
 fcstat.est <- function(
     X, method, base = "cov",
-    lambda = NULL, nlambda = 50, lambda.min.ratio = NULL,
+    lambda = NULL, nlambda = 20, lambda.min.ratio = NULL,
     gamma = NULL, ## for elnet, adapt, atan, exp, mcp, scad
     target = 0, ## for ridge, elnet
-    initial = "linshrink", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
-    utilopt = "flare") { ## utility option for clime
+    initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
+    utilopt = "flare", ## utility option for clime
+    cores = 1) {
 
   if (!method %in% c("glasso", "ridge", "elnet", "clime", "tiger",
                      "adapt", "atan", "exp", "mcp", "scad")) {
     stop("Error in method.
-         Available options: glasso, ridge, elnet, clime, tiger, adapt, atan, exp, mcp, scad")
+         Available options: 'glasso', 'ridge', 'elnet', 'clime', 'tiger', 'adapt', 'atan', 'exp', 'mcp', 'scad'.\n")
   }
 
   ## dimensionality
@@ -145,7 +152,6 @@ fcstat.est <- function(
     S <- X
     X <- NULL
   } else {
-    X <- scale(X)
     S <- eval(parse(text =  paste0(base, "(X)")))
   }
 
@@ -184,7 +190,6 @@ fcstat.est <- function(
     lambda.min <- lambda.min.ratio*lambda.max
     lambda <- exp(seq(log(lambda.min), log(lambda.max), length = nlambda))
   }
-  nlambda <- length(lambda)
 
   ## gamma grid
   if(all(is.na(gamma))) {
@@ -206,40 +211,82 @@ fcstat.est <- function(
   }
 
   ## parameter grid combination
-  parameter <- expand.grid(lambda = unique(lambda), gamma = unique(gamma))
+  parameter <- expand.grid(lambda = sort(unique(lambda)), gamma = sort(unique(gamma), na.last = TRUE))
 
-  ## compute the precision matrix estimator hatOmega along the parameter grid
-  if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
-    hatOmega <- foreach(k = 1:nrow(parameter)) %do% {
-      eval(parse(text = paste0(
-        "fcstat_", method,
-        "(X = X, S = S, lambda = parameter$lambda[k], gamma = parameter$gamma[k], target = target, utilopt = utilopt)"
-      )))
+  npara <- nrow(parameter)
+
+  if (npara > 1 & cores > 1) {
+
+    ## CPU cores
+    num.cores <- detectCores(all.tests = FALSE, logical = TRUE)
+    if (cores > num.cores) {
+      cat("The number of available CPU cores is ", num.cores, "!\n", sep = "")
     }
-  } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
-    if (all(grepl("^invS-", initial))) {
-      Omega <- tryCatch({
-        gen_initial(X, S, base, initial = "invS", parameter)
-      }, error = function(e) {
-         gen_initial(X, S, base, initial = sub("^invS-(.*)", "\\1", initial), parameter)
+    if (cores > npara) {
+      cores <- npara
+    }
+    cluster <- makeCluster(cores)
+    registerDoParallel(cluster)
+
+    ## compute the precision matrix estimator hatOmega along the parameter grid
+    if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
+      hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
+                          .export = c("fcstat_method")) %dopar% {
+                            fcstat_method(method = method, X = X, S = S,
+                                          lambda = parameter$lambda[k], gamma = parameter$gamma[k],
+                                          target = target, utilopt = utilopt)
+                          }
+    } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
+      if (all(grepl("^invS-", initial))) {
+        Omega <- tryCatch({
+          gen_initial(X, S, base, initial = "invS", parameter$lambda)
+        }, error = function(e) {
+          gen_initial(X, S, base, initial = sub("^invS-(.*)", "\\1", initial), parameter$lambda)
+        })
+      } else {
+        Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
+      }
+      hatOmega <- foreach(k = 1:npara) %dopar% {
+        lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
+                                    lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+        glassoFast::glassoFast(S, rho = lambda_mat)$wi
+      }
+    }
+
+    stopCluster(cluster)
+
+  } else {
+
+    ## compute the precision matrix estimator hatOmega along the parameter grid
+    if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
+      hatOmega <- lapply(1:npara, function(k) {
+        fcstat_method(method = method, X = X, S = S,
+                      lambda = parameter$lambda[k], gamma = parameter$gamma[k],
+                      target = target, utilopt = utilopt)
       })
-    } else {
-      Omega <- gen_initial(X, S, base, initial = initial, parameter)
+    } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
+      if (all(grepl("^invS-", initial))) {
+        Omega <- tryCatch({
+          gen_initial(X, S, base, initial = "invS", parameter$lambda)
+        }, error = function(e) {
+          gen_initial(X, S, base, initial = sub("^invS-(.*)", "\\1", initial), parameter$lambda)
+        })
+      } else {
+        Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
+      }
+      hatOmega <- lapply(1:npara, function(k) {
+        lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
+                                    lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+        return(glassoFast::glassoFast(S, rho = lambda_mat)$wi)
+      })
     }
-
-    hatOmega <- mapply(function(x, y, z) {
-      lambda_mat <- deriv(penalty = method, Omega = z, lambda = x, gamma = y)
-      glassoFast::glassoFast(S, rho = lambda_mat)$wi
-    }, x = parameter$lambda, y = parameter$gamma, z = Omega, SIMPLIFY = FALSE)
   }
 
   result <- list(hatOmega = hatOmega,
-                 X = X, S = S,
-                 method = method, base = base,
-                 lambda = parameter$lambda, gamma = parameter$gamma,
-                 target = if (method %in% c("ridge", "elnet")) target else NULL,
-                 initial = if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) initial else NULL,
-                 utilopt = if (method == "clime") utilopt else NULL)
+                 lambda = parameter$lambda,
+                 gamma = parameter$gamma,
+                 X = X,
+                 S = S)
   class(result) <- c("fcstat.est")
   return(result)
 

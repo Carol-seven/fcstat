@@ -8,6 +8,7 @@ fcstat(
   X,
   method,
   base = "cov",
+  n = NULL,
   lambda = NULL,
   nlambda = 50,
   lambda.min.ratio = NULL,
@@ -15,10 +16,10 @@ fcstat(
   target = 0,
   initial = "linshrink",
   utilopt = "flare",
-  n = NULL,
   crit = "CV",
   fold = 5,
-  ebic.tuning = 0.5
+  ebic.tuning = 0.5,
+  cores = 1
 )
 }
 \arguments{
@@ -27,7 +28,7 @@ fcstat(
 \item A p-by-p sample covariance/correlation matrix with dimension p.
 }}
 
-\item{method}{A character string specifying the statistical methods for estimating
+\item{method}{A character string specifying the statistical method for estimating
 precision matrix. Available options include: \enumerate{
 \item "glasso": graphical lasso \insertCite{friedman2008sparse}{fcstat}.
 \item "ridge": graphical ridge \insertCite{vanwieringen2016ridge}{fcstat}.
@@ -47,6 +48,10 @@ data matrix.
 \item{base}{A character string (default = "cov") specifying the calculation base,
 either the covariance matrix ("cov") or the correlation matrix ("cor"). This is only
 applicable when \code{X} is the n-by-p data matrix.}
+
+\item{n}{An integer (default = NULL) specifying the sample size. This is only required
+when the input matrix \code{X} is a p-by-p sample covariance/correlation matrix with
+dimension p.}
 
 \item{lambda}{Grid of non-negative scalars for the regularization parameter.
 The default is \code{NULL}, which generates its own \code{lambda} sequence based on
@@ -114,10 +119,6 @@ the package \code{clime} with the linsolver \code{simplex}.
 the package \code{flare}.
 }}
 
-\item{n}{An integer (default - NULL) specifying the sample size. This is only required
-when the input matrix \code{X} is a p-by-p sample covariance/correlation matrix with
-dimension p.}
-
 \item{crit}{A string (default = "CV") specifying the parameter selection method to use.
 Available options include: \enumerate{
 \item "AIC": Akaike information criterion \insertCite{akaike1973information}{fcstat}.
@@ -131,26 +132,33 @@ Available options include: \enumerate{
 
 \item{ebic.tuning}{A scalar (default = 0.5) specifying the tuning parameter to
 calculate for \code{crit = "EBIC"}.}
+
+\item{cores}{An integer (default = 1) specifying the number of cores to use for
+parallel execution.}
 }
 \value{
 \itemize{
-\item For \code{crit = "CV"}, an object with S3 class "fcstat.sel" containing the
-following components: \describe{
+\item For \code{crit = "CV"}, an object with S3 class "fcstat" containing the following
+components: \describe{
 \item{hatOmega_opt}{The estimated precision matrix.}
 \item{lambda_opt}{The optimal regularization parameter.}
 \item{gamma_opt}{The optimal hyperparameter.}
 \item{loss_opt}{The optimal k-fold loss.}
+\item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
+\code{gamma} grid.}
 \item{lambda}{The actual lambda grid used in the program.}
 \item{gamma}{The actual gamma grid used in the program.}
 \item{loss.mean}{The mean of k-fold loss for each parameter grid value.}
 \item{loss.sd}{The standard deviation of k-fold loss for each parameter grid value.}
 }
-\item For other criteria, an object with S3 class "fcstat.sel" containing the following
+\item For other criteria, an object with S3 class "fcstat" containing the following
 components: \describe{
 \item{hatOmega_opt}{The estimated precision matrix.}
 \item{lambda_opt}{The optimal regularization parameter.}
 \item{gamma_opt}{The optimal hyperparameter.}
 \item{score_opt}{The optimal information criterion score.}
+\item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
+\code{gamma} grid.}
 \item{lambda}{The actual lambda grid used in the program.}
 \item{gamma}{The actual gamma grid used in the program.}
 \item{score}{The information criterion score for each parameter grid value.}
