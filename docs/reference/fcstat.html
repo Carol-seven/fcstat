@@ -44,11 +44,11 @@
 <span>  base <span class="op">=</span> <span class="st">"cov"</span>,</span>
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  nlambda <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  nlambda <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  lambda.min.ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  target <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>  initial <span class="op">=</span> <span class="st">"linshrink"</span>,</span>
+<span>  initial <span class="op">=</span> <span class="st">"glasso"</span>,</span>
 <span>  utilopt <span class="op">=</span> <span class="st">"flare"</span>,</span>
 <span>  crit <span class="op">=</span> <span class="st">"CV"</span>,</span>
 <span>  fold <span class="op">=</span> <span class="fl">5</span>,</span>
@@ -152,25 +152,13 @@ set to <code>"atan"</code>, <code>"exp"</code>, <code>"scad"</code>, or <code>"m
 \(|\tilde{\omega}_{ij}|^{-\gamma}\), where \(\tilde{\Omega} := (\tilde{\omega}_{ij})\).
 Some options are also offered when a character string is provided (default "linshrink"),
 including:</p><ul><li><p>"glasso": use the precision matrix estimate derived from the graphical lasso.</p></li>
+<li><p>"invS": use the inverse calculation base matrix if the matrix is invertible.</p></li>
 <li><p>"linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
 shrinakge estimator of the population covariance matrix
 (Ledoit and Wolf 2004)
 .</p></li>
 <li><p>"nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
 shrinakge estimator of the population covariance matrix
-(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
-.</p></li>
-<li><p>"invS-glasso": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from the graphical
-lasso.</p></li>
-<li><p>"invS-linshrink": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-linear shrinakge estimator of the population covariance matrix
-(Ledoit and Wolf 2004)
-.</p></li>
-<li><p>"invS-nlshrink": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-non-linear shrinkage estimator of the population covariance matrix
 (Ledoit and Wolf 2015; Ledoit and Wolf 2017)
 .</p></li>
 </ul></dd>

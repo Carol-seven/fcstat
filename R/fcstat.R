@@ -70,22 +70,12 @@
 #' including:
 #' \itemize{
 #' \item "glasso": use the precision matrix estimate derived from the graphical lasso.
+#' \item "invS": use the inverse calculation base matrix if the matrix is invertible.
 #' \item "linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
 #' shrinakge estimator of the population covariance matrix
 #' \insertCite{ledoit2004well}{fcstat}.
 #' \item "nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
 #' shrinakge estimator of the population covariance matrix
-#' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
-#' \item "invS-glasso": use the inverse calculation base matrix if the matrix is
-#' invertible; otherwise, use the precision matrix estimate derived from the graphical
-#' lasso.
-#' \item "invS-linshrink": use the inverse calculation base matrix if the matrix is
-#' invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-#' linear shrinakge estimator of the population covariance matrix
-#' \insertCite{ledoit2004well}{fcstat}.
-#' \item "invS-nlshrink": use the inverse calculation base matrix if the matrix is
-#' invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-#' non-linear shrinkage estimator of the population covariance matrix
 #' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 #' }
 #'
@@ -162,10 +152,10 @@
 
 fcstat <- function(
     X, method, base = "cov", n = NULL,
-    lambda = NULL, nlambda = 50, lambda.min.ratio = NULL,
+    lambda = NULL, nlambda = 20, lambda.min.ratio = NULL,
     gamma = NA, ## for elnet, adapt, atan, exp, mcp, scad
     target = 0, ## for ridge, elnet
-    initial = "linshrink", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
+    initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
     utilopt = "flare", ## utility option for clime
     crit = "CV", fold = 5, ebic.tuning = 0.5,
     cores = 1) {
@@ -216,8 +206,8 @@ fcstat <- function(
 
         ## loss: negative log-likelihood
         for (k in 1:npara) {
-          loss[j,k] <- - log(det(cvlist$hatOmega[[k]])) + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
-          # determinant(cvlist$hatOmega[[k]])$modulus[1]
+          loss[j,k] <- - determinant(cvlist$hatOmega[[k]])$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
+          # log(det(cvlist$hatOmega[[k]]))
         }
       }
 

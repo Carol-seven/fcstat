@@ -10,11 +10,11 @@ fcstat(
   base = "cov",
   n = NULL,
   lambda = NULL,
-  nlambda = 50,
+  nlambda = 20,
   lambda.min.ratio = NULL,
   gamma = NA,
   target = 0,
-  initial = "linshrink",
+  initial = "glasso",
   utilopt = "flare",
   crit = "CV",
   fold = 5,
@@ -90,22 +90,12 @@ Some options are also offered when a character string is provided (default "lins
 including:
 \itemize{
 \item "glasso": use the precision matrix estimate derived from the graphical lasso.
+\item "invS": use the inverse calculation base matrix if the matrix is invertible.
 \item "linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
 shrinakge estimator of the population covariance matrix
 \insertCite{ledoit2004well}{fcstat}.
 \item "nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
 shrinakge estimator of the population covariance matrix
-\insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
-\item "invS-glasso": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from the graphical
-lasso.
-\item "invS-linshrink": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-linear shrinakge estimator of the population covariance matrix
-\insertCite{ledoit2004well}{fcstat}.
-\item "invS-nlshrink": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-non-linear shrinkage estimator of the population covariance matrix
 \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 }}
 

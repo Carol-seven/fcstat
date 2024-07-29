@@ -67,22 +67,12 @@
 #' including:
 #' \itemize{
 #' \item "glasso": use the precision matrix estimate derived from the graphical lasso.
+#' \item "invS": use the inverse calculation base matrix if the matrix is invertible.
 #' \item "linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
 #' shrinakge estimator of the population covariance matrix
 #' \insertCite{ledoit2004well}{fcstat}.
 #' \item "nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
 #' shrinakge estimator of the population covariance matrix
-#' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
-#' \item "invS-glasso": use the inverse calculation base matrix if the matrix is
-#' invertible; otherwise, use the precision matrix estimate derived from the graphical
-#' lasso.
-#' \item "invS-linshrink": use the inverse calculation base matrix if the matrix is
-#' invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-#' linear shrinakge estimator of the population covariance matrix
-#' \insertCite{ledoit2004well}{fcstat}.
-#' \item "invS-nlshrink": use the inverse calculation base matrix if the matrix is
-#' invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-#' non-linear shrinkage estimator of the population covariance matrix
 #' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 #' }
 #'
@@ -237,15 +227,7 @@ fcstat.est <- function(
                                           target = target, utilopt = utilopt)
                           }
     } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
-      if (all(grepl("^invS-", initial))) {
-        Omega <- tryCatch({
-          gen_initial(X, S, base, initial = "invS", parameter$lambda)
-        }, error = function(e) {
-          gen_initial(X, S, base, initial = sub("^invS-(.*)", "\\1", initial), parameter$lambda)
-        })
-      } else {
-        Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
-      }
+      Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
       hatOmega <- foreach(k = 1:npara) %dopar% {
         lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
                                     lambda = parameter$lambda[k], gamma = parameter$gamma[k])
@@ -265,15 +247,7 @@ fcstat.est <- function(
                       target = target, utilopt = utilopt)
       })
     } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
-      if (all(grepl("^invS-", initial))) {
-        Omega <- tryCatch({
-          gen_initial(X, S, base, initial = "invS", parameter$lambda)
-        }, error = function(e) {
-          gen_initial(X, S, base, initial = sub("^invS-(.*)", "\\1", initial), parameter$lambda)
-        })
-      } else {
-        Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
-      }
+      Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
       hatOmega <- lapply(1:npara, function(k) {
         lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
                                     lambda = parameter$lambda[k], gamma = parameter$gamma[k])

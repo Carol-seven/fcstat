@@ -145,25 +145,13 @@ set to <code>"atan"</code>, <code>"exp"</code>, <code>"scad"</code>, or <code>"m
 \(|\tilde{\omega}_{ij}|^{-\gamma}\), where \(\tilde{\Omega} := (\tilde{\omega}_{ij})\).
 Some options are also offered when a character string is provided (default "glasso"),
 including:</p><ul><li><p>"glasso": use the precision matrix estimate derived from the graphical lasso.</p></li>
+<li><p>"invS": use the inverse calculation base matrix if the matrix is invertible.</p></li>
 <li><p>"linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
 shrinakge estimator of the population covariance matrix
 (Ledoit and Wolf 2004)
 .</p></li>
 <li><p>"nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
 shrinakge estimator of the population covariance matrix
-(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
-.</p></li>
-<li><p>"invS-glasso": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from the graphical
-lasso.</p></li>
-<li><p>"invS-linshrink": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-linear shrinakge estimator of the population covariance matrix
-(Ledoit and Wolf 2004)
-.</p></li>
-<li><p>"invS-nlshrink": use the inverse calculation base matrix if the matrix is
-invertible; otherwise, use the precision matrix estimate derived from Ledoit-Wolf
-non-linear shrinkage estimator of the population covariance matrix
 (Ledoit and Wolf 2015; Ledoit and Wolf 2017)
 .</p></li>
 </ul></dd>
