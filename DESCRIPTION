@@ -28,7 +28,12 @@ Imports:
     nlshrink,
     parallel,
     rags2ridges,
-    methods
+    methods,
+    ADMMsigma,
+    CVglasso,
+    CovTools,
+    glasso,
+    porridge
 Depends: doParallel
 Suggests: 
     roxyglobals

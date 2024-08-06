@@ -99,14 +99,33 @@ shrinakge estimator of the population covariance matrix
 \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 }}
 
-\item{utilopt}{A character string specifying the utility option to use for
-\code{method = "clime"}: \itemize{
-\item "clime_primaldual": the utility function \code{\link[clime]{clime}} from
-the package \code{clime} with the linsolver \code{primaldual}.
-\item "clime_simplex": the utility function \code{\link[clime]{clime}} from
-the package \code{clime} with the linsolver \code{simplex}.
-\item "flare": the utility function \code{\link[flare]{sugm}} from
-the package \code{flare}.
+\item{utilopt}{A character string specifying the utility option to use: \enumerate{
+\item For \code{method = "glasso"}: \itemize{
+\item "CVglasso": the utility function from the package \code{\link[CVglasso]{CVglasso}}.
+\item "CovTools": the utility function from the package \code{\link[CovTools]{CovTools}}.
+\item "glasso": the utility function from the package \code{\link[glasso]{glasso}}.
+\item "glassoFast": the utility function from the package \code{\link[glassoFast]{glassoFast}}.
+\item "huge": the utility function from the package \code{\link[huge]{huge}}.
+}
+\item For \code{method = "ridge"}: \itemize{
+\item "porridge": the utility function from the package \code{\link[porridge]{porridge}}.
+\item "rags2ridges": the utility function from the package \code{\link[rags2ridges]{rags2ridges}}.
+}
+\item For \code{method = "elnet"}: \itemize{
+\item "ADMMsigma": the utility function from the package \code{\link[ADMMsigma]{ADMMsigma}}.
+\item "GLassoElnetFast": the utility function from the package \code{\link[GLassoElnetFast]{GLassoElnetFast}}.
+}
+\item For \code{method = "clime"}: \itemize{
+\item "clime_primaldual": the utility function from the package \code{\link[clime]{clime}}
+with the linsolver \code{primaldual}.
+\item "clime_simplex": the utility function from the package \code{\link[clime]{clime}}
+with the linsolver \code{simplex}.
+\item "flare": the utility function from the package \code{\link[flare]{flare}}.
+}
+\item For \code{method = "tiger"}: \itemize{
+\item "flare": the utility function from the package \code{\link[flare]{flare}}.
+\item "huge": the utility function from the package \code{\link[huge]{huge}}.
+}
 }}
 
 \item{crit}{A string (default = "CV") specifying the parameter selection method to use.

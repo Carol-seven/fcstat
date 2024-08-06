@@ -27,24 +27,49 @@
 #' for all elements, specifying the target matrix for \code{method = "ridge"} and
 #' \code{method = "elnet"}.
 #'
-#' @param utilopt A character string specifying the utility option to use for
-#' \code{method = "clime"}: \itemize{
-#' \item "clime_primaldual": the utility function \code{\link[clime]{clime}} from
-#' the package \code{clime} with the linsolver \code{primaldual}.
-#' \item "clime_simplex": the utility function \code{\link[clime]{clime}} from
-#' the package \code{clime} with the linsolver \code{simplex}.
-#' \item "flare": the utility function \code{\link[flare]{sugm}} from
-#' the package \code{flare}.
+#' @param utilopt A character string specifying the utility option to use: \enumerate{
+#' \item For \code{method = "glasso"}: \itemize{
+#' \item "CVglasso": the utility function from the package \code{\link[CVglasso]{CVglasso}}.
+#' \item "CovTools": the utility function from the package \code{\link[CovTools]{CovTools}}.
+#' \item "glasso": the utility function from the package \code{\link[glasso]{glasso}}.
+#' \item "glassoFast": the utility function from the package \code{\link[glassoFast]{glassoFast}}.
+#' \item "huge": the utility function from the package \code{\link[huge]{huge}}.
+#' }
+#' \item For \code{method = "ridge"}: \itemize{
+#' \item "porridge": the utility function from the package \code{\link[porridge]{porridge}}.
+#' \item "rags2ridges": the utility function from the package \code{\link[rags2ridges]{rags2ridges}}.
+#' }
+#' \item For \code{method = "elnet"}: \itemize{
+#' \item "ADMMsigma": the utility function from the package \code{\link[ADMMsigma]{ADMMsigma}}.
+#' \item "GLassoElnetFast": the utility function from the package \code{\link[GLassoElnetFast]{GLassoElnetFast}}.
+#' }
+#' \item For \code{method = "clime"}: \itemize{
+#' \item "clime_primaldual": the utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver \code{primaldual}.
+#' \item "clime_simplex": the utility function from the package \code{\link[clime]{clime}}
+#' with the linsolver \code{simplex}.
+#' \item "flare": the utility function from the package \code{\link[flare]{flare}}.
+#' }
+#' \item For \code{method = "tiger"}: \itemize{
+#' \item "flare": the utility function from the package \code{\link[flare]{flare}}.
+#' \item "huge": the utility function from the package \code{\link[huge]{huge}}.
+#' }
 #' }
 #'
 #' @import RBGL
 #' @import graph
+#' @importFrom CVglasso CVglasso
+#' @importFrom CovTools PreEst.glasso
+#' @importFrom glasso glasso
+#' @importFrom glassoFast glassoFast
+#' @importFrom huge huge.glasso
+#' @importFrom porridge ridgePgen
+#' @importFrom rags2ridges ridgeP
+#' @importFrom ADMMsigma ADMMsigma
 #' @importFrom GLassoElnetFast gelnet
 #' @importFrom clime clime
 #' @importFrom flare sugm
-#' @importFrom glassoFast glassoFast
 #' @importFrom huge huge.tiger
-#' @importFrom rags2ridges ridgeP
 #' @importFrom Rdpack reprompt
 #'
 #' @return Estimated precision matrix.
@@ -55,17 +80,35 @@ fcstat_method <- function(method, X = NULL, S = NULL,
                           lambda = NULL, gamma = NULL,
                           target = 0, utilopt = NULL) {
   if (method == "glasso") {
-    hatOmega <- glassoFast::glassoFast(S, rho = lambda)$wi
+    if (utilopt == "CVglasso") {
+      hatOmega <- CVglasso::CVglasso(S = S, lam = lambda)$Omega
+    } else if (utilopt == "CovTools") {
+      hatOmega <- CovTools::PreEst.glasso(X, method = list(type = "fixed", param = lambda))$C
+    } else if (utilopt == "glasso") {
+      hatOmega <- glasso::glasso(s = S, rho = lambda)$wi
+    } else if (utilopt == "glassoFast") {
+      hatOmega <- glassoFast::glassoFast(S = S, rho = lambda)$wi
+    } else if (utilopt == "huge") {
+      hatOmega <- huge::huge.glasso(x = S, lambda = lambda, verbose = FALSE)$icov[[1]]
+    }
   } else if (method == "ridge") {
     if (is.numeric(target) & length(target) == 1) {
       target <- matrix(target, ncol(S), ncol(S))
     }
-    hatOmega <- rags2ridges::ridgeP(S, lambda = lambda, target = target)
+    if (utilopt == "porridge") {
+      hatOmega <- porridge::ridgePgen(S = S, lambda = matrix(lambda, ncol(S), ncol(S)), target = target)
+    } else if (utilopt == "rags2ridges") {
+      hatOmega <- rags2ridges::ridgeP(S = S, lambda = lambda, target = target)
+    }
   } else if (method == "elnet") {
     if (is.numeric(target) & length(target) == 1) {
       target <- matrix(target, ncol(S), ncol(S))
     }
-    hatOmega <- GLassoElnetFast::gelnet(S, lambda = lambda, alpha = gamma, Target = target)$Theta
+    if (utilopt == "ADMMsigma") {
+      hatOmega <- ADMMsigma::ADMMsigma(S = S, lam = lambda, alpha = gamma)$Omega
+    } else if (utilopt == "GLassoElnetFast") {
+      hatOmega <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = gamma, Target = target)$Theta
+    }
   } else if (method == "clime") {
     if (utilopt == "clime_primaldual") {
       hatOmega <- clime::clime(S, lambda = lambda, sigma = TRUE, standardize = FALSE,
@@ -77,7 +120,11 @@ fcstat_method <- function(method, X = NULL, S = NULL,
       hatOmega <- flare::sugm(S, lambda = lambda, method = "clime", verbose = FALSE)$icov[[1]]
     }
   } else if (method == "tiger") {
-    hatOmega <- huge::huge.tiger(X, lambda = lambda, verbose = FALSE)$icov[[1]]
+    if (utilopt == "flare") {
+      hatOmega <- flare::sugm(X, lambda = lambda, method = "tiger", verbose = FALSE)$icov[[1]]
+    } else if (utilopt == "huge") {
+      hatOmega <- huge::huge.tiger(X, lambda = lambda, verbose = FALSE)$icov[[1]]
+    }
   }
   return(hatOmega)
 }
