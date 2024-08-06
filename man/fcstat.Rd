@@ -102,7 +102,7 @@ shrinakge estimator of the population covariance matrix
 \item{utilopt}{A character string specifying the utility option to use: \enumerate{
 \item For \code{method = "glasso"}: \itemize{
 \item "CVglasso": the utility function from the package \code{\link[CVglasso]{CVglasso}}.
-\item "CovTools": the utility function from the package \code{\link[CovTools]{CovTools}}.
+\item "CovTools": the utility function from the package CovTools.
 \item "glasso": the utility function from the package \code{\link[glasso]{glasso}}.
 \item "glassoFast": the utility function from the package \code{\link[glassoFast]{glassoFast}}.
 \item "huge": the utility function from the package \code{\link[huge]{huge}}.
@@ -113,7 +113,7 @@ shrinakge estimator of the population covariance matrix
 }
 \item For \code{method = "elnet"}: \itemize{
 \item "ADMMsigma": the utility function from the package \code{\link[ADMMsigma]{ADMMsigma}}.
-\item "GLassoElnetFast": the utility function from the package \code{\link[GLassoElnetFast]{GLassoElnetFast}}.
+\item "GLassoElnetFast": the utility function from the package GLassoElnetFast.
 }
 \item For \code{method = "clime"}: \itemize{
 \item "clime_primaldual": the utility function from the package \code{\link[clime]{clime}}
