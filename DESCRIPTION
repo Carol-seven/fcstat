@@ -2,45 +2,50 @@ Package: fcstat
 Title: Statistical Methods for Functional Connectivity
 Version: 0.1.0
 Authors@R: c(
-    person(given = "Shiying", family = "Xiao", email = "shiying.xiao@outlook.com",
-           role = c("aut", "cre"), comment = c(ORCID = "0000-0002-8846-3258")),
-    person(given = "Jun", family = "Yan", email = "jun.yan@uconn.edu",
-           role = "aut", comment = c(ORCID = "0000-0003-4401-7296")),
-    person(given = "Panpan", family = "Zhang", email = "panpan.zhang@vumc.org",
-           role = "aut", comment = c(ORCID = "0000-0002-8211-5930")))
+    person("Shiying", "Xiao", , "shiying.xiao@outlook.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8846-3258")),
+    person("Jun", "Yan", , "jun.yan@uconn.edu", role = "aut",
+           comment = c(ORCID = "0000-0003-4401-7296")),
+    person("Panpan", "Zhang", , "panpan.zhang@vumc.org", role = "aut",
+           comment = c(ORCID = "0000-0002-8211-5930"))
+  )
 Maintainer: Shiying Xiao <shiying.xiao@outlook.com>
-Description: Statistical methods for estimating functional connectivity analysis in brain networks.
+Description: Statistical methods for estimating functional connectivity
+    analysis in brain networks.
 License: GPL (>= 3)
-Encoding: UTF-8
 URL: https://github.com/Carol-seven/fcstat
 BugReports: https://github.com/Carol-seven/fcstat/issues
-RoxygenNote: 7.3.2
+Depends: 
+    doParallel
 Imports: 
-    GLassoElnetFast,
-    RBGL,
-    Rdpack,
+    ADMMsigma,
     clime,
+    CovTools,
+    CVglasso,
     flare,
     foreach,
+    glasso,
+    GLassoElnetFast,
     glassoFast,
     graph,
     huge,
+    methods,
     nlshrink,
     parallel,
+    porridge,
     rags2ridges,
-    methods,
-    ADMMsigma,
-    CVglasso,
-    CovTools,
-    glasso,
-    porridge
-Depends: doParallel
+    RBGL,
+    Rdpack
 Suggests: 
     roxyglobals
-Roxygen: list(roclets = c("collate", "namespace", "rd",
-    "roxyglobals::global_roclet"))
-RdMacros: Rdpack
+RdMacros: 
+    Rdpack
+Remotes: 
+    TobiasRuckstuhl/GLassoElnetFast
 biocViews: RBGL, graph
-Remotes: TobiasRuckstuhl/GLassoElnetFast
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
+Encoding: UTF-8
+Roxygen: list(roclets = c("collate", "namespace", "rd",
+    "roxyglobals::global_roclet"))
+RoxygenNote: 7.3.2

@@ -165,14 +165,28 @@ shrinakge estimator of the population covariance matrix
 
 
 <dt id="arg-utilopt">utilopt<a class="anchor" aria-label="anchor" href="#arg-utilopt"></a></dt>
-<dd><p>A character string specifying the utility option to use for
-<code>method = "clime"</code>:</p><ul><li><p>"clime_primaldual": the utility function <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code> from
-the package <code>clime</code> with the linsolver <code>primaldual</code>.</p></li>
-<li><p>"clime_simplex": the utility function <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code> from
-the package <code>clime</code> with the linsolver <code>simplex</code>.</p></li>
-<li><p>"flare": the utility function <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code> from
-the package <code>flare</code>.</p></li>
-</ul></dd>
+<dd><p>A character string specifying the utility option to use:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"CVglasso": the utility function from the package <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code>.</p></li>
+<li><p>"CovTools": the utility function from the package CovTools.</p></li>
+<li><p>"glasso": the utility function from the package <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
+<li><p>"glassoFast": the utility function from the package <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
+<li><p>"huge": the utility function from the package <code><a href="https://rdrr.io/pkg/huge/man/huge.html" class="external-link">huge</a></code>.</p></li>
+</ul></li>
+<li><p>For <code>method = "ridge"</code>:</p><ul><li><p>"porridge": the utility function from the package <code><a href="https://rdrr.io/pkg/porridge/man/porridge-package.html" class="external-link">porridge</a></code>.</p></li>
+<li><p>"rags2ridges": the utility function from the package <code><a href="https://cfwp.github.io/rags2ridges/reference/rags2ridges-package.html" class="external-link">rags2ridges</a></code>.</p></li>
+</ul></li>
+<li><p>For <code>method = "elnet"</code>:</p><ul><li><p>"ADMMsigma": the utility function from the package <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
+<li><p>"GLassoElnetFast": the utility function from the package GLassoElnetFast.</p></li>
+</ul></li>
+<li><p>For <code>method = "clime"</code>:</p><ul><li><p>"clime_primaldual": the utility function from the package <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
+with the linsolver <code>primaldual</code>.</p></li>
+<li><p>"clime_simplex": the utility function from the package <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
+with the linsolver <code>simplex</code>.</p></li>
+<li><p>"flare": the utility function from the package <code><a href="https://rdrr.io/pkg/flare/man/flare-package.html" class="external-link">flare</a></code>.</p></li>
+</ul></li>
+<li><p>For <code>method = "tiger"</code>:</p><ul><li><p>"flare": the utility function from the package <code><a href="https://rdrr.io/pkg/flare/man/flare-package.html" class="external-link">flare</a></code>.</p></li>
+<li><p>"huge": the utility function from the package <code><a href="https://rdrr.io/pkg/huge/man/huge.html" class="external-link">huge</a></code>.</p></li>
+</ul></li>
+</ol></dd>
 
 
 <dt id="arg-crit">crit<a class="anchor" aria-label="anchor" href="#arg-crit"></a></dt>
