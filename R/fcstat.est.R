@@ -117,7 +117,7 @@
 #'
 #' @import foreach
 #' @importFrom doParallel registerDoParallel
-#' @importFrom glassoFast glassoFast
+#' @importFrom huge huge.glasso
 #' @importFrom parallel detectCores
 #' @importFrom parallel makeCluster
 #' @importFrom parallel stopCluster
@@ -252,7 +252,7 @@ fcstat.est <- function(
       hatOmega <- foreach(k = 1:npara) %dopar% {
         lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
                                     lambda = parameter$lambda[k], gamma = parameter$gamma[k])
-        glassoFast::glassoFast(S, rho = lambda_mat)$wi
+        huge::huge.glasso(x = S, lambda = lambda_mat, verbose = FALSE)$icov[[1]]
       }
     }
 
@@ -272,7 +272,7 @@ fcstat.est <- function(
       hatOmega <- lapply(1:npara, function(k) {
         lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
                                     lambda = parameter$lambda[k], gamma = parameter$gamma[k])
-        return(glassoFast::glassoFast(S, rho = lambda_mat)$wi)
+        return(huge::huge.glasso(x = S, lambda = lambda_mat, verbose = FALSE)$icov[[1]])
       })
     }
   }
