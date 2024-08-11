@@ -79,32 +79,34 @@
 #' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 #' }
 #'
-#' @param utilopt A character string specifying the utility option to use: \enumerate{
+#' @param utilopt A character string specifying the utility option to use. The available
+#' options depend on the chosen method: \enumerate{
 #' \item For \code{method = "glasso"}: \itemize{
-#' \item "CVglasso": the utility function from the package \code{\link[CVglasso]{CVglasso}}.
-#' \item "CovTools": the utility function from the package CovTools.
-#' \item "glasso": the utility function from the package \code{\link[glasso]{glasso}}.
-#' \item "glassoFast": the utility function from the package \code{\link[glassoFast]{glassoFast}}.
-#' \item "huge": the utility function from the package \code{\link[huge]{huge}}.
+#' \item "CVglasso": the utility function from \code{\link[CVglasso]{CVglasso}}.
+#' \item "CovTools": the utility function from \code{\link[CovTools]{PreEst.glasso}}.
+#' \item "glasso": the utility function from \code{\link[glasso]{glasso}}.
+#' \item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
+#' \item "huge": the utility function from \code{\link[huge]{huge.glasso}}.
 #' }
 #' \item For \code{method = "ridge"}: \itemize{
-#' \item "porridge": the utility function from the package \code{\link[porridge]{porridge}}.
-#' \item "rags2ridges": the utility function from the package \code{\link[rags2ridges]{rags2ridges}}.
+#' \item "porridge": the utility function from \code{\link[porridge]{ridgePgen}}.
+#' \item "rags2ridges": the utility function from \code{\link[rags2ridges]{ridgeP}}.
 #' }
 #' \item For \code{method = "elnet"}: \itemize{
-#' \item "ADMMsigma": the utility function from the package \code{\link[ADMMsigma]{ADMMsigma}}.
-#' \item "GLassoElnetFast": the utility function from the package GLassoElnetFast.
+#' \item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
+#' \item "GLassoElnetFast": the utility function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 #' }
 #' \item For \code{method = "clime"}: \itemize{
-#' \item "clime_primaldual": the utility function from the package \code{\link[clime]{clime}}
+#' \item "clime_primaldual": the utility function from \code{\link[clime]{clime}}
 #' with the linsolver \code{primaldual}.
-#' \item "clime_simplex": the utility function from the package \code{\link[clime]{clime}}
+#' \item "clime_simplex": the utility function from \code{\link[clime]{clime}}
 #' with the linsolver \code{simplex}.
-#' \item "flare": the utility function from the package \code{\link[flare]{flare}}.
+#' \item "flare": the utility function from \code{\link[flare]{sugm}}.
 #' }
 #' \item For \code{method = "tiger"}: \itemize{
-#' \item "flare": the utility function from the package \code{\link[flare]{flare}}.
-#' \item "huge": the utility function from the package \code{\link[huge]{huge}}.
+#' \item "flare": the utility function from \code{\link[flare]{sugm}}.
+#' \item "huge": the utility function from \code{\link[huge]{huge.tiger}}.
 #' }
 #' }
 #'

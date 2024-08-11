@@ -3,7 +3,6 @@
 export(criterion)
 export(deriv)
 export(fcstat)
-export(fcstat.est)
 export(ledoit_wolf_est)
 export(pen)
 export(performance)
