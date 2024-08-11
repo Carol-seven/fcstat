@@ -57,7 +57,7 @@ dimension p.}
 The default is \code{NULL}, which generates its own \code{lambda} sequence based on
 \code{nlambda} and \code{lambda.min.ratio}.}
 
-\item{nlambda}{An integer (default = 50) specifying the number of \code{lambda} values
+\item{nlambda}{An integer (default = 20) specifying the number of \code{lambda} values
 to be generated when \code{lambda = NULL}.}
 
 \item{lambda.min.ratio}{A scalar specifying the fraction of the maximum \code{lambda}

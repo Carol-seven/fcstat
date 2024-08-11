@@ -37,7 +37,7 @@
 #' The default is \code{NULL}, which generates its own \code{lambda} sequence based on
 #' \code{nlambda} and \code{lambda.min.ratio}.
 #'
-#' @param nlambda An integer (default = 50) specifying the number of \code{lambda} values
+#' @param nlambda An integer (default = 20) specifying the number of \code{lambda} values
 #' to be generated when \code{lambda = NULL}.
 #'
 #' @param lambda.min.ratio A scalar specifying the fraction of the maximum \code{lambda}
