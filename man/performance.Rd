@@ -33,6 +33,8 @@ negatives.}
 \item{F1}{F1 score, the harmonic mean of Precision and Recall.}
 \item{MCC}{Matthews correlation coefficient, a measure of the quality of binary
 classifications.}
+\item{Sparsity}{The ratio of zero entries to total entries in the estimated precision
+matrix.}
 }
 }
 \description{

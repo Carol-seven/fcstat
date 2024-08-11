@@ -28,6 +28,8 @@
 #' \item{F1}{F1 score, the harmonic mean of Precision and Recall.}
 #' \item{MCC}{Matthews correlation coefficient, a measure of the quality of binary
 #' classifications.}
+#' \item{Sparsity}{The ratio of zero entries to total entries in the estimated precision
+#' matrix.}
 #' }
 #'
 #' @export
@@ -64,10 +66,12 @@ performance <- function(Omega, Sigma = NULL, hatOmega) {
   F1 <- 2*TP / (FN+FP+2*TP)
   # F1 <- 2*Precision*Recall / (Precision+Recall)
   MCC <- (TN*TP-FN*FP) / (sqrt(FN+TN)*sqrt(FN+TP)*sqrt(FP+TN)*sqrt(FP+TP))
+  Sparsity <- sum(hatOmega == 0) / length(hatOmega)
   result <- c(Fnorm1 = Fnorm1, Fnorm2 = Fnorm2,
               KL = KL, Ql = Ql, Snorm = Snorm,
               Precision = Precision, "Recall/Sensitivity" = Recall, Specificity = Specificity,
-              F1 = F1, MCC = MCC)
+              F1 = F1, MCC = MCC,
+              Sparsity = Sparsity)
   return(result)
 }
 
