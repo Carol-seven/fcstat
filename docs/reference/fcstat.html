@@ -147,7 +147,7 @@ for all elements, specifying the target matrix for <code>method = "ridge"</code>
 <dt id="arg-initial">initial<a class="anchor" aria-label="anchor" href="#arg-initial"></a></dt>
 <dd><p>A p-by-p matrix or a p-by-p-by-npara (the number of all combinations of
 <code>lambda</code> and <code>gamma</code>) array specifying the initial estimate for <code>method</code>
-set to <code>"atan"</code>, <code>"exp"</code>, <code>"scad"</code>, or <code>"mcp"</code>; or specifying
+set to <code>"atan"</code>, <code>"exp"</code>, <code>"scad"</code>, and <code>"mcp"</code>; or specifying
 \(\tilde{\Omega}\) of the adaptive weight for <code>method = "adapt"</code>, calculated as
 \(|\tilde{\omega}_{ij}|^{-\gamma}\), where \(\tilde{\Omega} := (\tilde{\omega}_{ij})\).
 Some options are also offered when a character string is provided (default "linshrink"),
@@ -187,6 +187,10 @@ with the linsolver <code>simplex</code>.</p></li>
 </ul></li>
 <li><p>For <code>method = "tiger"</code>:</p><ul><li><p>"flare": the utility function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
 <li><p>"huge": the utility function from <code><a href="https://rdrr.io/pkg/huge/man/huge.tiger.html" class="external-link">huge.tiger</a></code>.</p></li>
+</ul></li>
+<li><p>For <code>method</code> set to <code>"adapt"</code>, <code>"atan"</code>, <code>"exp"</code>,
+<code>"scad"</code>, and <code>"mcp"</code>:</p><ul><li><p>"glasso": the utility function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
+<li><p>"glassoFast": the utility function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
 </ul></li>
 </ol></dd>
 

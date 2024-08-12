@@ -60,7 +60,7 @@
 #'
 #' @param initial A p-by-p matrix or a p-by-p-by-npara (the number of all combinations of
 #' \code{lambda} and \code{gamma}) array specifying the initial estimate for \code{method}
-#' set to \code{"atan"}, \code{"exp"}, \code{"scad"}, or \code{"mcp"}; or specifying
+#' set to \code{"atan"}, \code{"exp"}, \code{"scad"}, and \code{"mcp"}; or specifying
 #' \eqn{\tilde{\Omega}} of the adaptive weight for \code{method = "adapt"}, calculated as
 #' \eqn{|\tilde{\omega}_{ij}|^{-\gamma}}, where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
 #' Some options are also offered when a character string is provided (default "glasso"),
@@ -105,6 +105,11 @@
 #' \item "flare": the utility function from \code{\link[flare]{sugm}}.
 #' \item "huge": the utility function from \code{\link[huge]{huge.tiger}}.
 #' }
+#' \item For \code{method} set to \code{"adapt"}, \code{"atan"}, \code{"exp"},
+#' \code{"scad"}, and \code{"mcp"}: \itemize{
+#' \item "glasso": the utility function from \code{\link[glasso]{glasso}}.
+#' \item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
+#' }
 #' }
 #'
 #' @param cores An integer (default = 1) specifying the number of cores to use for
@@ -117,7 +122,8 @@
 #'
 #' @import foreach
 #' @importFrom doParallel registerDoParallel
-#' @importFrom huge huge.glasso
+#' @importFrom glasso glasso
+#' @importFrom glassoFast glassoFast
 #' @importFrom parallel detectCores
 #' @importFrom parallel makeCluster
 #' @importFrom parallel stopCluster
@@ -163,7 +169,7 @@ fcstat.est <- function(
     S <- X
     X <- NULL
   } else {
-    S <- eval(parse(text =  paste0(base, "(X)")))
+    S <- eval(parse(text = paste0(base, "(X)")))
   }
 
   ## lambda grid
@@ -249,10 +255,18 @@ fcstat.est <- function(
                           }
     } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
       Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
-      hatOmega <- foreach(k = 1:npara) %dopar% {
-        lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
-                                    lambda = parameter$lambda[k], gamma = parameter$gamma[k])
-        huge::huge.glasso(x = S, lambda = lambda_mat, verbose = FALSE)$icov[[1]]
+      if (utilopt == "glasso") {
+        hatOmega <- foreach(k = 1:npara) %dopar% {
+          lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
+                                      lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+          glasso::glasso(s = S, rho = lambda_mat)$wi
+        }
+      } else if (utilopt == "glassoFast") {
+        hatOmega <- foreach(k = 1:npara) %dopar% {
+          lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
+                                      lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+          glassoFast::glassoFast(S = S, rho = lambda_mat)$wi
+        }
       }
     }
 
@@ -269,11 +283,19 @@ fcstat.est <- function(
       })
     } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
       Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
-      hatOmega <- lapply(1:npara, function(k) {
-        lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
-                                    lambda = parameter$lambda[k], gamma = parameter$gamma[k])
-        return(huge::huge.glasso(x = S, lambda = lambda_mat, verbose = FALSE)$icov[[1]])
-      })
+      if (utilopt == "glasso") {
+        hatOmega <- lapply(1:npara, function(k) {
+          lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
+                                      lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+          return(glasso::glasso(s = S, rho = lambda_mat)$wi)
+        })
+      } else if (utilopt == "glassoFast") {
+        hatOmega <- lapply(1:npara, function(k) {
+          lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
+                                      lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+          return(glassoFast::glassoFast(S = S, rho = lambda_mat)$wi)
+        })
+      }
     }
   }
 

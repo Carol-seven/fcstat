@@ -83,7 +83,7 @@ for all elements, specifying the target matrix for \code{method = "ridge"} or
 
 \item{initial}{A p-by-p matrix or a p-by-p-by-npara (the number of all combinations of
 \code{lambda} and \code{gamma}) array specifying the initial estimate for \code{method}
-set to \code{"atan"}, \code{"exp"}, \code{"scad"}, or \code{"mcp"}; or specifying
+set to \code{"atan"}, \code{"exp"}, \code{"scad"}, and \code{"mcp"}; or specifying
 \eqn{\tilde{\Omega}} of the adaptive weight for \code{method = "adapt"}, calculated as
 \eqn{|\tilde{\omega}_{ij}|^{-\gamma}}, where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
 Some options are also offered when a character string is provided (default "linshrink"),
@@ -127,6 +127,11 @@ with the linsolver \code{simplex}.
 \item For \code{method = "tiger"}: \itemize{
 \item "flare": the utility function from \code{\link[flare]{sugm}}.
 \item "huge": the utility function from \code{\link[huge]{huge.tiger}}.
+}
+\item For \code{method} set to \code{"adapt"}, \code{"atan"}, \code{"exp"},
+\code{"scad"}, and \code{"mcp"}: \itemize{
+\item "glasso": the utility function from \code{\link[glasso]{glasso}}.
+\item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
 }
 }}
 
