@@ -32,7 +32,9 @@
 #'
 #' @param lambda Grid of non-negative scalars for the regularization parameter.
 #' The default is \code{NULL}, which generates its own \code{lambda} sequence based on
-#' \code{nlambda} and \code{lambda.min.ratio}.
+#' \code{nlambda} and \code{lambda.min.ratio}. For \code{method = "clime"} combined with
+#' \code{utilopt = "clime"}, the \code{lambda} sequence is based on \code{nlambda},
+#' \code{lambda.min} and \code{lambda.max}.
 #'
 #' @param nlambda An integer (default = 20) specifying the number of \code{lambda} values
 #' to be generated when \code{lambda = NULL}.
@@ -41,8 +43,19 @@
 #' value \eqn{\lambda_{max}} to generate the minimum \code{lambda} \eqn{\lambda_{min}}.
 #' If \code{lambda = NULL}, the program automatically generates a \code{lambda} grid as a
 #' sequence of length \code{nlambda} in log scale, starting from \eqn{\lambda_{min}} to
-#' \eqn{\lambda_{max}}. The default value is 0.4 for \code{method = "clime"}, 0.1 for
-#' \code{method = "tiger"} and 0.01 for other methods.
+#' \eqn{\lambda_{max}}. The default value is
+#' 0.4 for \code{method = "clime"} combined with \code{utilopt = "flare"},
+#' 0.4 for \code{method = "tiger"} combined with \code{utilopt = "flare"},
+#' 0.1 for \code{method = "tiger"} combined with \code{utilopt = "huge"},
+#' and 0.01 for all other methods.
+#'
+#' @param lambda.min A scalar specifying the minimum value of program generated
+#' \code{lambda} grid for \code{method = "clime"} combined with \code{utilopt = "clime"}.
+#' Default is 1e-4 (\eqn{n>p}) or 1e-2 (\eqn{n<p}).
+#'
+#' @param lambda.max A scalar (default = 0.8) specifying the maximum value of program
+#' generated \code{lambda} grid for \code{method = "clime"} combined with
+#' \code{utilopt = "clime"}.
 #'
 #' @param gamma Grid of scalars specifying the hyperparameter for the chosen \code{method}.
 #' Default values: \enumerate{
@@ -53,10 +66,6 @@
 #' \item "scad": 3.7
 #' \item "mcp": 3
 #' }
-#'
-#' @param target A p-by-p symmetric matrix or a scalar (default = 0) serves as the value
-#' for all elements, specifying the target matrix for \code{method = "ridge"} or
-#' \code{method = "elnet"}.
 #'
 #' @param initial A p-by-p matrix or a p-by-p-by-npara (the number of all combinations of
 #' \code{lambda} and \code{gamma}) array specifying the initial estimate for \code{method}
@@ -79,13 +88,19 @@
 #' @param utilopt A character string specifying the utility option to use. The available
 #' options depend on the chosen method: \enumerate{
 #' \item For \code{method = "glasso"}: \itemize{
+#' \item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
 #' \item "CVglasso": the utility function from \code{\link[CVglasso]{CVglasso}}.
 #' \item "CovTools": the utility function from \code{\link[CovTools]{PreEst.glasso}}.
 #' \item "glasso": the utility function from \code{\link[glasso]{glasso}}.
+#' \item "GLassoElnetFast": the utility function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 #' \item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
 #' \item "huge": the utility function from \code{\link[huge]{huge.glasso}}.
 #' }
 #' \item For \code{method = "ridge"}: \itemize{
+#' \item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
+#' \item "GLassoElnetFast": the utility function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 #' \item "porridge": the utility function from \code{\link[porridge]{ridgePgen}}.
 #' \item "rags2ridges": the utility function from \code{\link[rags2ridges]{ridgeP}}.
 #' }
@@ -95,10 +110,7 @@
 #' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 #' }
 #' \item For \code{method = "clime"}: \itemize{
-#' \item "clime_primaldual": the utility function from \code{\link[clime]{clime}}
-#' with the linsolver \code{primaldual}.
-#' \item "clime_simplex": the utility function from \code{\link[clime]{clime}}
-#' with the linsolver \code{simplex}.
+#' \item "clime": the utility function from \code{\link[clime]{clime}}.
 #' \item "flare": the utility function from \code{\link[flare]{sugm}}.
 #' }
 #' \item For \code{method = "tiger"}: \itemize{
@@ -149,10 +161,10 @@
 fcstat.est <- function(
     X, method, base = "cov",
     lambda = NULL, nlambda = 20, lambda.min.ratio = NULL,
+    lambda.min = NULL, lambda.max = NULL, ## for clime_clime
     gamma = NULL, ## for elnet, adapt, atan, exp, mcp, scad
-    target = 0, ## for ridge, elnet
     initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
-    utilopt = "flare", ## utility option for clime
+    utilopt = "glassoFast", ## utility option
     cores = 1) {
 
   if (!method %in% c("glasso", "ridge", "elnet", "clime", "tiger",
@@ -163,49 +175,69 @@ fcstat.est <- function(
 
   ## dimensionality
   p <- ncol(X)
+  n <- nrow(X)
 
   ## sample covariance/correlation matrix
   if (isSymmetric(X)) {
     S <- X
     X <- NULL
   } else {
-    S <- eval(parse(text = paste0(base, "(X)")))
+    if (base == "cov") {
+      S <- cov(X)
+    } else if (base == "cor") {
+      S <- cor(X)
+    }
   }
 
   ## lambda grid
   if(is.null(lambda)) {
-    if (method == "clime") { ## pkg:flare
-      if (is.null(lambda.min.ratio)) {
-        lambda.min.ratio <- 0.4
+    if (method == "clime") {
+      if (utilopt == "clime") {
+        if (is.null(lambda.min)) {
+          lambda.min <- ifelse(n > p, 1e-4, 1e-2)
+        }
+        if (is.null(lambda.max)) {
+          lambda.max <- 0.8
+        }
+        lambda <- 10^(seq(log10(lambda.min), log10(lambda.max), length = nlambda))
+      } else if (utilopt == "flare") {
+        if (is.null(lambda.min.ratio)) {
+          lambda.min.ratio <- 0.4
+        }
+        S_adjusted <- S - diag(diag(S))
+        max_val <- max(S_adjusted)
+        min_val <- min(S_adjusted)
+        lambda.max.tmp <- min(max_val, -min_val)
+        lambda.max <- ifelse(lambda.max.tmp == 0, max(max_val, -min_val), lambda.max.tmp)
+        lambda.min <- lambda.min.ratio*lambda.max
+        lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
       }
-      lambda.max.tmp <- abs(range(S - diag(diag(S))))
-      lambda.max <- ifelse(min(lambda.max.tmp) == 0, max(lambda.max.tmp), min(lambda.max.tmp))
-      # ## pkg:clime
-      # if (is.null(lambda.min)) {
-      #   lambda.min <- ifelse(n > p, 1e-4, 1e-2)
-      # }
-      # if (is.null(lambda.max)) {
-      #   lambda.max <- 0.8
-      # }
-    } else if (method == "tiger") { ## pkg:huge
-      if (is.null(lambda.min.ratio)) {
-        lambda.min.ratio <- 0.1
+    } else if (method == "tiger") {
+      if (utilopt == "flare") {
+        if (is.null(lambda.min.ratio)) {
+          lambda.min.ratio <- 0.4
+        }
+        lambda.max <- pi*sqrt(log(p)/n)
+        lambda.min <- lambda.min.ratio*lambda.max
+        lambda <- seq(lambda.max, lambda.min, length = nlambda)
+      } else if (utilopt == "huge") {
+        if (is.null(lambda.min.ratio)) {
+          lambda.min.ratio <- 0.1
+        }
+        S_adjusted <- S - diag(p)
+        lambda.max <- max(max(S_adjusted), -min(S_adjusted))
+        lambda.min <- lambda.min.ratio*lambda.max
+        lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
       }
-      lambda.max <- max(abs(range(S - diag(p))))
-      # ## pkg:flare
-      # if (is.null(lambda.min.ratio)) {
-      #   lambda.min.ratio <- 0.4
-      # }
-      # lambda.max <- pi*sqrt(log(p)/n)
-      # lambda.min <- lambda.min.ratio*lambda.max
     } else {
       if (is.null(lambda.min.ratio)) {
         lambda.min.ratio <- 0.01
       }
-      lambda.max <- max(abs(range(S - diag(p)))) ## max(max(S-diag(p)), -min(S-diag(p)))
+      S_adjusted <- S - diag(p)
+      lambda.max <- max(max(S_adjusted), -min(S_adjusted))
+      lambda.min <- lambda.min.ratio*lambda.max
+      lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
     }
-    lambda.min <- lambda.min.ratio*lambda.max
-    lambda <- exp(seq(log(lambda.min), log(lambda.max), length = nlambda))
   }
 
   ## gamma grid
@@ -228,7 +260,7 @@ fcstat.est <- function(
   }
 
   ## parameter grid combination
-  parameter <- expand.grid(lambda = sort(unique(lambda)), gamma = sort(unique(gamma), na.last = TRUE))
+  parameter <- expand.grid(lambda = unique(lambda), gamma = unique(gamma))
 
   npara <- nrow(parameter)
 
@@ -249,12 +281,12 @@ fcstat.est <- function(
     if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
       hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
                           .export = c("fcstat_method")) %dopar% {
-                            fcstat_method(method = method, X = X, S = S,
-                                          lambda = parameter$lambda[k], gamma = parameter$gamma[k],
-                                          target = target, utilopt = utilopt)
-                          }
-    } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
-      Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
+        fcstat_method(method = method, X = X, S = S,
+                      lambda = parameter$lambda[k], gamma = parameter$gamma[k],
+                      utilopt = utilopt)
+      }
+    } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
+      Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda)
       if (utilopt == "glasso") {
         hatOmega <- foreach(k = 1:npara) %dopar% {
           lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],
@@ -279,10 +311,10 @@ fcstat.est <- function(
       hatOmega <- lapply(1:npara, function(k) {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
-                      target = target, utilopt = utilopt)
+                      utilopt = utilopt)
       })
-    } else if (method %in% c("adapt", "atan", "exp", "mcp", "scad")) {
-      Omega <- gen_initial(X, S, base, initial = initial, parameter$lambda)
+    } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
+      Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda)
       if (utilopt == "glasso") {
         hatOmega <- lapply(1:npara, function(k) {
           lambda_mat <- fcstat::deriv(penalty = method, Omega = Omega[[k]],

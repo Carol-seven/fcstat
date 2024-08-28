@@ -12,10 +12,11 @@ fcstat(
   lambda = NULL,
   nlambda = 20,
   lambda.min.ratio = NULL,
+  lambda.min = NULL,
+  lambda.max = NULL,
   gamma = NA,
-  target = 0,
   initial = "glasso",
-  utilopt = "flare",
+  utilopt = "glassoFast",
   crit = "CV",
   fold = 5,
   ebic.tuning = 0.5,
@@ -55,7 +56,9 @@ dimension p.}
 
 \item{lambda}{Grid of non-negative scalars for the regularization parameter.
 The default is \code{NULL}, which generates its own \code{lambda} sequence based on
-\code{nlambda} and \code{lambda.min.ratio}.}
+\code{nlambda} and \code{lambda.min.ratio}. For \code{method = "clime"} combined with
+\code{utilopt = "clime"}, the \code{lambda} sequence is based on \code{nlambda},
+\code{lambda.min} and \code{lambda.max}.}
 
 \item{nlambda}{An integer (default = 20) specifying the number of \code{lambda} values
 to be generated when \code{lambda = NULL}.}
@@ -64,8 +67,19 @@ to be generated when \code{lambda = NULL}.}
 value \eqn{\lambda_{max}} to generate the minimum \code{lambda} \eqn{\lambda_{min}}.
 If \code{lambda = NULL}, the program automatically generates a \code{lambda} grid as a
 sequence of length \code{nlambda} in log scale, starting from \eqn{\lambda_{min}} to
-\eqn{\lambda_{max}}. The default value is 0.4 for \code{method = "clime"}, 0.1 for
-\code{method = "tiger"} and 0.01 for other methods.}
+\eqn{\lambda_{max}}. The default value is
+0.4 for \code{method = "clime"} combined with \code{utilopt = "flare"},
+0.4 for \code{method = "tiger"} combined with \code{utilopt = "flare"},
+0.1 for \code{method = "tiger"} combined with \code{utilopt = "huge"},
+and 0.01 for all other methods.}
+
+\item{lambda.min}{A scalar specifying the minimum value of program generated
+\code{lambda} grid for \code{method = "clime"} combined with \code{utilopt = "clime"}.
+Default is 1e-4 (\eqn{n>p}) or 1e-2 (\eqn{n<p}).}
+
+\item{lambda.max}{A scalar (default = 0.8) specifying the maximum value of program
+generated \code{lambda} grid for \code{method = "clime"} combined with
+\code{utilopt = "clime"}.}
 
 \item{gamma}{Grid of scalars specifying the hyperparameter for the chosen \code{method}.
 Default values: \enumerate{
@@ -76,10 +90,6 @@ Default values: \enumerate{
 \item "scad": 3.7
 \item "mcp": 3
 }}
-
-\item{target}{A p-by-p symmetric matrix or a scalar (default = 0) serves as the value
-for all elements, specifying the target matrix for \code{method = "ridge"} or
-\code{method = "elnet"}.}
 
 \item{initial}{A p-by-p matrix or a p-by-p-by-npara (the number of all combinations of
 \code{lambda} and \code{gamma}) array specifying the initial estimate for \code{method}
@@ -102,13 +112,19 @@ shrinakge estimator of the population covariance matrix
 \item{utilopt}{A character string specifying the utility option to use. The available
 options depend on the chosen method: \enumerate{
 \item For \code{method = "glasso"}: \itemize{
+\item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
 \item "CVglasso": the utility function from \code{\link[CVglasso]{CVglasso}}.
 \item "CovTools": the utility function from \code{\link[CovTools]{PreEst.glasso}}.
 \item "glasso": the utility function from \code{\link[glasso]{glasso}}.
+\item "GLassoElnetFast": the utility function from
+\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 \item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
 \item "huge": the utility function from \code{\link[huge]{huge.glasso}}.
 }
 \item For \code{method = "ridge"}: \itemize{
+\item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
+\item "GLassoElnetFast": the utility function from
+\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 \item "porridge": the utility function from \code{\link[porridge]{ridgePgen}}.
 \item "rags2ridges": the utility function from \code{\link[rags2ridges]{ridgeP}}.
 }
@@ -118,10 +134,7 @@ options depend on the chosen method: \enumerate{
 \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 }
 \item For \code{method = "clime"}: \itemize{
-\item "clime_primaldual": the utility function from \code{\link[clime]{clime}}
-with the linsolver \code{primaldual}.
-\item "clime_simplex": the utility function from \code{\link[clime]{clime}}
-with the linsolver \code{simplex}.
+\item "clime": the utility function from \code{\link[clime]{clime}}.
 \item "flare": the utility function from \code{\link[flare]{sugm}}.
 }
 \item For \code{method = "tiger"}: \itemize{

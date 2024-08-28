@@ -46,10 +46,11 @@
 <span>  lambda <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nlambda <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  lambda.min.ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lambda.min <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lambda.max <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
-<span>  target <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  initial <span class="op">=</span> <span class="st">"glasso"</span>,</span>
-<span>  utilopt <span class="op">=</span> <span class="st">"flare"</span>,</span>
+<span>  utilopt <span class="op">=</span> <span class="st">"glassoFast"</span>,</span>
 <span>  crit <span class="op">=</span> <span class="st">"CV"</span>,</span>
 <span>  fold <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  ebic.tuning <span class="op">=</span> <span class="fl">0.5</span>,</span>
@@ -110,7 +111,9 @@ dimension p.</p></dd>
 <dt id="arg-lambda">lambda<a class="anchor" aria-label="anchor" href="#arg-lambda"></a></dt>
 <dd><p>Grid of non-negative scalars for the regularization parameter.
 The default is <code>NULL</code>, which generates its own <code>lambda</code> sequence based on
-<code>nlambda</code> and <code>lambda.min.ratio</code>.</p></dd>
+<code>nlambda</code> and <code>lambda.min.ratio</code>. For <code>method = "clime"</code> combined with
+<code>utilopt = "clime"</code>, the <code>lambda</code> sequence is based on <code>nlambda</code>,
+<code>lambda.min</code> and <code>lambda.max</code>.</p></dd>
 
 
 <dt id="arg-nlambda">nlambda<a class="anchor" aria-label="anchor" href="#arg-nlambda"></a></dt>
@@ -123,8 +126,23 @@ to be generated when <code>lambda = NULL</code>.</p></dd>
 value \(\lambda_{max}\) to generate the minimum <code>lambda</code> \(\lambda_{min}\).
 If <code>lambda = NULL</code>, the program automatically generates a <code>lambda</code> grid as a
 sequence of length <code>nlambda</code> in log scale, starting from \(\lambda_{min}\) to
-\(\lambda_{max}\). The default value is 0.4 for <code>method = "clime"</code>, 0.1 for
-<code>method = "tiger"</code> and 0.01 for other methods.</p></dd>
+\(\lambda_{max}\). The default value is
+0.4 for <code>method = "clime"</code> combined with <code>utilopt = "flare"</code>,
+0.4 for <code>method = "tiger"</code> combined with <code>utilopt = "flare"</code>,
+0.1 for <code>method = "tiger"</code> combined with <code>utilopt = "huge"</code>,
+and 0.01 for all other methods.</p></dd>
+
+
+<dt id="arg-lambda-min">lambda.min<a class="anchor" aria-label="anchor" href="#arg-lambda-min"></a></dt>
+<dd><p>A scalar specifying the minimum value of program generated
+<code>lambda</code> grid for <code>method = "clime"</code> combined with <code>utilopt = "clime"</code>.
+Default is 1e-4 (\(n&gt;p\)) or 1e-2 (\(n&lt;p\)).</p></dd>
+
+
+<dt id="arg-lambda-max">lambda.max<a class="anchor" aria-label="anchor" href="#arg-lambda-max"></a></dt>
+<dd><p>A scalar (default = 0.8) specifying the maximum value of program
+generated <code>lambda</code> grid for <code>method = "clime"</code> combined with
+<code>utilopt = "clime"</code>.</p></dd>
 
 
 <dt id="arg-gamma">gamma<a class="anchor" aria-label="anchor" href="#arg-gamma"></a></dt>
@@ -136,12 +154,6 @@ Default values:</p><ol><li><p>"elnet": a sequence from 0.1 to 0.9 with increment
 <li><p>"scad": 3.7</p></li>
 <li><p>"mcp": 3</p></li>
 </ol></dd>
-
-
-<dt id="arg-target">target<a class="anchor" aria-label="anchor" href="#arg-target"></a></dt>
-<dd><p>A p-by-p symmetric matrix or a scalar (default = 0) serves as the value
-for all elements, specifying the target matrix for <code>method = "ridge"</code> or
-<code>method = "elnet"</code>.</p></dd>
 
 
 <dt id="arg-initial">initial<a class="anchor" aria-label="anchor" href="#arg-initial"></a></dt>
@@ -166,23 +178,26 @@ shrinakge estimator of the population covariance matrix
 
 <dt id="arg-utilopt">utilopt<a class="anchor" aria-label="anchor" href="#arg-utilopt"></a></dt>
 <dd><p>A character string specifying the utility option to use. The available
-options depend on the chosen method:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"CVglasso": the utility function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code>.</p></li>
+options depend on the chosen method:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"ADMMsigma": the utility function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
+<li><p>"CVglasso": the utility function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code>.</p></li>
 <li><p>"CovTools": the utility function from <code><a href="https://rdrr.io/pkg/CovTools/man/PreEst.glasso.html" class="external-link">PreEst.glasso</a></code>.</p></li>
 <li><p>"glasso": the utility function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
+<li><p>"GLassoElnetFast": the utility function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
 <li><p>"glassoFast": the utility function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
 <li><p>"huge": the utility function from <code><a href="https://rdrr.io/pkg/huge/man/huge.glasso.html" class="external-link">huge.glasso</a></code>.</p></li>
 </ul></li>
-<li><p>For <code>method = "ridge"</code>:</p><ul><li><p>"porridge": the utility function from <code><a href="https://rdrr.io/pkg/porridge/man/ridgePgen.html" class="external-link">ridgePgen</a></code>.</p></li>
+<li><p>For <code>method = "ridge"</code>:</p><ul><li><p>"ADMMsigma": the utility function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
+<li><p>"GLassoElnetFast": the utility function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
+<li><p>"porridge": the utility function from <code><a href="https://rdrr.io/pkg/porridge/man/ridgePgen.html" class="external-link">ridgePgen</a></code>.</p></li>
 <li><p>"rags2ridges": the utility function from <code><a href="https://cfwp.github.io/rags2ridges/reference/ridgeP.html" class="external-link">ridgeP</a></code>.</p></li>
 </ul></li>
 <li><p>For <code>method = "elnet"</code>:</p><ul><li><p>"ADMMsigma": the utility function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
 <li><p>"GLassoElnetFast": the utility function from
 <a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
 </ul></li>
-<li><p>For <code>method = "clime"</code>:</p><ul><li><p>"clime_primaldual": the utility function from <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
-with the linsolver <code>primaldual</code>.</p></li>
-<li><p>"clime_simplex": the utility function from <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>
-with the linsolver <code>simplex</code>.</p></li>
+<li><p>For <code>method = "clime"</code>:</p><ul><li><p>"clime": the utility function from <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>.</p></li>
 <li><p>"flare": the utility function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
 </ul></li>
 <li><p>For <code>method = "tiger"</code>:</p><ul><li><p>"flare": the utility function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
