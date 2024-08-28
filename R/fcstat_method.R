@@ -20,16 +20,6 @@
 #'
 #' @param lambda A non-negative scalar specifying the regularization parameter.
 #'
-#' @param gamma Grid of scalars specifying the hyperparameter for the chosen \code{method}.
-#' Default values: \enumerate{
-#' \item "elnet": a sequence from 0.1 to 0.9 with increments of 0.1
-#' \item "adapt": 0.5
-#' \item "atan": 0.005
-#' \item "exp": 0.01
-#' \item "scad": 3.7
-#' \item "mcp": 3
-#' }
-#'
 #' @param gamma A scalar specifying the hyperparameter for \code{method} set to
 #' \code{"elnet"}.
 #'
