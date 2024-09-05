@@ -45,9 +45,7 @@
 <span>  n <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  lambda <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  nlambda <span class="op">=</span> <span class="fl">20</span>,</span>
-<span>  lambda.min.ratio <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  lambda.min <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  lambda.max <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lambda.min.ratio <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  initial <span class="op">=</span> <span class="st">"glasso"</span>,</span>
 <span>  utilopt <span class="op">=</span> <span class="st">"glassoFast"</span>,</span>
@@ -111,9 +109,7 @@ dimension p.</p></dd>
 <dt id="arg-lambda">lambda<a class="anchor" aria-label="anchor" href="#arg-lambda"></a></dt>
 <dd><p>Grid of non-negative scalars for the regularization parameter.
 The default is <code>NULL</code>, which generates its own <code>lambda</code> sequence based on
-<code>nlambda</code> and <code>lambda.min.ratio</code>. For <code>method = "clime"</code> combined with
-<code>utilopt = "clime"</code>, the <code>lambda</code> sequence is based on <code>nlambda</code>,
-<code>lambda.min</code> and <code>lambda.max</code>.</p></dd>
+<code>nlambda</code> and <code>lambda.min.ratio</code>.</p></dd>
 
 
 <dt id="arg-nlambda">nlambda<a class="anchor" aria-label="anchor" href="#arg-nlambda"></a></dt>
@@ -122,27 +118,11 @@ to be generated when <code>lambda = NULL</code>.</p></dd>
 
 
 <dt id="arg-lambda-min-ratio">lambda.min.ratio<a class="anchor" aria-label="anchor" href="#arg-lambda-min-ratio"></a></dt>
-<dd><p>A scalar specifying the fraction of the maximum <code>lambda</code>
-value \(\lambda_{max}\) to generate the minimum <code>lambda</code> \(\lambda_{min}\).
-If <code>lambda = NULL</code>, the program automatically generates a <code>lambda</code> grid as a
-sequence of length <code>nlambda</code> in log scale, starting from \(\lambda_{min}\) to
-\(\lambda_{max}\). The default value is
-0.4 for <code>method = "clime"</code> combined with <code>utilopt = "flare"</code>,
-0.4 for <code>method = "tiger"</code> combined with <code>utilopt = "flare"</code>,
-0.1 for <code>method = "tiger"</code> combined with <code>utilopt = "huge"</code>,
-and 0.01 for all other methods.</p></dd>
-
-
-<dt id="arg-lambda-min">lambda.min<a class="anchor" aria-label="anchor" href="#arg-lambda-min"></a></dt>
-<dd><p>A scalar specifying the minimum value of program generated
-<code>lambda</code> grid for <code>method = "clime"</code> combined with <code>utilopt = "clime"</code>.
-Default is 1e-4 (\(n&gt;p\)) or 1e-2 (\(n&lt;p\)).</p></dd>
-
-
-<dt id="arg-lambda-max">lambda.max<a class="anchor" aria-label="anchor" href="#arg-lambda-max"></a></dt>
-<dd><p>A scalar (default = 0.8) specifying the maximum value of program
-generated <code>lambda</code> grid for <code>method = "clime"</code> combined with
-<code>utilopt = "clime"</code>.</p></dd>
+<dd><p>A scalar (default = 0.01) specifying the fraction of
+the maximum <code>lambda</code> value \(\lambda_{max}\) to generate the minimum
+<code>lambda</code> \(\lambda_{min}\). If <code>lambda = NULL</code>, the program automatically
+generates a <code>lambda</code> grid as a sequence of length <code>nlambda</code> in log scale,
+starting from \(\lambda_{min}\) to \(\lambda_{max}\).</p></dd>
 
 
 <dt id="arg-gamma">gamma<a class="anchor" aria-label="anchor" href="#arg-gamma"></a></dt>

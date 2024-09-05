@@ -11,9 +11,7 @@ fcstat(
   n = NULL,
   lambda = NULL,
   nlambda = 20,
-  lambda.min.ratio = NULL,
-  lambda.min = NULL,
-  lambda.max = NULL,
+  lambda.min.ratio = 0.01,
   gamma = NA,
   initial = "glasso",
   utilopt = "glassoFast",
@@ -56,30 +54,16 @@ dimension p.}
 
 \item{lambda}{Grid of non-negative scalars for the regularization parameter.
 The default is \code{NULL}, which generates its own \code{lambda} sequence based on
-\code{nlambda} and \code{lambda.min.ratio}. For \code{method = "clime"} combined with
-\code{utilopt = "clime"}, the \code{lambda} sequence is based on \code{nlambda},
-\code{lambda.min} and \code{lambda.max}.}
+\code{nlambda} and \code{lambda.min.ratio}.}
 
 \item{nlambda}{An integer (default = 20) specifying the number of \code{lambda} values
 to be generated when \code{lambda = NULL}.}
 
-\item{lambda.min.ratio}{A scalar specifying the fraction of the maximum \code{lambda}
-value \eqn{\lambda_{max}} to generate the minimum \code{lambda} \eqn{\lambda_{min}}.
-If \code{lambda = NULL}, the program automatically generates a \code{lambda} grid as a
-sequence of length \code{nlambda} in log scale, starting from \eqn{\lambda_{min}} to
-\eqn{\lambda_{max}}. The default value is
-0.4 for \code{method = "clime"} combined with \code{utilopt = "flare"},
-0.4 for \code{method = "tiger"} combined with \code{utilopt = "flare"},
-0.1 for \code{method = "tiger"} combined with \code{utilopt = "huge"},
-and 0.01 for all other methods.}
-
-\item{lambda.min}{A scalar specifying the minimum value of program generated
-\code{lambda} grid for \code{method = "clime"} combined with \code{utilopt = "clime"}.
-Default is 1e-4 (\eqn{n>p}) or 1e-2 (\eqn{n<p}).}
-
-\item{lambda.max}{A scalar (default = 0.8) specifying the maximum value of program
-generated \code{lambda} grid for \code{method = "clime"} combined with
-\code{utilopt = "clime"}.}
+\item{lambda.min.ratio}{A scalar (default = 0.01) specifying the fraction of
+the maximum \code{lambda} value \eqn{\lambda_{max}} to generate the minimum
+\code{lambda} \eqn{\lambda_{min}}. If \code{lambda = NULL}, the program automatically
+generates a \code{lambda} grid as a sequence of length \code{nlambda} in log scale,
+starting from \eqn{\lambda_{min}} to \eqn{\lambda_{max}}.}
 
 \item{gamma}{Grid of scalars specifying the hyperparameter for the chosen \code{method}.
 Default values: \enumerate{

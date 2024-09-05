@@ -39,23 +39,11 @@
 #' @param nlambda An integer (default = 20) specifying the number of \code{lambda} values
 #' to be generated when \code{lambda = NULL}.
 #'
-#' @param lambda.min.ratio A scalar specifying the fraction of the maximum \code{lambda}
-#' value \eqn{\lambda_{max}} to generate the minimum \code{lambda} \eqn{\lambda_{min}}.
-#' If \code{lambda = NULL}, the program automatically generates a \code{lambda} grid as a
-#' sequence of length \code{nlambda} in log scale, starting from \eqn{\lambda_{min}} to
-#' \eqn{\lambda_{max}}. The default value is
-#' 0.4 for \code{method = "clime"} combined with \code{utilopt = "flare"},
-#' 0.4 for \code{method = "tiger"} combined with \code{utilopt = "flare"},
-#' 0.1 for \code{method = "tiger"} combined with \code{utilopt = "huge"},
-#' and 0.01 for all other methods.
-#'
-#' @param lambda.min A scalar specifying the minimum value of program generated
-#' \code{lambda} grid for \code{method = "clime"} combined with \code{utilopt = "clime"}.
-#' Default is 1e-4 (\eqn{n>p}) or 1e-2 (\eqn{n<p}).
-#'
-#' @param lambda.max A scalar (default = 0.8) specifying the maximum value of program
-#' generated \code{lambda} grid for \code{method = "clime"} combined with
-#' \code{utilopt = "clime"}.
+#' @param lambda.min.ratio A scalar (default = 0.01) specifying the fraction of
+#' the maximum \code{lambda} value \eqn{\lambda_{max}} to generate the minimum
+#' \code{lambda} \eqn{\lambda_{min}}. If \code{lambda = NULL}, the program automatically
+#' generates a \code{lambda} grid as a sequence of length \code{nlambda} in log scale,
+#' starting from \eqn{\lambda_{min}} to \eqn{\lambda_{max}}.
 #'
 #' @param gamma Grid of scalars specifying the hyperparameter for the chosen \code{method}.
 #' Default values: \enumerate{
@@ -160,8 +148,7 @@
 
 fcstat.est <- function(
     X, method, base = "cov",
-    lambda = NULL, nlambda = 20, lambda.min.ratio = NULL,
-    lambda.min = NULL, lambda.max = NULL, ## for clime_clime
+    lambda = NULL, nlambda = 20, lambda.min.ratio = 0.01,
     gamma = NULL, ## for elnet, adapt, atan, exp, mcp, scad
     initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
     utilopt = "glassoFast", ## utility option
@@ -191,53 +178,10 @@ fcstat.est <- function(
 
   ## lambda grid
   if(is.null(lambda)) {
-    if (method == "clime") {
-      if (utilopt == "clime") {
-        if (is.null(lambda.min)) {
-          lambda.min <- ifelse(n > p, 1e-4, 1e-2)
-        }
-        if (is.null(lambda.max)) {
-          lambda.max <- 0.8
-        }
-        lambda <- 10^(seq(log10(lambda.min), log10(lambda.max), length = nlambda))
-      } else if (utilopt == "flare") {
-        if (is.null(lambda.min.ratio)) {
-          lambda.min.ratio <- 0.4
-        }
-        S_adjusted <- S - diag(diag(S))
-        max_val <- max(S_adjusted)
-        min_val <- min(S_adjusted)
-        lambda.max.tmp <- min(max_val, -min_val)
-        lambda.max <- ifelse(lambda.max.tmp == 0, max(max_val, -min_val), lambda.max.tmp)
-        lambda.min <- lambda.min.ratio*lambda.max
-        lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
-      }
-    } else if (method == "tiger") {
-      if (utilopt == "flare") {
-        if (is.null(lambda.min.ratio)) {
-          lambda.min.ratio <- 0.4
-        }
-        lambda.max <- pi*sqrt(log(p)/n)
-        lambda.min <- lambda.min.ratio*lambda.max
-        lambda <- seq(lambda.max, lambda.min, length = nlambda)
-      } else if (utilopt == "huge") {
-        if (is.null(lambda.min.ratio)) {
-          lambda.min.ratio <- 0.1
-        }
-        S_adjusted <- S - diag(p)
-        lambda.max <- max(max(S_adjusted), -min(S_adjusted))
-        lambda.min <- lambda.min.ratio*lambda.max
-        lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
-      }
-    } else {
-      if (is.null(lambda.min.ratio)) {
-        lambda.min.ratio <- 0.01
-      }
-      S_adjusted <- S - diag(p)
-      lambda.max <- max(max(S_adjusted), -min(S_adjusted))
-      lambda.min <- lambda.min.ratio*lambda.max
-      lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
-    }
+    S_adjusted <- S - diag(p)
+    lambda.max <- max(max(S_adjusted), -min(S_adjusted))
+    lambda.min <- lambda.min.ratio*lambda.max
+    lambda <- exp(seq(log(lambda.max), log(lambda.min), length = nlambda))
   }
 
   ## gamma grid
