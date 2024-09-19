@@ -74,42 +74,54 @@
 #' \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
 #' }
 #'
-#' @param utilopt A character string specifying the utility option to use. The available
-#' options depend on the chosen method: \enumerate{
+#' @param pkgopt A character string specifying the package option to use. The available
+#' options depend on the selected method: \enumerate{
 #' \item For \code{method = "glasso"}: \itemize{
-#' \item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
-#' \item "CVglasso": the utility function from \code{\link[CVglasso]{CVglasso}}.
-#' \item "CovTools": the utility function from \code{\link[CovTools]{PreEst.glasso}}.
-#' \item "glasso": the utility function from \code{\link[glasso]{glasso}}.
-#' \item "GLassoElnetFast": the utility function from
+#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}} with warm-starts.
+#' \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}}.
+#' \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}} with warm-starts.
+#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}}.
+#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
+#' \item "GLassoElnetFast_cold": the function from
 #' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
-#' \item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
-#' \item "huge": the utility function from \code{\link[huge]{huge.glasso}}.
+#' \item "GLassoElnetFast_warm": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
+#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}}.
+#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
+#' warm-starts.
+#' \item "huge": the function from \code{\link[huge]{huge.glasso}}.
 #' }
 #' \item For \code{method = "ridge"}: \itemize{
-#' \item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
-#' \item "GLassoElnetFast": the utility function from
+#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{RIDGEsigma}}.
+#' \item "GLassoElnetFast": the function from
 #' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
-#' \item "porridge": the utility function from \code{\link[porridge]{ridgePgen}}.
-#' \item "rags2ridges": the utility function from \code{\link[rags2ridges]{ridgeP}}.
+#' \item "porridge": the function from \code{\link[porridge]{ridgePgen}}.
+#' \item "rags2ridges": the function from \code{\link[rags2ridges]{ridgeP}}.
 #' }
 #' \item For \code{method = "elnet"}: \itemize{
-#' \item "ADMMsigma": the utility function from \code{\link[ADMMsigma]{ADMMsigma}}.
-#' \item "GLassoElnetFast": the utility function from
+#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}}.
+#' \item "GLassoElnetFast": the function from
 #' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
 #' }
 #' \item For \code{method = "clime"}: \itemize{
-#' \item "clime": the utility function from \code{\link[clime]{clime}}.
-#' \item "flare": the utility function from \code{\link[flare]{sugm}}.
+#' \item "clime": the function from \code{\link[clime]{clime}}.
+#' \item "flare": the function from \code{\link[flare]{sugm}}.
 #' }
 #' \item For \code{method = "tiger"}: \itemize{
-#' \item "flare": the utility function from \code{\link[flare]{sugm}}.
-#' \item "huge": the utility function from \code{\link[huge]{huge.tiger}}.
+#' \item "flare": the function from \code{\link[flare]{sugm}}.
+#' \item "huge": the function from \code{\link[huge]{huge.tiger}}.
 #' }
 #' \item For \code{method} set to \code{"adapt"}, \code{"atan"}, \code{"exp"},
 #' \code{"scad"}, and \code{"mcp"}: \itemize{
-#' \item "glasso": the utility function from \code{\link[glasso]{glasso}}.
-#' \item "glassoFast": the utility function from \code{\link[glassoFast]{glassoFast}}.
+#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}}.
+#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
+#' \item "GLassoElnetFast_cold": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+#' \item "GLassoElnetFast_warm": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
+#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}}.
+#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
+#' warm-starts.
 #' }
 #' }
 #'
@@ -179,14 +191,14 @@ fcstat <- function(
     lambda = NULL, nlambda = 20, lambda.min.ratio = 0.01,
     gamma = NA, ## for elnet, adapt, atan, exp, mcp, scad
     initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
-    utilopt = "glassoFast", ## utility option for clime
+    pkgopt = "glassoFast_cold", ## package option
     crit = "CV", fold = 5, ebic.tuning = 0.5,
     cores = 1) {
 
   est.obj <- fcstat.est(
     X = X, method = method, base = base,
     lambda = lambda, nlambda = nlambda, lambda.min.ratio = lambda.min.ratio,
-    gamma = gamma, initial = initial, utilopt = utilopt,
+    gamma = gamma, initial = initial, pkgopt = pkgopt,
     cores = cores)
 
   npara <- length(est.obj$hatOmega)
@@ -228,7 +240,7 @@ fcstat <- function(
         cvlist <- fcstat.est(X = X.train,
                              method = method, base = base,
                              lambda = lambda, gamma = gamma,
-                             initial = initial, utilopt = utilopt,
+                             initial = initial, pkgopt = pkgopt,
                              cores = cores)
 
         ## loss: negative log-likelihood

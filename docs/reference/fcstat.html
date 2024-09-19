@@ -48,7 +48,7 @@
 <span>  lambda.min.ratio <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  initial <span class="op">=</span> <span class="st">"glasso"</span>,</span>
-<span>  utilopt <span class="op">=</span> <span class="st">"glassoFast"</span>,</span>
+<span>  pkgopt <span class="op">=</span> <span class="st">"glassoFast_cold"</span>,</span>
 <span>  crit <span class="op">=</span> <span class="st">"CV"</span>,</span>
 <span>  fold <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  ebic.tuning <span class="op">=</span> <span class="fl">0.5</span>,</span>
@@ -68,29 +68,19 @@
 
 <dt id="arg-method">method<a class="anchor" aria-label="anchor" href="#arg-method"></a></dt>
 <dd><p>A character string specifying the statistical method for estimating
-precision matrix. Available options include:</p><ol><li><p>"glasso": graphical lasso (Friedman et al. 2008)
-.</p></li>
-<li><p>"ridge": graphical ridge (van Wieringen and Peeters 2016)
-.</p></li>
-<li><p>"elnet": graphical elastic net (Zou and Hastie 2005)
-.</p></li>
+precision matrix. Available options include:</p><ol><li><p>"glasso": graphical lasso friedman2008sparsefcstat.</p></li>
+<li><p>"ridge": graphical ridge vanwieringen2016ridgefcstat.</p></li>
+<li><p>"elnet": graphical elastic net zou2005regularizationfcstat.</p></li>
 <li><p>"clime": constrained L1-minimization for inverse (covariance) matrix estimation
-(Cai et al. 2011)
-.</p></li>
+cai2011aconstrainedfcstat.</p></li>
 <li><p>"tiger": tuning-insensitive graph estimation and regression
-(Liu and Wang 2017)
-, which is only applicable when <code>X</code> is the n-by-p
+liu2017tigerfcstat, which is only applicable when <code>X</code> is the n-by-p
 data matrix.</p></li>
-<li><p>"adapt": adaptive lasso (Zou 2006; Fan et al. 2009)
-.</p></li>
-<li><p>"atan": arctangent type penalty (Wang and Zhu 2016)
-.</p></li>
-<li><p>"exp": exponential type penalty (Wang et al. 2018)
-.</p></li>
-<li><p>"mcp": minimax concave penalty (Zou 2006)
-.</p></li>
-<li><p>"scad": smoothly clipped absolute deviation (Fan and Li 2001; Fan et al. 2009)
-.</p></li>
+<li><p>"adapt": adaptive lasso zou2006adaptive,fan2009networkfcstat.</p></li>
+<li><p>"atan": arctangent type penalty wang2016variablefcstat.</p></li>
+<li><p>"exp": exponential type penalty wang2018variablefcstat.</p></li>
+<li><p>"mcp": minimax concave penalty zou2006adaptivefcstat.</p></li>
+<li><p>"scad": smoothly clipped absolute deviation fan2001variable,fan2009networkfcstat.</p></li>
 </ol></dd>
 
 
@@ -147,59 +137,65 @@ including:</p><ul><li><p>"glasso": use the precision matrix estimate derived fro
 <li><p>"invS": use the inverse calculation base matrix if the matrix is invertible.</p></li>
 <li><p>"linshrink": use the precision matrix estimate derived from Ledoit-Wolf linear
 shrinakge estimator of the population covariance matrix
-(Ledoit and Wolf 2004)
-.</p></li>
+ledoit2004wellfcstat.</p></li>
 <li><p>"nlshrink": use the precision matrix estimate derived from Ledoit-Wolf non-linear
 shrinakge estimator of the population covariance matrix
-(Ledoit and Wolf 2015; Ledoit and Wolf 2017)
-.</p></li>
+ledoit2015spectrum,ledoit2017numericalfcstat.</p></li>
 </ul></dd>
 
 
-<dt id="arg-utilopt">utilopt<a class="anchor" aria-label="anchor" href="#arg-utilopt"></a></dt>
-<dd><p>A character string specifying the utility option to use. The available
-options depend on the chosen method:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"ADMMsigma": the utility function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
-<li><p>"CVglasso": the utility function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code>.</p></li>
-<li><p>"CovTools": the utility function from <code><a href="https://rdrr.io/pkg/CovTools/man/PreEst.glasso.html" class="external-link">PreEst.glasso</a></code>.</p></li>
-<li><p>"glasso": the utility function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
-<li><p>"GLassoElnetFast": the utility function from
+<dt id="arg-pkgopt">pkgopt<a class="anchor" aria-label="anchor" href="#arg-pkgopt"></a></dt>
+<dd><p>A character string specifying the package option to use. The available
+options depend on the selected method:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"ADMMsigma": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code> with warm-starts.</p></li>
+<li><p>"CovTools": the function from <code><a href="https://rdrr.io/pkg/CovTools/man/PreEst.glasso.html" class="external-link">PreEst.glasso</a></code>.</p></li>
+<li><p>"CVglasso": the function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code> with warm-starts.</p></li>
+<li><p>"glasso_cold": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
+<li><p>"glasso_warm": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code> with warm-starts.</p></li>
+<li><p>"GLassoElnetFast_cold": the function from
 <a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
-<li><p>"glassoFast": the utility function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
-<li><p>"huge": the utility function from <code><a href="https://rdrr.io/pkg/huge/man/huge.glasso.html" class="external-link">huge.glasso</a></code>.</p></li>
+<li><p>"GLassoElnetFast_warm": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a> with warm-starts.</p></li>
+<li><p>"glassoFast_cold": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
+<li><p>"glassoFast_warm": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code> with
+warm-starts.</p></li>
+<li><p>"huge": the function from <code><a href="https://rdrr.io/pkg/huge/man/huge.glasso.html" class="external-link">huge.glasso</a></code>.</p></li>
 </ul></li>
-<li><p>For <code>method = "ridge"</code>:</p><ul><li><p>"ADMMsigma": the utility function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
-<li><p>"GLassoElnetFast": the utility function from
+<li><p>For <code>method = "ridge"</code>:</p><ul><li><p>"ADMMsigma": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/RIDGEsigma.html" class="external-link">RIDGEsigma</a></code>.</p></li>
+<li><p>"GLassoElnetFast": the function from
 <a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
-<li><p>"porridge": the utility function from <code><a href="https://rdrr.io/pkg/porridge/man/ridgePgen.html" class="external-link">ridgePgen</a></code>.</p></li>
-<li><p>"rags2ridges": the utility function from <code><a href="https://cfwp.github.io/rags2ridges/reference/ridgeP.html" class="external-link">ridgeP</a></code>.</p></li>
+<li><p>"porridge": the function from <code><a href="https://rdrr.io/pkg/porridge/man/ridgePgen.html" class="external-link">ridgePgen</a></code>.</p></li>
+<li><p>"rags2ridges": the function from <code><a href="https://cfwp.github.io/rags2ridges/reference/ridgeP.html" class="external-link">ridgeP</a></code>.</p></li>
 </ul></li>
-<li><p>For <code>method = "elnet"</code>:</p><ul><li><p>"ADMMsigma": the utility function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
-<li><p>"GLassoElnetFast": the utility function from
+<li><p>For <code>method = "elnet"</code>:</p><ul><li><p>"ADMMsigma": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code>.</p></li>
+<li><p>"GLassoElnetFast": the function from
 <a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
 </ul></li>
-<li><p>For <code>method = "clime"</code>:</p><ul><li><p>"clime": the utility function from <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>.</p></li>
-<li><p>"flare": the utility function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
+<li><p>For <code>method = "clime"</code>:</p><ul><li><p>"clime": the function from <code><a href="https://rdrr.io/pkg/clime/man/clime.html" class="external-link">clime</a></code>.</p></li>
+<li><p>"flare": the function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
 </ul></li>
-<li><p>For <code>method = "tiger"</code>:</p><ul><li><p>"flare": the utility function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
-<li><p>"huge": the utility function from <code><a href="https://rdrr.io/pkg/huge/man/huge.tiger.html" class="external-link">huge.tiger</a></code>.</p></li>
+<li><p>For <code>method = "tiger"</code>:</p><ul><li><p>"flare": the function from <code><a href="https://rdrr.io/pkg/flare/man/sugm.html" class="external-link">sugm</a></code>.</p></li>
+<li><p>"huge": the function from <code><a href="https://rdrr.io/pkg/huge/man/huge.tiger.html" class="external-link">huge.tiger</a></code>.</p></li>
 </ul></li>
 <li><p>For <code>method</code> set to <code>"adapt"</code>, <code>"atan"</code>, <code>"exp"</code>,
-<code>"scad"</code>, and <code>"mcp"</code>:</p><ul><li><p>"glasso": the utility function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
-<li><p>"glassoFast": the utility function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
+<code>"scad"</code>, and <code>"mcp"</code>:</p><ul><li><p>"glasso_cold": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
+<li><p>"glasso_warm": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code> with warm-starts.</p></li>
+<li><p>"GLassoElnetFast_cold": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
+<li><p>"GLassoElnetFast_warm": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a> with warm-starts.</p></li>
+<li><p>"glassoFast_cold": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
+<li><p>"glassoFast_warm": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code> with
+warm-starts.</p></li>
 </ul></li>
 </ol></dd>
 
 
 <dt id="arg-crit">crit<a class="anchor" aria-label="anchor" href="#arg-crit"></a></dt>
 <dd><p>A string (default = "CV") specifying the parameter selection method to use.
-Available options include:</p><ol><li><p>"AIC": Akaike information criterion (Akaike 1973)
-.</p></li>
-<li><p>"BIC": Bayesian information criterion (Schwarz 1978)
-.</p></li>
-<li><p>"EBIC": extended Bayesian information criterion (Foygel and Drton 2010)
-.</p></li>
-<li><p>"HBIC": high dimensional Bayesian information criterion (Wang et al. 2013; Fan et al. 2017)
-.</p></li>
+Available options include:</p><ol><li><p>"AIC": Akaike information criterion akaike1973informationfcstat.</p></li>
+<li><p>"BIC": Bayesian information criterion schwarz1978estimatingfcstat.</p></li>
+<li><p>"EBIC": extended Bayesian information criterion foygel2010extendedfcstat.</p></li>
+<li><p>"HBIC": high dimensional Bayesian information criterion wang2013calibrating,fan2017highfcstat.</p></li>
 <li><p>"CV": k-fold cross validation with negative log-likelihood loss.</p></li>
 </ol></dd>
 
@@ -289,76 +285,7 @@ applicable for <code>tiger</code> and will have no effect if provided.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Akaike H (1973).
-“Information Theory and an Extension of the Maximum Likelihood Principle.”
-In Petrov BN, Csáki F (eds.), <em>Second International Symposium on Information Theory</em>, 267–281.
-Akad\'emiai Kiad\'o, Budapest, Hungary.<br><br> Cai TT, Liu W, Luo X (2011).
-“A Constrained \(\ell\)1 Minimization Approach to Sparse Precision Matrix Estimation.”
-<em>Journal of the American Statistical Association</em>, <b>106</b>(494), 594–607.
-<a href="https://doi.org/10.1198/jasa.2011.tm10155" class="external-link">doi:10.1198/jasa.2011.tm10155</a>
-.<br><br> Fan J, Feng Y, Wu Y (2009).
-“Network Exploration via the Adaptive LASSO and SCAD Penalties.”
-<em>The Annals of Applied Statistics</em>, <b>3</b>(2), 521–541.
-<a href="https://doi.org/10.1214/08-aoas215" class="external-link">doi:10.1214/08-aoas215</a>
-.<br><br> Fan J, Li R (2001).
-“Variable Selection via Nonconcave Penalized Likelihood and its Oracle Properties.”
-<em>Journal of the American Statistical Association</em>, <b>96</b>(456), 1348–1360.
-<a href="https://doi.org/10.1198/016214501753382273" class="external-link">doi:10.1198/016214501753382273</a>
-.<br><br> Fan J, Liu H, Ning Y, Zou H (2017).
-“High Dimensional Semiparametric Latent Graphical Model for Mixed Data.”
-<em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em>, <b>79</b>(2), 405–421.
-<a href="https://doi.org/10.1111/rssb.12168" class="external-link">doi:10.1111/rssb.12168</a>
-.<br><br> Foygel R, Drton M (2010).
-“Extended Bayesian Information Criteria for Gaussian Graphical Models.”
-In Lafferty J, Williams C, Shawe-Taylor J, Zemel R, Culotta A (eds.), <em>Advances in Neural Information Processing Systems 23 (NIPS 2010)</em>, 604–612.<br><br> Friedman J, Hastie T, Tibshirani R (2008).
-“Sparse Inverse Covariance Estimation with the Graphical Lasso.”
-<em>Biostatistics</em>, <b>9</b>(3), 432–441.
-<a href="https://doi.org/10.1093/biostatistics/kxm045" class="external-link">doi:10.1093/biostatistics/kxm045</a>
-.<br><br> Ledoit O, Wolf M (2004).
-“A Well-Conditioned Estimator for Large-Dimensional Covariance Matrices.”
-<em>Journal of Multivariate Analysis</em>, <b>88</b>(2), 365–411.
-<a href="https://doi.org/10.1016/S0047-259X%2803%2900096-4" class="external-link">doi:10.1016/S0047-259X(03)00096-4</a>
-.<br><br> Ledoit O, Wolf M (2015).
-“Spectrum Estimation: A Unified Framework for Covariance Matrix Estimation and PCA in Large Dimensions.”
-<em>Journal of Multivariate Analysis</em>, <b>139</b>, 360–384.
-<a href="https://doi.org/10.1016/j.jmva.2015.04.006" class="external-link">doi:10.1016/j.jmva.2015.04.006</a>
-.<br><br> Ledoit O, Wolf M (2017).
-“Numerical Implementation of the QuEST Function.”
-<em>Computational Statistics &amp; Data Analysis</em>, <b>115</b>, 199–223.
-<a href="https://doi.org/10.1016/j.csda.2017.06.004" class="external-link">doi:10.1016/j.csda.2017.06.004</a>
-.<br><br> Liu H, Wang L (2017).
-“TIGER: A Tuning-Insensitive Approach for Optimally Estimating Gaussian Graphical Models.”
-<em>Electronic Journal of Statistics</em>, <b>11</b>(1), 241–294.
-<a href="https://doi.org/10.1214/16-EJS1195" class="external-link">doi:10.1214/16-EJS1195</a>
-.<br><br> Schwarz G (1978).
-“Estimating the Dimension of a Model.”
-<em>The Annals of Statistics</em>, <b>6</b>(2), 461–464.
-<a href="https://doi.org/10.1214/aos/1176344136" class="external-link">doi:10.1214/aos/1176344136</a>
-.<br><br> van Wieringen WN, Peeters CFW (2016).
-“Ridge Estimation of Inverse Covariance Matrices from High-Dimensional Data.”
-<em>Computational Statistics &amp; Data Analysis</em>, <b>103</b>, 284–303.
-<a href="https://doi.org/10.1016/j.csda.2016.05.012" class="external-link">doi:10.1016/j.csda.2016.05.012</a>
-.<br><br> Wang L, Kim Y, Li R (2013).
-“Calibrating Nonconvex Penalized Regression in Ultra-High Dimension.”
-<em>The Annals of Statistics</em>, <b>41</b>(5), 2505–2536.
-<a href="https://doi.org/10.1214/13-AOS1159" class="external-link">doi:10.1214/13-AOS1159</a>
-.<br><br> Wang Y, Fan Q, Zhu L (2018).
-“Variable Selection and Estimation using a Continuous Approximation to the \(L_0\) Penalty.”
-<em>Annals of the Institute of Statistical Mathematics</em>, <b>70</b>(1), 191–214.
-<a href="https://doi.org/10.1007/s10463-016-0588-3" class="external-link">doi:10.1007/s10463-016-0588-3</a>
-.<br><br> Wang Y, Zhu L (2016).
-“Variable Selection and Parameter Estimation with the Atan Regularization Method.”
-<em>Journal of Probability and Statistics</em>, <b>2016</b>, 6495417.
-<a href="https://doi.org/10.1155/2016/6495417" class="external-link">doi:10.1155/2016/6495417</a>
-.<br><br> Zou H (2006).
-“The Adaptive Lasso and Its Oracle Properties.”
-<em>Journal of the American Statistical Association</em>, <b>101</b>(476), 1418–1429.
-<a href="https://doi.org/10.1198/016214506000000735" class="external-link">doi:10.1198/016214506000000735</a>
-.<br><br> Zou H, Hastie T (2005).
-“Regularization and Variable Selection via the Elastic Net.”
-<em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em>, <b>67</b>(2), 301–320.
-<a href="https://doi.org/10.1111/j.1467-9868.2005.00527.x" class="external-link">doi:10.1111/j.1467-9868.2005.00527.x</a>
-.</p>
+    <p></p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -370,7 +297,7 @@ In Lafferty J, Williams C, Shawe-Taylor J, Zemel R, Culotta A (eds.), <em>Advanc
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
 </div>
 
     </footer></div>
