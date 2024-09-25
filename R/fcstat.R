@@ -283,7 +283,7 @@ fcstat <- function(
       }
 
       ## select the optimal parameters among a set of possible values
-      scores <- sapply(1:npara, function (k) {
+      score <- sapply(1:npara, function (k) {
         criterion(hatOmega = hatOmega[[k]], S = S, n = n, crit = crit, ebic.tuning = ebic.tuning)
       })
 
