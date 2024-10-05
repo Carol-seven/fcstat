@@ -30,5 +30,5 @@ X <- matrix(rnorm(200), 10, 20)
 
 ## Statistical methods for estimating the precision matrix,
 ## including the estimation and selection process
-fcstat(X, method = "glasso", pkgopt = "glassoFast_cold", crit = "CV", fold = 5)
+fcstat(X, method = "glasso", pkgopt = "glassoFast_cold_diagture", crit = "CV", fold = 5)
 ```

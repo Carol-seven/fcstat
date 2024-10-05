@@ -48,7 +48,7 @@
 <span>  lambda.min.ratio <span class="op">=</span> <span class="fl">0.01</span>,</span>
 <span>  gamma <span class="op">=</span> <span class="cn">NA</span>,</span>
 <span>  initial <span class="op">=</span> <span class="st">"glasso"</span>,</span>
-<span>  pkgopt <span class="op">=</span> <span class="st">"glassoFast_cold"</span>,</span>
+<span>  pkgopt <span class="op">=</span> <span class="st">"glassoFast_cold_diagture"</span>,</span>
 <span>  crit <span class="op">=</span> <span class="st">"CV"</span>,</span>
 <span>  fold <span class="op">=</span> <span class="fl">5</span>,</span>
 <span>  ebic.tuning <span class="op">=</span> <span class="fl">0.5</span>,</span>
@@ -146,19 +146,44 @@ ledoit2015spectrum,ledoit2017numericalfcstat.</p></li>
 
 <dt id="arg-pkgopt">pkgopt<a class="anchor" aria-label="anchor" href="#arg-pkgopt"></a></dt>
 <dd><p>A character string specifying the package option to use. The available
-options depend on the selected method:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"ADMMsigma": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code> with warm-starts.</p></li>
+options depend on the selected method:</p><ol><li><p>For <code>method = "glasso"</code>:</p><ul><li><p>"ADMMsigma_diagtrue": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code> with
+warm-starts, and the diagonal elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"ADMMsigma_diagfalse": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/ADMMsigma.html" class="external-link">ADMMsigma</a></code> with
+warm-starts, and the diagonal elements of the estimated precision matrix are not
+penalized.</p></li>
 <li><p>"CovTools": the function from <code><a href="https://rdrr.io/pkg/CovTools/man/PreEst.glasso.html" class="external-link">PreEst.glasso</a></code>.</p></li>
-<li><p>"CVglasso": the function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code> with warm-starts.</p></li>
-<li><p>"glasso_cold": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>.</p></li>
-<li><p>"glasso_warm": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code> with warm-starts.</p></li>
-<li><p>"GLassoElnetFast_cold": the function from
-<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>.</p></li>
-<li><p>"GLassoElnetFast_warm": the function from
-<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a> with warm-starts.</p></li>
-<li><p>"glassoFast_cold": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>.</p></li>
+<li><p>"CVglasso_diagtrue": the function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code> with
+warm-starts, and the diagonal elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"CVglasso_diagfalse": the function from <code><a href="https://rdrr.io/pkg/CVglasso/man/CVglasso.html" class="external-link">CVglasso</a></code> with
+warm-starts, and the diagonal elements of the estimated precision matrix are not
+penalized.</p></li>
+<li><p>"glasso_cold_diagtrue": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>, and the
+diagonal elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"glasso_cold_diagfalse": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code>, and the
+diagonal elements of the estimated precision matrix are not penalized.</p></li>
+<li><p>"glasso_warm_diagtrue": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code> with
+warm-starts, and the diagonal elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"glasso_warm_diagfalse": the function from <code><a href="https://rdrr.io/pkg/glasso/man/glasso.html" class="external-link">glasso</a></code> with
+warm-starts, and the diagonal elements of the estimated precision matrix are not
+penalized.</p></li>
+<li><p>"GLassoElnetFast_cold_diagtrue": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>, and the diagonal
+elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"GLassoElnetFast_cold_diagfalse": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a>, and the diagonal
+elements of the estimated precision matrix are not penalized.</p></li>
+<li><p>"GLassoElnetFast_warm_diagtrue": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a> with warm-starts, and
+the diagonal elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"GLassoElnetFast_warm_diagfalse": the function from
+<a href="https://github.com/TobiasRuckstuhl/GLassoElnetFast" class="external-link">gelnet</a> with warm-starts, and
+the diagonal elements of the estimated precision matrix are not penalized.</p></li>
+<li><p>"glassoFast_cold": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code>, and
+the diagonal elements of the estimated precision matrix are penalized.</p></li>
 <li><p>"glassoFast_warm": the function from <code><a href="https://rdrr.io/pkg/glassoFast/man/glassoFast.html" class="external-link">glassoFast</a></code> with
-warm-starts.</p></li>
-<li><p>"huge": the function from <code><a href="https://rdrr.io/pkg/huge/man/huge.glasso.html" class="external-link">huge.glasso</a></code>.</p></li>
+warm-starts, and the diagonal elements of the estimated precision matrix are penalized.</p></li>
+<li><p>"huge": the function from <code><a href="https://rdrr.io/pkg/huge/man/huge.glasso.html" class="external-link">huge.glasso</a></code>, and the diagonal
+elements of the estimated precision matrix are penalized.</p></li>
 </ul></li>
 <li><p>For <code>method = "ridge"</code>:</p><ul><li><p>"ADMMsigma": the function from <code><a href="https://rdrr.io/pkg/ADMMsigma/man/RIDGEsigma.html" class="external-link">RIDGEsigma</a></code>.</p></li>
 <li><p>"GLassoElnetFast": the function from
