@@ -14,7 +14,7 @@ fcstat(
   lambda.min.ratio = 0.01,
   gamma = NA,
   initial = "glasso",
-  pkgopt = "glassoFast_cold_diagture",
+  pkgopt = "glasso_cold",
   crit = "CV",
   fold = 5,
   ebic.tuning = 0.5,
@@ -96,44 +96,22 @@ shrinakge estimator of the population covariance matrix
 \item{pkgopt}{A character string specifying the package option to use. The available
 options depend on the selected method: \enumerate{
 \item For \code{method = "glasso"}: \itemize{
-\item "ADMMsigma_diagtrue": the function from \code{\link[ADMMsigma]{ADMMsigma}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are penalized.
-\item "ADMMsigma_diagfalse": the function from \code{\link[ADMMsigma]{ADMMsigma}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are not
-penalized.
-\item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}}.
-\item "CVglasso_diagtrue": the function from \code{\link[CVglasso]{CVglasso}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are penalized.
-\item "CVglasso_diagfalse": the function from \code{\link[CVglasso]{CVglasso}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are not
-penalized.
-\item "glasso_cold_diagtrue": the function from \code{\link[glasso]{glasso}}, and the
-diagonal elements of the estimated precision matrix are penalized.
-\item "glasso_cold_diagfalse": the function from \code{\link[glasso]{glasso}}, and the
-diagonal elements of the estimated precision matrix are not penalized.
-\item "glasso_warm_diagtrue": the function from \code{\link[glasso]{glasso}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are penalized.
-\item "glasso_warm_diagfalse": the function from \code{\link[glasso]{glasso}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are not
-penalized.
-\item "GLassoElnetFast_cold_diagtrue": the function from
-\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}, and the diagonal
-elements of the estimated precision matrix are penalized.
-\item "GLassoElnetFast_cold_diagfalse": the function from
-\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}, and the diagonal
-elements of the estimated precision matrix are not penalized.
-\item "GLassoElnetFast_warm_diagtrue": the function from
-\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts, and
-the diagonal elements of the estimated precision matrix are penalized.
-\item "GLassoElnetFast_warm_diagfalse": the function from
-\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts, and
-the diagonal elements of the estimated precision matrix are not penalized.
-\item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}}, and
-the diagonal elements of the estimated precision matrix are penalized.
+\item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}} with
+warm-starts.
+\item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}} with
+cold-starts.
+\item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}} with warm-starts.
+\item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
+\item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
+\item "GLassoElnetFast_cold": the function from
+\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
+\item "GLassoElnetFast_warm": the function from
+\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
+\item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
+cold-starts.
 \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
-warm-starts, and the diagonal elements of the estimated precision matrix are penalized.
-\item "huge": the function from \code{\link[huge]{huge.glasso}}, and the diagonal
-elements of the estimated precision matrix are penalized.
+warm-starts.
+\item "huge": the function from \code{\link[huge]{huge.glasso}} with cold-starts.
 }
 \item For \code{method = "ridge"}: \itemize{
 \item "ADMMsigma": the function from \code{\link[ADMMsigma]{RIDGEsigma}}.
@@ -157,13 +135,14 @@ elements of the estimated precision matrix are penalized.
 }
 \item For \code{method} set to \code{"adapt"}, \code{"atan"}, \code{"exp"},
 \code{"scad"}, and \code{"mcp"}: \itemize{
-\item "glasso_cold": the function from \code{\link[glasso]{glasso}}.
+\item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
 \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
 \item "GLassoElnetFast_cold": the function from
-\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+\href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
 \item "GLassoElnetFast_warm": the function from
 \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
-\item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}}.
+\item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
+cold-starts.
 \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
 warm-starts.
 }
