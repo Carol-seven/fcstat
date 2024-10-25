@@ -246,7 +246,7 @@ fcstat.est <- function(
                       pkgopt = pkgopt)
       }
     } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
-      Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda)
+      Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda, pkgopt = pkgopt)
       lambda_mat <- lapply(1:npara, function(k) {
         fcstat::deriv(penalty = method, Omega = Omega[[k]],
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k])
@@ -293,7 +293,7 @@ fcstat.est <- function(
                       pkgopt = pkgopt)
       })
     } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
-      Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda)
+      Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda, pkgopt = pkgopt)
       lambda_mat <- lapply(1:npara, function(k) {
         fcstat::deriv(penalty = method, Omega = Omega[[k]],
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k])
