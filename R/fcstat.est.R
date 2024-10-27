@@ -76,22 +76,14 @@
 #' @param pkgopt A character string specifying the package option to use. The available
 #' options depend on the selected method: \enumerate{
 #' \item For \code{method = "glasso"}: \itemize{
-#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}} with
-#' warm-starts.
-#' \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}} with
-#' cold-starts.
-#' \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}} with warm-starts.
-#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
-#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
-#' \item "GLassoElnetFast_cold": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
-#' \item "GLassoElnetFast_warm": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
-#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
-#' cold-starts.
-#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
-#' warm-starts.
-#' \item "huge": the function from \code{\link[huge]{huge.glasso}} with cold-starts.
+#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}}.
+#' \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}}.
+#' \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}}.
+#' \item "glasso": the function from \code{\link[glasso]{glasso}}.
+#' \item "GLassoElnetFast": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+#' \item "glassoFast": the function from \code{\link[glassoFast]{glassoFast}}.
+#' \item "huge": the function from \code{\link[huge]{huge.glasso}}.
 #' }
 #' \item For \code{method = "ridge"}: \itemize{
 #' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{RIDGEsigma}}.
@@ -115,16 +107,10 @@
 #' }
 #' \item For \code{method} set to \code{"adapt"}, \code{"atan"}, \code{"exp"},
 #' \code{"scad"}, and \code{"mcp"}: \itemize{
-#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
-#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
-#' \item "GLassoElnetFast_cold": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
-#' \item "GLassoElnetFast_warm": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
-#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
-#' cold-starts.
-#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
-#' warm-starts.
+#' \item "glasso": the function from \code{\link[glasso]{glasso}}.
+#' \item "GLassoElnetFast": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+#' \item "glassoFast": the function from \code{\link[glassoFast]{glassoFast}}.
 #' }
 #' }
 #'
@@ -167,7 +153,7 @@ fcstat.est <- function(
     lambda = NULL, nlambda = 20, lambda.min.ratio = 0.01,
     gamma = NULL, ## for elnet, adapt, atan, exp, mcp, scad
     initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
-    pkgopt = "glasso_cold", ## package option
+    pkgopt = "glasso", ## package option
     cores = 1) {
 
   if (!method %in% c("glasso", "ridge", "elnet", "clime", "tiger",
@@ -238,12 +224,24 @@ fcstat.est <- function(
     registerDoParallel(cluster)
 
     ## compute the precision matrix estimator hatOmega along the parameter grid
-    if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
+    if (method %in% c("glasso", "ridge", "elnet", "clime")) {
       hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
                           .export = c("fcstat_method")) %dopar% {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
                       pkgopt = pkgopt)
+      }
+    } else if (method == "tiger") {
+      hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
+                          .export = c("fcstat_method")) %dopar% {
+        tryCatch(
+          fcstat_method(method = method, X = X, S = S,
+                        lambda = parameter$lambda[k], gamma = parameter$gamma[k],
+                        pkgopt = pkgopt),
+          error = function(e) {
+            message("lambda[", k, "] ", parameter$lambda[k], " is too samll. Ignored!")
+          }
+        )
       }
     } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
       Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda, pkgopt = pkgopt)
@@ -251,32 +249,17 @@ fcstat.est <- function(
         fcstat::deriv(penalty = method, Omega = Omega[[k]],
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k])
       })
-      if (pkgopt == "glasso_cold") {
+      if (pkgopt == "glasso") {
         hatOmega <- foreach(k = 1:npara) %dopar% {
           glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "cold")$wi
         }
-      } else if (pkgopt == "glasso_warm") {
-        hatOmega <- foreach(k = 1:npara) %dopar% {
-          glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "warm",
-                         w.init = S + lambda_mat[[k]], wi.init = diag(ncol(S)))$wi
-        }
-      } else if (pkgopt == "GLassoElnetFast_cold") {
+      } else if (pkgopt == "GLassoElnetFast") {
         hatOmega <- foreach(k = 1:npara) %dopar% {
           GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE)$Theta
         }
-      } else if (pkgopt == "GLassoElnetFast_warm") {
-        hatOmega <- foreach(k = 1:npara) %dopar% {
-          GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE,
-                                  W = S + lambda_mat[[k]], Theta = diag(ncol(S)))$Theta
-        }
-      } else if (pkgopt == "glassoFast_cold") {
+      } else if (pkgopt == "glassoFast") {
         hatOmega <- foreach(k = 1:npara) %dopar% {
           glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "cold")$wi
-        }
-      } else if (pkgopt == "glassoFast_warm") {
-        hatOmega <- foreach(k = 1:npara) %dopar% {
-          glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "warm",
-                                 w.init = S + lambda_mat[[k]], wi.init = diag(ncol(S)))$wi
         }
       }
     }
@@ -286,11 +269,22 @@ fcstat.est <- function(
   } else {
 
     ## compute the precision matrix estimator hatOmega along the parameter grid
-    if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
+    if (method %in% c("glasso", "ridge", "elnet", "clime")) {
       hatOmega <- lapply(1:npara, function(k) {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
                       pkgopt = pkgopt)
+      })
+    } else if (method == "tiger") {
+      hatOmega <- lapply(1:npara, function(k) {
+        tryCatch(
+          fcstat_method(method = method, X = X, S = S,
+                        lambda = parameter$lambda[k], gamma = parameter$gamma[k],
+                        pkgopt = pkgopt),
+          error = function(e) {
+            message("lambda[", k, "] ", parameter$lambda[k], " is too samll. Ignored!")
+          }
+        )
       })
     } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
       Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda, pkgopt = pkgopt)
@@ -298,32 +292,17 @@ fcstat.est <- function(
         fcstat::deriv(penalty = method, Omega = Omega[[k]],
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k])
       })
-      if (pkgopt == "glasso_cold") {
+      if (pkgopt == "glasso") {
         hatOmega <- lapply(1:npara, function(k) {
           glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "cold")$wi
         })
-      } else if (pkgopt == "glasso_warm") {
-        hatOmega <- lapply(1:npara, function(k) {
-          glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "warm",
-                         w.init = S + lambda_mat[[k]], wi.init = diag(ncol(S)))$wi
-        })
-      } else if (pkgopt == "GLassoElnetFast_cold") {
+      } else if (pkgopt == "GLassoElnetFast") {
         hatOmega <- lapply(1:npara, function(k) {
           GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE)$Theta
         })
-      } else if (pkgopt == "GLassoElnetFast_warm") {
-        hatOmega <- lapply(1:npara, function(k) {
-          GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE,
-                                  W = S + lambda_mat[[k]], Theta = diag(ncol(S)))$Theta
-        })
-      } else if (pkgopt == "glassoFast_cold") {
+      } else if (pkgopt == "glassoFast") {
         hatOmega <- lapply(1:npara, function(k) {
           glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "cold")$wi
-        })
-      } else if (pkgopt == "glassoFast_warm") {
-        hatOmega <- lapply(1:npara, function(k) {
-          glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "warm",
-                                 w.init = S + lambda_mat[[k]], wi.init = diag(ncol(S)))$wi
         })
       }
     }

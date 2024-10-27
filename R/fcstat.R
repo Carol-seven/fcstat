@@ -77,22 +77,14 @@
 #' @param pkgopt A character string specifying the package option to use. The available
 #' options depend on the selected method: \enumerate{
 #' \item For \code{method = "glasso"}: \itemize{
-#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}} with
-#' warm-starts.
-#' \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}} with
-#' cold-starts.
-#' \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}} with warm-starts.
-#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
-#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
-#' \item "GLassoElnetFast_cold": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
-#' \item "GLassoElnetFast_warm": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
-#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
-#' cold-starts.
-#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
-#' warm-starts.
-#' \item "huge": the function from \code{\link[huge]{huge.glasso}} with cold-starts.
+#' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}}.
+#' \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}}.
+#' \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}}.
+#' \item "glasso": the function from \code{\link[glasso]{glasso}}.
+#' \item "GLassoElnetFast": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+#' \item "glassoFast": the function from \code{\link[glassoFast]{glassoFast}}.
+#' \item "huge": the function from \code{\link[huge]{huge.glasso}}.
 #' }
 #' \item For \code{method = "ridge"}: \itemize{
 #' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{RIDGEsigma}}.
@@ -116,16 +108,10 @@
 #' }
 #' \item For \code{method} set to \code{"adapt"}, \code{"atan"}, \code{"exp"},
 #' \code{"scad"}, and \code{"mcp"}: \itemize{
-#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
-#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
-#' \item "GLassoElnetFast_cold": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
-#' \item "GLassoElnetFast_warm": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
-#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
-#' cold-starts.
-#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
-#' warm-starts.
+#' \item "glasso": the function from \code{\link[glasso]{glasso}}.
+#' \item "GLassoElnetFast": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+#' \item "glassoFast": the function from \code{\link[glassoFast]{glassoFast}}.
 #' }
 #' }
 #'
@@ -195,7 +181,7 @@ fcstat <- function(
     lambda = NULL, nlambda = 20, lambda.min.ratio = 0.01,
     gamma = NA, ## for elnet, adapt, atan, exp, mcp, scad
     initial = "glasso", ## initial estimator for atan, exp, mcp, scad; adaptive weight for adapt
-    pkgopt = "glasso_cold", ## package option
+    pkgopt = "glasso", ## package option
     crit = "CV", fold = 5, ebic.tuning = 0.5,
     cores = 1) {
 
@@ -249,8 +235,11 @@ fcstat <- function(
 
         ## loss: negative log-likelihood
         for (k in 1:npara) {
-          loss[j,k] <- - determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
-          # log(det(cvlist$hatOmega[[k]])) determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1]
+          loss[j,k] <- ifelse(
+            is.null(cvlist$hatOmega[[k]]), NULL,
+            - determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
+            # log(det(cvlist$hatOmega[[k]])) determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1]
+          )
         }
       }
 

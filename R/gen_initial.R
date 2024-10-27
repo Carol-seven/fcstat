@@ -30,16 +30,10 @@
 #'
 #' @param pkgopt A character string specifying the package option to use. This argument
 #' only works when \code{initial = "glasso"}. \itemize{
-#' \item "glasso_cold": the function from \code{\link[glasso]{glasso}} with cold-starts.
-#' \item "glasso_warm": the function from \code{\link[glasso]{glasso}} with warm-starts.
-#' \item "GLassoElnetFast_cold": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with cold-starts.
-#' \item "GLassoElnetFast_warm": the function from
-#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet} with warm-starts.
-#' \item "glassoFast_cold": the function from \code{\link[glassoFast]{glassoFast}} with
-#' cold-starts.
-#' \item "glassoFast_warm": the function from \code{\link[glassoFast]{glassoFast}} with
-#' warm-starts.
+#' \item "glasso": the function from \code{\link[glasso]{glasso}}.
+#' \item "GLassoElnetFast": the function from
+#' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
+#' \item "glassoFast": the function from \code{\link[glassoFast]{glassoFast}}.
 #' }
 #'
 #' @param lambda Grid of non-negative scalars for the regularization parameter.
@@ -73,32 +67,17 @@ gen_initial <- function(X, S, base, initial, lambda, pkgopt) {
                        simplify = FALSE)
 
   } else if (initial == "glasso") {
-    if (pkgopt == "glasso_cold") {
+    if (pkgopt == "glasso") {
       Omega <- lapply(lambda, function(z) {
         glasso::glasso(s = S, rho = z, penalize.diagonal = TRUE, start = "cold")$wi
       })
-    } else if (pkgopt == "glasso_warm") {
-      Omega <- lapply(lambda, function(z) {
-        glasso::glasso(s = S, rho = z, penalize.diagonal = TRUE, start = "warm",
-                       w.init = S + z, wi.init = diag(ncol(S)))$wi
-      })
-    } else if (pkgopt == "GLassoElnetFast_cold") {
+    } else if (pkgopt == "GLassoElnetFast") {
       Omega <- lapply(lambda, function(z) {
         GLassoElnetFast::gelnet(S = S, lambda = z, alpha = 1, penalize.diagonal = TRUE)$Theta
       })
-    } else if (pkgopt == "GLassoElnetFast_warm") {
-      Omega <- lapply(lambda, function(z) {
-        GLassoElnetFast::gelnet(S = S, lambda = z, alpha = 1, penalize.diagonal = TRUE,
-                                W = S + z, Theta = diag(ncol(S)))$Theta
-      })
-    } else if (pkgopt == "glassoFast_cold") {
+    } else if (pkgopt == "glassoFast") {
       Omega <- lapply(lambda, function(z) {
         glassoFast::glassoFast(S = S, rho = z, start = "cold")$wi
-      })
-    } else if (pkgopt == "glassoFast_warm") {
-      Omega <- lapply(lambda, function(z) {
-        glassoFast::glassoFast(S = S, rho = z, start = "warm",
-                               w.init = S + z, wi.init = diag(ncol(S)))$wi
       })
     }
   }
