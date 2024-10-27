@@ -224,24 +224,12 @@ fcstat.est <- function(
     registerDoParallel(cluster)
 
     ## compute the precision matrix estimator hatOmega along the parameter grid
-    if (method %in% c("glasso", "ridge", "elnet", "clime")) {
+    if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
       hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
                           .export = c("fcstat_method")) %dopar% {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
                       pkgopt = pkgopt)
-      }
-    } else if (method == "tiger") {
-      hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
-                          .export = c("fcstat_method")) %dopar% {
-        tryCatch(
-          fcstat_method(method = method, X = X, S = S,
-                        lambda = parameter$lambda[k], gamma = parameter$gamma[k],
-                        pkgopt = pkgopt),
-          error = function(e) {
-            message("lambda[", k, "] ", parameter$lambda[k], " is too samll. Ignored!")
-          }
-        )
       }
     } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
       Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda, pkgopt = pkgopt)
@@ -269,22 +257,11 @@ fcstat.est <- function(
   } else {
 
     ## compute the precision matrix estimator hatOmega along the parameter grid
-    if (method %in% c("glasso", "ridge", "elnet", "clime")) {
+    if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
       hatOmega <- lapply(1:npara, function(k) {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
                       pkgopt = pkgopt)
-      })
-    } else if (method == "tiger") {
-      hatOmega <- lapply(1:npara, function(k) {
-        tryCatch(
-          fcstat_method(method = method, X = X, S = S,
-                        lambda = parameter$lambda[k], gamma = parameter$gamma[k],
-                        pkgopt = pkgopt),
-          error = function(e) {
-            message("lambda[", k, "] ", parameter$lambda[k], " is too samll. Ignored!")
-          }
-        )
       })
     } else { ## method %in% c("adapt", "atan", "exp", "mcp", "scad")
       Omega <- gen_initial(X = X, S = S, base = base, initial = initial, lambda = parameter$lambda, pkgopt = pkgopt)

@@ -235,11 +235,8 @@ fcstat <- function(
 
         ## loss: negative log-likelihood
         for (k in 1:npara) {
-          loss[j,k] <- ifelse(
-            is.null(cvlist$hatOmega[[k]]), NULL,
-            - determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
-            # log(det(cvlist$hatOmega[[k]])) determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1]
-          )
+          loss[j,k] <- - determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1] + sum(diag(S.test%*%cvlist$hatOmega[[k]]))
+          # log(det(cvlist$hatOmega[[k]])) determinant(cvlist$hatOmega[[k]], logarithm = TRUE)$modulus[1]
         }
       }
 
