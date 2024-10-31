@@ -29,6 +29,7 @@
 #' \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}}.
 #' \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}}.
 #' \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}}.
+#' \item "Glarmadillo": the function from \code{\link[Glarmadillo]{glarma}}.
 #' \item "glasso": the function from \code{\link[glasso]{glasso}}.
 #' \item "GLassoElnetFast": the function from
 #' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
@@ -62,6 +63,7 @@
 #' @importFrom ADMMsigma ADMMsigma
 #' @importFrom CovTools PreEst.glasso
 #' @importFrom CVglasso CVglasso
+#' @importFrom Glarmadillo glarma
 #' @importFrom glasso glasso
 #' @importFrom GLassoElnetFast gelnet
 #' @importFrom glassoFast glassoFast
@@ -88,6 +90,8 @@ fcstat_method <- function(method, X = NULL, S = NULL,
       hatOmega <- CovTools::PreEst.glasso(X = X, method = list(type = "fixed", param = lambda))$C
     } else if (pkgopt == "CVglasso") {
       hatOmega <- CVglasso::CVglasso(S = S, lam = lambda, diagonal = TRUE)$Omega
+    } else if (pkgopt == "Glarmadillo") {
+      hatOmega <- Glarmadillo::glarma(s = S, rho = lambda)$Theta
     } else if (pkgopt == "glasso") {
       hatOmega <- glasso::glasso(s = S, rho = lambda, penalize.diagonal = TRUE, start = "cold")$wi
     } else if (pkgopt == "GLassoElnetFast") {

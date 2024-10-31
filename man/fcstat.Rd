@@ -99,6 +99,7 @@ options depend on the selected method: \enumerate{
 \item "ADMMsigma": the function from \code{\link[ADMMsigma]{ADMMsigma}}.
 \item "CovTools": the function from \code{\link[CovTools]{PreEst.glasso}}.
 \item "CVglasso": the function from \code{\link[CVglasso]{CVglasso}}.
+\item "Glarmadillo": the function from \code{\link[Glarmadillo]{glarma}}.
 \item "glasso": the function from \code{\link[glasso]{glasso}}.
 \item "GLassoElnetFast": the function from
 \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.
