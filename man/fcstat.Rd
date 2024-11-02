@@ -159,11 +159,13 @@ components: \describe{
 \item{hatOmega_opt}{The estimated precision matrix.}
 \item{lambda_opt}{The optimal regularization parameter.}
 \item{gamma_opt}{The optimal hyperparameter.}
+\item{niter_opt}{The number of iterations.}
 \item{loss_opt}{The optimal k-fold loss.}
 \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
 \code{gamma} grid.}
-\item{lambda}{The actual lambda grid used in the program.}
-\item{gamma}{The actual gamma grid used in the program.}
+\item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
+\item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
+\item{niter}{The number of iterations, corresponding to \code{hatOmega}.}
 \item{loss.mean}{The mean of k-fold loss for each parameter grid value.}
 \item{loss.sd}{The standard deviation of k-fold loss for each parameter grid value.}
 }
@@ -172,11 +174,13 @@ components: \describe{
 \item{hatOmega_opt}{The estimated precision matrix.}
 \item{lambda_opt}{The optimal regularization parameter.}
 \item{gamma_opt}{The optimal hyperparameter.}
+\item{niter_opt}{The number of iterations.}
 \item{score_opt}{The optimal information criterion score.}
 \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
 \code{gamma} grid.}
-\item{lambda}{The actual lambda grid used in the program.}
-\item{gamma}{The actual gamma grid used in the program.}
+\item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
+\item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
+\item{niter}{The number of iterations, corresponding to \code{hatOmega}.}
 \item{score}{The information criterion score for each parameter grid value.}
 }
 }

@@ -148,11 +148,13 @@
 #' \item{hatOmega_opt}{The estimated precision matrix.}
 #' \item{lambda_opt}{The optimal regularization parameter.}
 #' \item{gamma_opt}{The optimal hyperparameter.}
+#' \item{niter_opt}{The number of iterations.}
 #' \item{loss_opt}{The optimal k-fold loss.}
 #' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
 #' \code{gamma} grid.}
-#' \item{lambda}{The actual lambda grid used in the program.}
-#' \item{gamma}{The actual gamma grid used in the program.}
+#' \item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
+#' \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
+#' \item{niter}{The number of iterations, corresponding to \code{hatOmega}.}
 #' \item{loss.mean}{The mean of k-fold loss for each parameter grid value.}
 #' \item{loss.sd}{The standard deviation of k-fold loss for each parameter grid value.}
 #' }
@@ -161,11 +163,13 @@
 #' \item{hatOmega_opt}{The estimated precision matrix.}
 #' \item{lambda_opt}{The optimal regularization parameter.}
 #' \item{gamma_opt}{The optimal hyperparameter.}
+#' \item{niter_opt}{The number of iterations.}
 #' \item{score_opt}{The optimal information criterion score.}
 #' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid and
 #' \code{gamma} grid.}
-#' \item{lambda}{The actual lambda grid used in the program.}
-#' \item{gamma}{The actual gamma grid used in the program.}
+#' \item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
+#' \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
+#' \item{niter}{The number of iterations, corresponding to \code{hatOmega}.}
 #' \item{score}{The information criterion score for each parameter grid value.}
 #' }
 #' }
@@ -199,6 +203,7 @@ fcstat <- function(
     lambda <- est.obj$lambda
     gamma <- est.obj$gamma
     hatOmega <- est.obj$hatOmega
+    niter <- est.obj$niter
 
     if (crit == "CV") {
 
@@ -253,10 +258,12 @@ fcstat <- function(
       result <- list(hatOmega_opt = hatOmega[[index]],
                      lambda_opt = lambda[index],
                      gamma_opt = gamma[index],
+                     niter_opt = niter[index],
                      loss_opt = loss.mean[index],
                      hatOmega = hatOmega,
                      lambda = lambda,
                      gamma = gamma,
+                     niter = niter,
                      loss.mean = loss.mean,
                      loss.sd = loss.sd)
 
@@ -284,10 +291,12 @@ fcstat <- function(
       result <- list(hatOmega_opt = hatOmega[[index]],
                      lambda_opt = lambda[index],
                      gamma_opt = gamma[index],
+                     niter_opt = niter[index],
                      score_opt = score[index],
                      hatOmega = hatOmega,
                      lambda = lambda,
                      gamma = gamma,
+                     niter = niter,
                      score = score)
     }
 
