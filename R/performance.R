@@ -50,7 +50,7 @@ performance <- function(Omega, Sigma = NULL, hatOmega) {
   p <- ncol(hatOmega)
   Fnorm1 <- norm(Omega - hatOmega, "F")
   Fnorm2 <- norm(Sigma%*%hatOmega - diag(p), "F")
-  KL <- sum(diag(Sigma%*%hatOmega)) - log(det(Sigma%*%hatOmega)) - p
+  KL <- sum(diag(Sigma%*%hatOmega)) - determinant(Sigma%*%hatOmega, logarithm = TRUE)$modulus[1] - p
   Ql <- sum(diag(Sigma%*%hatOmega - diag(p))^2)
   Snorm <- svd(Omega - hatOmega)$d[1]
   # temp <- (Omega - hatOmega) %*% (Omega - hatOmega)
