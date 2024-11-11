@@ -76,10 +76,7 @@
 #' @importFrom huge huge.tiger
 #' @importFrom Rdpack reprompt
 #'
-#' @return A list with the following: \describe{
-#' \item{hatOmega}{The estimated precision matrix.}
-#' \item{niter}{Number of iterations.}
-#' }
+#' @return Estimated precision matrix.
 #'
 #' @noRd
 
@@ -88,69 +85,51 @@ fcstat_method <- function(method, X = NULL, S = NULL,
                           pkgopt = NULL) {
   if (method == "glasso") {
     if (pkgopt == "ADMMsigma") {
-      res <- ADMMsigma::ADMMsigma(S = S, lam = lambda, alpha = 1, diagonal = TRUE)
-      result <- list(hatOmega = res$Z, niter = res$Iterations)
+      hatOmega <- ADMMsigma::ADMMsigma(S = S, lam = lambda, alpha = 1, diagonal = TRUE)$Z
     } else if (pkgopt == "CovTools") {
-      res <- CovTools::PreEst.glasso(X = X, method = list(type = "fixed", param = lambda))
-      result <- list(hatOmega = res$C, niter = NULL)
+      hatOmega <- CovTools::PreEst.glasso(X = X, method = list(type = "fixed", param = lambda))$C
     } else if (pkgopt == "CVglasso") {
-      res <- CVglasso::CVglasso(S = S, lam = lambda, diagonal = TRUE)
-      result <- list(hatOmega = res$Omega, niter = res$Iterations)
+      hatOmega <- CVglasso::CVglasso(S = S, lam = lambda, diagonal = TRUE)$Omega
     } else if (pkgopt == "Glarmadillo") {
-      res <- Glarmadillo::glarma(s = S, rho = lambda)
-      result <- list(hatOmega = res$Theta, niter = res$iter)
+      hatOmega <- Glarmadillo::glarma(s = S, rho = lambda)$Theta
     } else if (pkgopt == "glasso") {
-      res <- glasso::glasso(s = S, rho = lambda, penalize.diagonal = TRUE, start = "cold")
-      result <- list(hatOmega = res$wi, niter = res$niter)
+      hatOmega <- glasso::glasso(s = S, rho = lambda, penalize.diagonal = TRUE, start = "cold")$wi
     } else if (pkgopt == "GLassoElnetFast") {
-      res <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = 1, penalize.diagonal = TRUE)
-      result <- list(hatOmega = res$Theta, niter = res$niter)
+      hatOmega <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = 1, penalize.diagonal = TRUE)$Theta
     } else if (pkgopt == "glassoFast") {
-      res <- glassoFast::glassoFast(S = S, rho = lambda, start = "cold")
-      result <- list(hatOmega = res$wi, niter = res$niter)
+      hatOmega <- glassoFast::glassoFast(S = S, rho = lambda, start = "cold")$wi
     } else if (pkgopt == "huge") {
-      res <- huge::huge.glasso(x = S, lambda = lambda, verbose = FALSE)
-      result <- list(hatOmega = res$icov[[1]], niter = NULL)
+      hatOmega <- huge::huge.glasso(x = S, lambda = lambda, verbose = FALSE)$icov[[1]]
     }
   } else if (method == "ridge") {
     if (pkgopt == "ADMMsigma") {
-      res <- ADMMsigma::RIDGEsigma(S = S, lam = lambda)
-      result <- list(hatOmega = res$Omega, niter = NULL)
+      hatOmega <- ADMMsigma::RIDGEsigma(S = S, lam = lambda)$Omega
     } else if (pkgopt == "GLassoElnetFast") {
-      res <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = 0)
-      result <- list(hatOmega = res$Theta, niter = res$niter)
+      hatOmega <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = 0)$Theta
     } else if (pkgopt == "porridge") {
-      res <- porridge::ridgePgen(S = S, lambda = matrix(lambda, ncol(S), ncol(S)), target = matrix(0, ncol(S), ncol(S)))
-      result <- list(hatOmega = res, niter = NULL)
+      hatOmega <- porridge::ridgePgen(S = S, lambda = matrix(lambda, ncol(S), ncol(S)), target = matrix(0, ncol(S), ncol(S)))
     } else if (pkgopt == "rags2ridges") {
-      res <- rags2ridges::ridgeP(S = S, lambda = lambda, target = matrix(0, ncol(S), ncol(S)))
-      result <- list(hatOmega = res, niter = NULL)
+      hatOmega <- rags2ridges::ridgeP(S = S, lambda = lambda, target = matrix(0, ncol(S), ncol(S)))
     }
   } else if (method == "elnet") {
     if (pkgopt == "ADMMsigma") {
-      res <- ADMMsigma::ADMMsigma(S = S, lam = lambda, alpha = gamma)
-      result <- list(hatOmega = res$Z, niter = res$Iterations)
+      hatOmega <- ADMMsigma::ADMMsigma(S = S, lam = lambda, alpha = gamma)$Z
     } else if (pkgopt == "GLassoElnetFast") {
-      res <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = gamma)
-      result <- list(hatOmega = res$Theta, niter = res$niter)
+      hatOmega <- GLassoElnetFast::gelnet(S = S, lambda = lambda, alpha = gamma)$Theta
     }
   } else if (method == "clime") {
     if (pkgopt == "clime") {
-      res <- clime::clime(x = S, lambda = lambda, sigma = TRUE, standardize = FALSE, linsolver = "simplex")
-      result <- list(hatOmega = res$Omegalist[[1]], niter = NULL)
+      hatOmega <- clime::clime(x = S, lambda = lambda, sigma = TRUE, standardize = FALSE, linsolver = "simplex")$Omegalist[[1]]
     } else if (pkgopt == "flare") {
-      res <- flare::sugm(data = S, lambda = lambda, method = "clime", verbose = FALSE)
-      result <- list(hatOmega = res$icov[[1]], niter = res$ite)
+      hatOmega <- flare::sugm(data = S, lambda = lambda, method = "clime", verbose = FALSE)$icov[[1]]
     }
   } else if (method == "tiger") {
     if (pkgopt == "flare") {
-      res <- flare::sugm(data = X, lambda = lambda, method = "tiger", verbose = FALSE)
-      result <- list(hatOmega = res$icov[[1]], niter = res$ite)
+      hatOmega <- flare::sugm(data = X, lambda = lambda, method = "tiger", verbose = FALSE)$icov[[1]]
     } else if (pkgopt == "huge") {
-      res <- huge::huge.tiger(x = X, lambda = lambda, verbose = FALSE)
-      result <- list(hatOmega = res$icov[[1]], niter = NULL)
+      hatOmega <- huge::huge.tiger(x = X, lambda = lambda, verbose = FALSE)$icov[[1]]
     }
   }
-  return(result)
+  return(hatOmega)
 }
 

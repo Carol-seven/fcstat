@@ -47,11 +47,16 @@
 
 <dl><dt id="arg-penalty">penalty<a class="anchor" aria-label="anchor" href="#arg-penalty"></a></dt>
 <dd><p>A character string specifying the non-convex penalty to use.
-Available options include:</p><ol><li><p>"adapt": adaptive lasso zou2006adaptive,fan2009networkfcstat.</p></li>
-<li><p>"atan": arctangent type penalty wang2016variablefcstat.</p></li>
-<li><p>"exp": exponential type penalty wang2018variablefcstat.</p></li>
-<li><p>"mcp": minimax concave penalty zou2006adaptivefcstat.</p></li>
-<li><p>"scad": smoothly clipped absolute deviation fan2001variable,fan2009networkfcstat.</p></li>
+Available options include:</p><ol><li><p>"adapt": adaptive lasso (Zou 2006; Fan et al. 2009)
+.</p></li>
+<li><p>"atan": arctangent type penalty (Wang and Zhu 2016)
+.</p></li>
+<li><p>"exp": exponential type penalty (Wang et al. 2018)
+.</p></li>
+<li><p>"mcp": minimax concave penalty (Zou 2006)
+.</p></li>
+<li><p>"scad": smoothly clipped absolute deviation (Fan and Li 2001; Fan et al. 2009)
+.</p></li>
 </ol></dd>
 
 
@@ -79,7 +84,27 @@ The defaults are:</p><ol><li><p>"adapt": 0.5</p></li>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p></p>
+    <p>Fan J, Feng Y, Wu Y (2009).
+“Network Exploration via the Adaptive LASSO and SCAD Penalties.”
+<em>The Annals of Applied Statistics</em>, <b>3</b>(2), 521–541.
+<a href="https://doi.org/10.1214/08-aoas215" class="external-link">doi:10.1214/08-aoas215</a>
+.<br><br> Fan J, Li R (2001).
+“Variable Selection via Nonconcave Penalized Likelihood and its Oracle Properties.”
+<em>Journal of the American Statistical Association</em>, <b>96</b>(456), 1348–1360.
+<a href="https://doi.org/10.1198/016214501753382273" class="external-link">doi:10.1198/016214501753382273</a>
+.<br><br> Wang Y, Fan Q, Zhu L (2018).
+“Variable Selection and Estimation using a Continuous Approximation to the \(L_0\) Penalty.”
+<em>Annals of the Institute of Statistical Mathematics</em>, <b>70</b>(1), 191–214.
+<a href="https://doi.org/10.1007/s10463-016-0588-3" class="external-link">doi:10.1007/s10463-016-0588-3</a>
+.<br><br> Wang Y, Zhu L (2016).
+“Variable Selection and Parameter Estimation with the Atan Regularization Method.”
+<em>Journal of Probability and Statistics</em>, <b>2016</b>, 6495417.
+<a href="https://doi.org/10.1155/2016/6495417" class="external-link">doi:10.1155/2016/6495417</a>
+.<br><br> Zou H (2006).
+“The Adaptive Lasso and Its Oracle Properties.”
+<em>Journal of the American Statistical Association</em>, <b>101</b>(476), 1418–1429.
+<a href="https://doi.org/10.1198/016214506000000735" class="external-link">doi:10.1198/016214506000000735</a>
+.</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
@@ -91,7 +116,7 @@ The defaults are:</p><ol><li><p>"adapt": 0.5</p></li>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.1.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
 </div>
 
     </footer></div>

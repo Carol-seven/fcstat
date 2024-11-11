@@ -37,12 +37,9 @@ Imports:
     rags2ridges,
     RBGL,
     Rdpack
-Suggests: 
-    roxyglobals
-RdMacros: 
-    Rdpack
-Remotes: 
-    TobiasRuckstuhl/GLassoElnetFast
+Suggests: roxyglobals
+RdMacros: Rdpack
+Remotes: TobiasRuckstuhl/GLassoElnetFast
 biocViews: RBGL, graph
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE

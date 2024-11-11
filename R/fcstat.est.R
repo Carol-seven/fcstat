@@ -139,7 +139,6 @@
 #' \code{gamma} grid.}
 #' \item{lambda}{The actual lambda grid used in the program, corresponding to \code{hatOmega}.}
 #' \item{gamma}{The actual gamma grid used in the program, corresponding to \code{hatOmega}.}
-#' \item{niter}{The number of iterations, corresponding to \code{hatOmega}.}
 #' \item{X}{The n-by-p data matrix used in the program.}
 #' \item{S}{The p-by-p calculation base matrix used in the program.}
 #' }
@@ -228,8 +227,8 @@ fcstat.est <- function(
 
     ## compute the precision matrix estimator hatOmega along the parameter grid
     if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
-      reslist <- foreach(k = 1:npara, .packages = "fcstat",
-                         .export = c("fcstat_method")) %dopar% {
+      hatOmega <- foreach(k = 1:npara, .packages = "fcstat",
+                          .export = c("fcstat_method")) %dopar% {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
                       pkgopt = pkgopt)
@@ -241,19 +240,16 @@ fcstat.est <- function(
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k])
       })
       if (pkgopt == "glasso") {
-        reslist <- foreach(k = 1:npara) %dopar% {
-          res <- glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "cold")
-          return(list(hatOmega = res$wi, niter = res$niter))
+        hatOmega <- foreach(k = 1:npara) %dopar% {
+          glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "cold")$wi
         }
       } else if (pkgopt == "GLassoElnetFast") {
-        reslist <- foreach(k = 1:npara) %dopar% {
-          res <- GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE)
-          return(list(hatOmega = res$Theta, niter = res$niter))
+        hatOmega <- foreach(k = 1:npara) %dopar% {
+          GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE)$Theta
         }
       } else if (pkgopt == "glassoFast") {
-        reslist <- foreach(k = 1:npara) %dopar% {
-          res <- glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "cold")
-          return(list(hatOmega = res$wi, niter = res$niter))
+        hatOmega <- foreach(k = 1:npara) %dopar% {
+          glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "cold")$wi
         }
       }
     }
@@ -264,7 +260,7 @@ fcstat.est <- function(
 
     ## compute the precision matrix estimator hatOmega along the parameter grid
     if (method %in% c("glasso", "ridge", "elnet", "clime", "tiger")) {
-      reslist <- lapply(1:npara, function(k) {
+      hatOmega <- lapply(1:npara, function(k) {
         fcstat_method(method = method, X = X, S = S,
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k],
                       pkgopt = pkgopt)
@@ -276,28 +272,24 @@ fcstat.est <- function(
                       lambda = parameter$lambda[k], gamma = parameter$gamma[k])
       })
       if (pkgopt == "glasso") {
-        reslist <- lapply(1:npara, function(k) {
-          res <- glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "cold")
-          return(list(hatOmega = res$wi, niter = res$niter))
+        hatOmega <- lapply(1:npara, function(k) {
+          glasso::glasso(s = S, rho = lambda_mat[[k]], penalize.diagonal = TRUE, start = "cold")$wi
         })
       } else if (pkgopt == "GLassoElnetFast") {
-        reslist <- lapply(1:npara, function(k) {
-          res <- GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE)
-          return(list(hatOmega = res$Theta, niter = res$niter))
+        hatOmega <- lapply(1:npara, function(k) {
+          GLassoElnetFast::gelnet(S = S, lambda = lambda_mat[[k]], alpha = 1, penalize.diagonal = TRUE)$Theta
         })
       } else if (pkgopt == "glassoFast") {
-        reslist <- lapply(1:npara, function(k) {
-          res <- glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "cold")
-          return(list(hatOmega = res$wi, niter = res$niter))
+        hatOmega <- lapply(1:npara, function(k) {
+          glassoFast::glassoFast(S = S, rho = lambda_mat[[k]], start = "cold")$wi
         })
       }
     }
   }
 
-  result <- list(hatOmega = lapply(reslist, function(x) x$hatOmega),
+  result <- list(hatOmega = hatOmega,
                  lambda = parameter$lambda,
                  gamma = parameter$gamma,
-                 niter = sapply(reslist, function(x) x$niter),
                  X = X,
                  S = S)
   class(result) <- c("fcstat.est")
