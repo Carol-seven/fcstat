@@ -1,9 +1,10 @@
-
 # fcstat <img src="man/figure/logo.png" align="right" alt="" width="150"/>
 
-<!-- badges: start -->
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/Carol-seven/fcstat)](https://github.com/Carol-seven/fcstat/commits/master)
 [![R-CMD-check](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml)
-<!-- badges: end -->
+[![GitHub License](https://img.shields.io/github/license/Carol-seven/fcstat?color=blue)](https://github.com/Carol-seven/fcstat/blob/master/LICENSE.md)
+
 
 The goal of **fcstat** is to provide classical statistical methods for estimating
 functional connectivity analysis in brain networks, making them user-friendly

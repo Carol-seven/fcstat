@@ -33,7 +33,7 @@ criterion <- function(hatOmega, S, n, crit, ebic.tuning = 0.5) {
   ## dimensionality
   p <- ncol(S)
   ## Gaussian log-likelihood
-  loglik <- (n/2) * (log(det(hatOmega)) - sum(diag(S%*%hatOmega)))
+  loglik <- (n/2) * (determinant(hatOmega, logarithm = TRUE)$modulus[1] - sum(diag(S%*%hatOmega)))
   ## cardinality of the edge set
   edges <- sum(hatOmega[upper.tri(hatOmega)] != 0)
   if (crit == "AIC") {
