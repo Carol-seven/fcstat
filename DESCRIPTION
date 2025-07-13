@@ -39,7 +39,7 @@ Imports:
     Rdpack
 Suggests: roxyglobals
 RdMacros: Rdpack
-Remotes: TobiasRuckstuhl/GLassoElnetFast
+Remotes: MGallow/ADMMsigma, TobiasRuckstuhl/GLassoElnetFast
 biocViews: RBGL, graph
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
