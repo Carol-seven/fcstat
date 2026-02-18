@@ -1,5 +1,5 @@
-Package: fcstat
-Title: Statistical Methods for Functional Connectivity
+Package: spice
+Title: Sparse Precision (Inverse Covariance) Estimation
 Version: 0.1.0
 Authors@R: c(
     person("Shiying", "Xiao", , "shiying.xiao@outlook.com", role = c("aut", "cre"),
@@ -10,8 +10,9 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-8211-5930"))
   )
 Maintainer: Shiying Xiao <shiying.xiao@outlook.com>
-Description: Statistical methods for estimating functional connectivity
-    analysis in brain networks.
+Description: Provide a unified interface to a collection of commonly used
+    statistical methods for sparse precision (inverse covariance) matrix
+    estimation.
 License: GPL (>= 3)
 URL: https://github.com/Carol-seven/fcstat
 BugReports: https://github.com/Carol-seven/fcstat/issues
@@ -38,12 +39,15 @@ Imports:
     RBGL,
     Rdpack
 Suggests: roxyglobals
-RdMacros: Rdpack
-Remotes: MGallow/ADMMsigma, TobiasRuckstuhl/GLassoElnetFast
+Remotes:
+    MGallow/ADMMsigma,
+    TobiasRuckstuhl/GLassoElnetFast,
+    HMJiangGatech/huge
 biocViews: RBGL, graph
+RdMacros: Rdpack
 Config/roxyglobals/filename: globals.R
 Config/roxyglobals/unique: FALSE
 Encoding: UTF-8
 Roxygen: list(roclets = c("collate", "namespace", "rd",
     "roxyglobals::global_roclet"))
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
