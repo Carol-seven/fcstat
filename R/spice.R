@@ -54,11 +54,11 @@
 #' \code{lambda} values to generate when \code{lambda = NULL}.
 #'
 #' @param lambda.min.ratio A numeric value > 0 (default = 0.01) specifying
-#' the fraction of the maximum \code{lambda} value \eqn{\lambda_{max}} to
-#' generate the minimum \code{lambda} \eqn{\lambda_{min}}.
+#' the fraction of the maximum \code{lambda} value \eqn{\lambda_{\max}} to
+#' generate the minimum \code{lambda} \eqn{\lambda_{\min}}.
 #' If \code{lambda = NULL}, a \code{lambda} grid of length \code{nlambda} is
-#' automatically generated on a log scale, ranging from \eqn{\lambda_{max}}
-#' down to \eqn{\lambda_{min}}.
+#' automatically generated on a log scale, ranging from \eqn{\lambda_{\max}}
+#' down to \eqn{\lambda_{\min}}.
 #'
 #' @param gamma A numeric value specifying the additional parameter for
 #' the chosen \code{method}. Default values:

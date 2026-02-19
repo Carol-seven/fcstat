@@ -1,0 +1,84 @@
+---
+output:
+  github_document:
+    pandoc_args: [ "--wrap=preserve", "--columns=80" ]
+bibliography: inst/REFERENCES.bib
+link-citations: yes
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+
+# spice <img src="man/figures/logo.png" align="right" alt="" width="150"/>
+
+
+## Sparse Precision (Inverse Covariance) Estimation
+
+
+[![GitHub last commit](https://img.shields.io/github/last-commit/Carol-seven/fcstat)](https://github.com/Carol-seven/fcstat/commits/master)
+[![R-CMD-check](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml)
+[![GitHub License](https://img.shields.io/github/license/Carol-seven/fcstat?color=blue)](https://github.com/Carol-seven/fcstat/blob/master/LICENSE.md)
+
+
+The goal of **spice** is to provide classical statistical methods for estimating
+sparse precision (inverse covariance) matrix for functional connectivity
+analysis in brain networks, making these methods accessible and easy to use for
+researchers and practitioners in neuroimaging.
+
+
+## Methods
+
+
+The package **spice** provides functions to estimate precision matrices using
+the following methods:
+
+
+| Penalty | Reference |
+|:--------|:----------|
+| Graphical lasso (`method = "lasso"`) | @friedman2008sparse |
+| Graphical ridge (`method = "ridge"`) | @vanwieringen2016ridge |
+| Graphical elastic net (`method = "elnet"`) | @zou2005regularization |
+| CLIME (`method = "clime"`) | @cai2011aconstrained |
+| TIGER (`method = "tiger"`) | @liu2017tiger |
+| Graphical adaptive lasso (`method = "adapt"`) | @zou2006adaptive; @fan2009network |
+| Arctangent type penalty (`method = "atan"`) | @wang2016variable |
+| Exponential type penalty (`method = "exp"`) | @wang2018variable |
+| MCP (`method = "mcp"`) | @zhang2010nearly |
+| SCAD (`method = "scad"`) | @fan2001variable; @fan2009network |
+
+
+## Installation
+
+
+You can install the development version of **spice** from
+[GitHub](https://github.com/Carol-seven/spice) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("Carol-seven/spice")
+```
+
+
+## Example
+
+
+```
+library(spice)
+
+set.seed(123)
+
+X <- matrix(rnorm(200), 10, 20)
+
+## Statistical methods for estimating the precision matrix,
+## including the estimation and selection process
+spice(X, method = "glasso", pkg = "glasso", crit = "CV", fold = 5)
+```
