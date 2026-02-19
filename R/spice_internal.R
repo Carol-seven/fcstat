@@ -1,4 +1,4 @@
-#' Estimation for precision matrix
+#' Estimation for Precision Matrix
 #'
 #' @description
 #' Provide a collection of statistical methods to obtain a series of precision
@@ -152,7 +152,7 @@
 #' @importFrom parallel stopCluster
 #' @importFrom Rdpack reprompt
 #'
-#' @return An object with S3 class "spice.est" containing the following
+#' @return An object with S3 class "spice_internal" containing the following
 #' components:
 #' \describe{
 #' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid
@@ -172,7 +172,7 @@
 #'
 #' @noRd
 
-spice.est <- function(
+spice_internal <- function(
     X, method, base = "cov",
     lambda = NULL, nlambda = 20, lambda.min.ratio = 0.01,
     gamma = NULL, ## for elnet, adapt, atan, exp, mcp, scad
@@ -307,7 +307,7 @@ spice.est <- function(
                  gamma = parameter$gamma,
                  X = X,
                  S = S)
-  class(result) <- c("spice.est")
+  class(result) <- c("spice.internal")
   return(result)
 
 }
