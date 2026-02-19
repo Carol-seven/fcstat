@@ -41,7 +41,8 @@
 #' }
 #'
 #' @param pkg A character string specifying the package option to use.
-#' This argument only works when \code{initial = "glasso"}. \itemize{
+#' This argument only works when \code{initial = "glasso"}.
+#' \itemize{
 #' \item "glasso": The function from \code{\link[glasso]{glasso}}.
 #' \item "GLassoElnetFast": The function from
 #' \href{https://github.com/TobiasRuckstuhl/GLassoElnetFast}{gelnet}.

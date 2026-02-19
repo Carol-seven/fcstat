@@ -20,7 +20,7 @@
 #'
 #' @noRd
 
-crit <- function(hatOmega, S, n, crit, ebic.tuning = 0.5) {
+criterion <- function(hatOmega, S, n, crit, ebic.tuning = 0.5) {
   ## dimensionality
   p <- ncol(S)
   ## Gaussian log-likelihood
