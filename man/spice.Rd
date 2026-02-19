@@ -198,8 +198,8 @@ and \code{gamma} grid.}
 \code{hatOmega}.}
 \item{gamma}{The actual gamma grid used in the program, corresponding to
 \code{hatOmega}.}
-\item{CV.loss}{Matrix of CV losses, with rows for parameter combinations and
-columns for CV folds, when \code{crit = "CV"}.}
+\item{CV.loss}{Matrix of CV losses, with rows for CV folds and columns for
+parameter combinations, when \code{crit = "CV"}.}
 \item{IC.score}{The information criterion score for each parameter
 combination when \code{crit} is set to \code{"AIC"}, \code{"BIC"},
 \code{"EBIC"}, or \code{"HBIC"}.}
