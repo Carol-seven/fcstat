@@ -1,14 +1,16 @@
 home:
-  title: fcstat
-  description: Statistical Methods for Functional Connectivity
+  title: spice
+  description: Sparse Precision (Inverse Covariance) Estimation
 
-url: https://github.com/Carol-seven/fcstat
+url: https://github.com/Carol-seven/spice
 
 template:
   bootstrap: 5
+  light-switch: true
+  math-rendering: mathjax
   opengraph:
     image:
-      src: https://github.com/Carol-seven/fcstat/blob/master/man/figure/logo.png
+      src: https://raw.githubusercontent.com/Carol-seven/spice/blob/main/man/figures/logo.png
 
 authors:
   Shiying Xiao:
@@ -20,3 +22,7 @@ authors:
 
 development:
   mode: auto
+
+figures:
+  dpi: 300
+
