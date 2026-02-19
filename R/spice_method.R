@@ -1,4 +1,4 @@
-#' Estimation for precision matrix
+#' Estimation for Precision Matrix
 #'
 #' @description
 #' Estimate a sparse precision matrix using a collection of statistical methods.
