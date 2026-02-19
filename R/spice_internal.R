@@ -212,11 +212,8 @@ spice_internal <- function(
 
   ## gamma grid
   if (all(is.na(gamma))) {
-    gamma <- switch(method,
-                    "elnet" = seq(0.1, 0.9, 0.1),
-                    "adapt" = 0.5,
-                    "atan" = 0.005,
-                    "exp"  = 0.01,
+    gamma <- switch(method, "elnet" = seq(0.1, 0.9, 0.1), "adapt" = 0.5,
+                    "atan" = 0.005, "exp"  = 0.01,
                     "mcp"  = 3, "scad" = 3.7, NA)
   }
 
