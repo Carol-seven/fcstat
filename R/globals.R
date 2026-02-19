@@ -2,5 +2,6 @@
 
 utils::globalVariables(c(
   "loss", # <spice>
+  "k", # <spice_internal>
   NULL
 ))

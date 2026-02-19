@@ -10,6 +10,8 @@
 #' @importFrom parallel stopCluster
 #' @importFrom Rdpack reprompt
 #'
+#' @autoglobal
+#'
 #' @noRd
 
 spice_internal <- function(
