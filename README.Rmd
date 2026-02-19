@@ -38,11 +38,7 @@ researchers and practitioners in neuroimaging.
 ## Methods
 
 
-The package **spice** provides functions to estimate precision matrices using
-the following methods:
-
-
-| Penalty | Reference |
+| Method | Reference |
 |:--------|:----------|
 | Graphical lasso (`method = "lasso"`) | @friedman2008sparse |
 | Graphical ridge (`method = "ridge"`) | @vanwieringen2016ridge |
