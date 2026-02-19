@@ -20,7 +20,8 @@
 #' parameter.
 #'
 #' @param gamma A numeric value specifying the additional parameter for
-#' the penalty function. The defaults are: \enumerate{
+#' the penalty function. The defaults are:
+#' \enumerate{
 #' \item "adapt": 0.5
 #' \item "atan": 0.005
 #' \item "exp": 0.01
