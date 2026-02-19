@@ -54,6 +54,8 @@ devtools::install_github("Carol-seven/spice")
     ## including the estimation and selection process
     spice(X, method = "glasso", pkg = "glasso", crit = "CV", fold = 5)
 
+## Reference
+
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-cai2011aconstrained" class="csl-entry">

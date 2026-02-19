@@ -82,3 +82,8 @@ X <- matrix(rnorm(200), 10, 20)
 ## including the estimation and selection process
 spice(X, method = "glasso", pkg = "glasso", crit = "CV", fold = 5)
 ```
+
+
+## Reference {-}
+
+
