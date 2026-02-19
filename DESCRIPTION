@@ -41,8 +41,7 @@ Imports:
 Suggests: roxyglobals
 Remotes:
     MGallow/ADMMsigma,
-    TobiasRuckstuhl/GLassoElnetFast,
-    HMJiangGatech/huge
+    TobiasRuckstuhl/GLassoElnetFast
 biocViews: RBGL, graph
 RdMacros: Rdpack
 Config/roxyglobals/filename: globals.R
