@@ -1,22 +1,24 @@
-#' Non-convex regularization penalty
+#' Non-Convex Regularization Penalty
 #'
 #' @description
-#' Compute the specified non-convex regularization penalty.
+#' Compute a specified non-convex regularization penalty.
 #'
 #' @param penalty A character string specifying the non-convex penalty to use.
 #' Available options include: \enumerate{
-#' \item "atan": arctangent type penalty \insertCite{wang2016variable}{fcstat}.
-#' \item "exp": exponential type penalty \insertCite{wang2018variable}{fcstat}.
-#' \item "mcp": minimax concave penalty \insertCite{zou2006adaptive}{fcstat}.
-#' \item "scad": smoothly clipped absolute deviation \insertCite{fan2001variable,fan2009network}{fcstat}.
+#' \item "atan": Arctangent type penalty \insertCite{wang2016variable}{spice}.
+#' \item "exp": Exponential type penalty \insertCite{wang2018variable}{spice}.
+#' \item "mcp": Minimax concave penalty \insertCite{zou2006adaptive}{spice}.
+#' \item "scad": Smoothly clipped absolute deviation
+#' \insertCite{fan2001variable,fan2009network}{spice}.
 #' }
 #'
 #' @param Omega The precision matrix.
 #'
-#' @param lambda A scalar specifying the regularization parameter.
+#' @param lambda A non-negative numeric value specifying the regularization
+#' parameter.
 #'
-#' @param gamma A scalar specifying the hyperparameter for the penalty function.
-#' The defaults are: \enumerate{
+#' @param gamma A numeric value specifying the additional parameter for
+#' the penalty function. The defaults are: \enumerate{
 #' \item "atan": 0.005
 #' \item "exp": 0.01
 #' \item "mcp": 3
@@ -32,27 +34,19 @@
 #'
 #' @export
 
-pen <- function(penalty, Omega, lambda, gamma) {
+ncv_pen <- function(penalty, Omega, lambda, gamma) {
+  if (missing(gamma)) {
+    gamma <- switch(penalty, "atan" = 0.005, "exp"  = 0.01,
+                    "mcp"  = 3, "scad" = 3.7, NA)
+  }
   if (penalty == "atan") {
-    if (missing(gamma)) {
-      gamma <- 0.005
-    }
     pen_mat <- lambda * (gamma + 2/pi) * atan(abs(Omega)/gamma)
   } else if (penalty == "exp") {
-    if (missing(gamma)) {
-      gamma <- 0.01
-    }
     pen_mat <- lambda * (1 - exp(-abs(Omega)/gamma))
   } else if (penalty == "mcp") {
-    if (missing(gamma)) {
-      gamma <- 3
-    }
     pen_mat <- (lambda*abs(Omega) - Omega^2/(2*gamma)) * (abs(Omega) <= gamma*lambda) +
       (gamma*lambda^2/2) * (abs(Omega) > gamma*lambda)
   } else if (penalty == "scad") {
-    if (missing(gamma)) {
-      gamma <- 3.7
-    }
     pen_mat <- lambda*abs(Omega) * (abs(Omega) <= lambda) +
       (2*gamma*lambda*abs(Omega)-Omega^2-lambda^2)/(2*(gamma-1)) * (lambda < abs(Omega) & abs(Omega) <= gamma*lambda) +
       lambda^2*(gamma+1)/2 * (abs(Omega) > gamma*lambda)
