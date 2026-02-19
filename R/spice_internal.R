@@ -87,8 +87,8 @@ spice_internal <- function(
       Omega <- gen_initial(X = X, S = S, base = base, initial = initial,
                            lambda = parameter$lambda, pkg = pkg)
       lambda_mat <- lapply(1:npara, function(k) {
-        spice::deriv(penalty = method, Omega = Omega[[k]],
-                     lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+        spice::ncv_deriv(penalty = method, Omega = Omega[[k]],
+                         lambda = parameter$lambda[k], gamma = parameter$gamma[k])
       })
       if (pkg == "glasso") {
         hatOmega <- foreach(k = 1:npara) %dopar% {
@@ -120,8 +120,8 @@ spice_internal <- function(
       Omega <- gen_initial(X = X, S = S, base = base, initial = initial,
                            lambda = parameter$lambda, pkg = pkg)
       lambda_mat <- lapply(1:npara, function(k) {
-        spice::deriv(penalty = method, Omega = Omega[[k]],
-                     lambda = parameter$lambda[k], gamma = parameter$gamma[k])
+        spice::ncv_deriv(penalty = method, Omega = Omega[[k]],
+                         lambda = parameter$lambda[k], gamma = parameter$gamma[k])
       })
       if (pkg == "glasso") {
         hatOmega <- lapply(1:npara, function(k) {
