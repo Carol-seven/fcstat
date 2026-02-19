@@ -2,41 +2,37 @@
 % Please edit documentation in R/performance.R
 \name{performance}
 \alias{performance}
-\title{Performance measures}
+\title{Performance Measures}
 \usage{
-performance(Omega, Sigma = NULL, hatOmega)
+performance(hatOmega, Omega)
 }
 \arguments{
-\item{Omega}{The precision matrix.}
-
-\item{Sigma}{The covariance matrix (default = NULL).}
-
 \item{hatOmega}{The estimated precision matrix.}
+
+\item{Omega}{The reference precision matrix.}
 }
 \value{
 A list containing the following components: \describe{
-\item{Fnorm1}{Frobenius (Hilbert-Schmidt) norm between the true and estimated precision
-matrices.}
-\item{Fnorm2}{Frobenius (Hilbert-Schmidt) norm between the product of the true
-covariance matrix and estimated precision matrix and the identity matrix.}
-\item{KL}{Kullback-Leibler divergence between the true and estimated precision matrices.}
-\item{Ql}{Quadratic loss between the diagonal elements of the product of the true
-covariance matrix and estimated precision matrix.}
-\item{Snorm}{Spectral (operator) norm of the difference between the true and estimated
+\item{Fnorm}{Frobenius (Hilbert-Schmidt) norm between the true and estimated
 precision matrices.}
-\item{Precision}{Precision measure, the ratio of true positives to the total predicted
-positives.}
-\item{Recall}{Recall measure, also known as Sensitivity, the ratio of true positives to
-the total actual positives.}
-\item{Specificity}{Specificity measure, the ratio of true negatives to the total actual
-negatives.}
+\item{KL}{Kullback-Leibler divergence between the true and estimated
+precision matrices.}
+\item{Snorm}{Spectral (operator) norm of the difference between the true and
+estimated precision matrices.}
+\item{precision}{Precision measure, the ratio of true positives to the total
+predicted positives.}
+\item{recall}{Recall measure, also known as Sensitivity, the ratio of true
+positives to the total actual positives.}
+\item{specificity}{Specificity measure, the ratio of true negatives to
+the total actual negatives.}
 \item{F1}{F1 score, the harmonic mean of Precision and Recall.}
-\item{MCC}{Matthews correlation coefficient, a measure of the quality of binary
-classifications.}
-\item{Sparsity}{The ratio of zero entries to total entries in the estimated precision
-matrix.}
+\item{MCC}{Matthews correlation coefficient, a measure of the quality of
+binary classifications.}
+\item{sparsity}{The proportion of zeros among edges in the estimated
+precision matrix.}
 }
 }
 \description{
-Calculate various measures to evaluate the performance of the estimated precision matrix.
+Calculate various measures to evaluate the performance of the estimated
+precision matrix.
 }
