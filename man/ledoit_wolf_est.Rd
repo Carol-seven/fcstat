@@ -9,22 +9,25 @@ ledoit_wolf_est(X, method = "linshrink", res = "cov")
 \arguments{
 \item{X}{A data matrix.}
 
-\item{method}{A character string (default = "linshrink") specifying the method used in
-shrinkage, includes: \enumerate{
-\item "linshrink": linear shrinkage \insertCite{ledoit2004well}{fcstat}.
-\item "nlshrink": non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
+\item{method}{A character string (default = "linshrink") specifying
+the method used in shrinkage, includes: \enumerate{
+\item "linshrink": Linear shrinkage \insertCite{ledoit2004well}{spice}.
+\item "nlshrink": Non-linear shrinkage
+\insertCite{ledoit2015spectrum,ledoit2017numerical}{spice}.
 }
-See \code{\link[nlshrink]{linshrink_cov}} and \code{\link[nlshrink]{nlshrink_cov}} for
-details.}
+See \code{\link[nlshrink]{linshrink_cov}} and
+\code{\link[nlshrink]{nlshrink_cov}} for details.}
 
-\item{res}{A character string (default = "cov") specifying the result matrix to be
-obtained, either the covariance matrix ("cov") or the correlation matrix ("cor").}
+\item{res}{A character string (default = "cov") specifying the result matrix
+to be obtained, either the covariance matrix ("cov") or the correlation
+matrix ("cor").}
 }
 \value{
 A numeric matrix.
 }
 \description{
-Compute the Ledoit-Wolf shrinkage estimator for the covariance or correlation matrix.
+Compute the Ledoit-Wolf shrinkage estimator for the covariance/correlation
+matrix.
 }
 \references{
 \insertAllCited{}

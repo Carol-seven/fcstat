@@ -1,20 +1,23 @@
 #' Ledoit-Wolf shrinkage estimator
 #'
 #' @description
-#' Compute the Ledoit-Wolf shrinkage estimator for the covariance or correlation matrix.
+#' Compute the Ledoit-Wolf shrinkage estimator for the covariance/correlation
+#' matrix.
 #'
 #' @param X A data matrix.
 #'
-#' @param method A character string (default = "linshrink") specifying the method used in
-#' shrinkage, includes: \enumerate{
-#' \item "linshrink": linear shrinkage \insertCite{ledoit2004well}{fcstat}.
-#' \item "nlshrink": non-linear shrinkage \insertCite{ledoit2015spectrum,ledoit2017numerical}{fcstat}.
+#' @param method A character string (default = "linshrink") specifying
+#' the method used in shrinkage, includes: \enumerate{
+#' \item "linshrink": Linear shrinkage \insertCite{ledoit2004well}{spice}.
+#' \item "nlshrink": Non-linear shrinkage
+#' \insertCite{ledoit2015spectrum,ledoit2017numerical}{spice}.
 #' }
-#' See \code{\link[nlshrink]{linshrink_cov}} and \code{\link[nlshrink]{nlshrink_cov}} for
-#' details.
+#' See \code{\link[nlshrink]{linshrink_cov}} and
+#' \code{\link[nlshrink]{nlshrink_cov}} for details.
 #'
-#' @param res A character string (default = "cov") specifying the result matrix to be
-#' obtained, either the covariance matrix ("cov") or the correlation matrix ("cor").
+#' @param res A character string (default = "cov") specifying the result matrix
+#' to be obtained, either the covariance matrix ("cov") or the correlation
+#' matrix ("cor").
 #'
 #' @importFrom nlshrink linshrink_cov nlshrink_cov
 #' @importFrom stats cov2cor
