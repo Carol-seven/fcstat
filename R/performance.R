@@ -8,7 +8,9 @@
 #'
 #' @param Omega The reference precision matrix.
 #'
-#' @return A list containing the following components: \describe{
+#' @return
+#' A list containing the following components:
+#' \describe{
 #' \item{Fnorm}{Frobenius (Hilbert-Schmidt) norm between the true and estimated
 #' precision matrices.}
 #' \item{KL}{Kullback-Leibler divergence between the true and estimated

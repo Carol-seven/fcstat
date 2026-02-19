@@ -12,7 +12,8 @@ performance(hatOmega, Omega)
 \item{Omega}{The reference precision matrix.}
 }
 \value{
-A list containing the following components: \describe{
+A list containing the following components:
+\describe{
 \item{Fnorm}{Frobenius (Hilbert-Schmidt) norm between the true and estimated
 precision matrices.}
 \item{KL}{Kullback-Leibler divergence between the true and estimated
