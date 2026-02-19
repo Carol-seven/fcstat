@@ -73,6 +73,63 @@
 <p>The goal of <strong>spice</strong> is to provide classical statistical methods for estimating sparse precision (inverse covariance) matrix for functional connectivity analysis in brain networks, making these methods accessible and easy to use for researchers and practitioners in neuroimaging.</p>
 </div>
 <div class="section level2">
+<h2 id="methods">Methods<a class="anchor" aria-label="anchor" href="#methods"></a>
+</h2>
+<p>The package <strong>spice</strong> provides functions to estimate precision matrices using the following methods:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Penalty</th>
+<th align="left">Reference</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Graphical lasso (<code>method = "lasso"</code>)</td>
+<td align="left">Friedman et al. (<a href="#ref-friedman2008sparse">2008</a>)</td>
+</tr>
+<tr class="even">
+<td align="left">Graphical ridge (<code>method = "ridge"</code>)</td>
+<td align="left">Wieringen and Peeters (<a href="#ref-vanwieringen2016ridge">2016</a>)</td>
+</tr>
+<tr class="odd">
+<td align="left">Graphical elastic net (<code>method = "elnet"</code>)</td>
+<td align="left">Zou and Hastie (<a href="#ref-zou2005regularization">2005</a>)</td>
+</tr>
+<tr class="even">
+<td align="left">CLIME (<code>method = "clime"</code>)</td>
+<td align="left">Cai et al. (<a href="#ref-cai2011aconstrained">2011</a>)</td>
+</tr>
+<tr class="odd">
+<td align="left">TIGER (<code>method = "tiger"</code>)</td>
+<td align="left">Liu and Wang (<a href="#ref-liu2017tiger">2017</a>)</td>
+</tr>
+<tr class="even">
+<td align="left">Graphical adaptive lasso (<code>method = "adapt"</code>)</td>
+<td align="left">Zou (<a href="#ref-zou2006adaptive">2006</a>); Fan et al. (<a href="#ref-fan2009network">2009</a>)</td>
+</tr>
+<tr class="odd">
+<td align="left">Arctangent type penalty (<code>method = "atan"</code>)</td>
+<td align="left">Wang and Zhu (<a href="#ref-wang2016variable">2016</a>)</td>
+</tr>
+<tr class="even">
+<td align="left">Exponential type penalty (<code>method = "exp"</code>)</td>
+<td align="left">Wang et al. (<a href="#ref-wang2018variable">2018</a>)</td>
+</tr>
+<tr class="odd">
+<td align="left">MCP (<code>method = "mcp"</code>)</td>
+<td align="left">Zhang (<a href="#ref-zhang2010nearly">2010</a>)</td>
+</tr>
+<tr class="even">
+<td align="left">SCAD (<code>method = "scad"</code>)</td>
+<td align="left">Fan and Li (<a href="#ref-fan2001variable">2001</a>); Fan et al. (<a href="#ref-fan2009network">2009</a>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <p>You can install the development version of <strong>spice</strong> from <a href="https://github.com/Carol-seven/spice">GitHub</a> with:</p>
@@ -83,16 +140,54 @@
 <div class="section level2">
 <h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
 </h2>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Carol-seven/fcstat" class="external-link">spice</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">X</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">200</span><span class="op">)</span>, <span class="fl">10</span>, <span class="fl">20</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co">## Statistical methods for estimating the precision matrix,</span></span>
-<span><span class="co">## including the estimation and selection process</span></span>
-<span><span class="fu"><a href="reference/spice.html">spice</a></span><span class="op">(</span><span class="va">X</span>, method <span class="op">=</span> <span class="st">"glasso"</span>, pkg <span class="op">=</span> <span class="st">"glasso"</span>, crit <span class="op">=</span> <span class="st">"CV"</span>, fold <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(spice)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">200</span>), <span class="dv">10</span>, <span class="dv">20</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="do">## Statistical methods for estimating the precision matrix,</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="do">## including the estimation and selection process</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="fu">spice</span>(X, <span class="at">method =</span> <span class="st">"glasso"</span>, <span class="at">pkg =</span> <span class="st">"glasso"</span>, <span class="at">crit =</span> <span class="st">"CV"</span>, <span class="at">fold =</span> <span class="dv">5</span>)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="reference">Reference<a class="anchor" aria-label="anchor" href="#reference"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-cai2011aconstrained" class="csl-entry">
+Cai, Tony T., Weidong Liu, and Xi Luo. 2011. “A Constrained <span class="math inline">\(\ell\)</span><!-- -->1 Minimization Approach to Sparse Precision Matrix Estimation.” <em>Journal of the American Statistical Association</em> 106 (494): 594–607. <a href="https://doi.org/10.1198/jasa.2011.tm10155" class="external-link uri">https://doi.org/10.1198/jasa.2011.tm10155</a>.
+</div>
+<div id="ref-fan2009network" class="csl-entry">
+Fan, Jianqing, Yang Feng, and Yichao Wu. 2009. “Network Exploration via the Adaptive LASSO and SCAD Penalties.” <em>The Annals of Applied Statistics</em> 3 (2): 521–41. <a href="https://doi.org/10.1214/08-aoas215" class="external-link uri">https://doi.org/10.1214/08-aoas215</a>.
+</div>
+<div id="ref-fan2001variable" class="csl-entry">
+Fan, Jianqing, and Runze Li. 2001. “Variable Selection via Nonconcave Penalized Likelihood and Its Oracle Properties.” <em>Journal of the American Statistical Association</em> 96 (456): 1348–60. <a href="https://doi.org/10.1198/016214501753382273" class="external-link uri">https://doi.org/10.1198/016214501753382273</a>.
+</div>
+<div id="ref-friedman2008sparse" class="csl-entry">
+Friedman, Jerome, Trevor Hastie, and Robert Tibshirani. 2008. “Sparse Inverse Covariance Estimation with the Graphical Lasso.” <em>Biostatistics</em> 9 (3): 432–41. <a href="https://doi.org/10.1093/biostatistics/kxm045" class="external-link uri">https://doi.org/10.1093/biostatistics/kxm045</a>.
+</div>
+<div id="ref-liu2017tiger" class="csl-entry">
+Liu, Han, and Lie Wang. 2017. “TIGER: A Tuning-Insensitive Approach for Optimally Estimating Gaussian Graphical Models.” <em>Electronic Journal of Statistics</em> 11 (1): 241–94. <a href="https://doi.org/10.1214/16-EJS1195" class="external-link uri">https://doi.org/10.1214/16-EJS1195</a>.
+</div>
+<div id="ref-wang2018variable" class="csl-entry">
+Wang, Yanxin, Qibin Fan, and Li Zhu. 2018. “Variable Selection and Estimation Using a Continuous Approximation to the <span class="math inline">\(L_0\)</span> Penalty.” <em>Annals of the Institute of Statistical Mathematics</em> 70 (1): 191–214. <a href="https://doi.org/10.1007/s10463-016-0588-3" class="external-link uri">https://doi.org/10.1007/s10463-016-0588-3</a>.
+</div>
+<div id="ref-wang2016variable" class="csl-entry">
+Wang, Yanxin, and Li Zhu. 2016. “Variable Selection and Parameter Estimation with the Atan Regularization Method.” <em>Journal of Probability and Statistics</em> 2016: 6495417. <a href="https://doi.org/10.1155/2016/6495417" class="external-link uri">https://doi.org/10.1155/2016/6495417</a>.
+</div>
+<div id="ref-vanwieringen2016ridge" class="csl-entry">
+Wieringen, Wessel N. van, and Carel F. W. Peeters. 2016. “Ridge Estimation of Inverse Covariance Matrices from High-Dimensional Data.” <em>Computational Statistics &amp; Data Analysis</em> 103: 284–303. <a href="https://doi.org/10.1016/j.csda.2016.05.012" class="external-link uri">https://doi.org/10.1016/j.csda.2016.05.012</a>.
+</div>
+<div id="ref-zhang2010nearly" class="csl-entry">
+Zhang, Cun-Hui. 2010. “Nearly Unbiased Variable Selection Under Minimax Concave Penalty.” <em>The Annals of Statistics</em> 38 (2): 894–942. <a href="https://doi.org/10.1214/09-AOS729" class="external-link uri">https://doi.org/10.1214/09-AOS729</a>.
+</div>
+<div id="ref-zou2006adaptive" class="csl-entry">
+Zou, Hui. 2006. “The Adaptive Lasso and Its Oracle Properties.” <em>Journal of the American Statistical Association</em> 101 (476): 1418–29. <a href="https://doi.org/10.1198/016214506000000735" class="external-link uri">https://doi.org/10.1198/016214506000000735</a>.
+</div>
+<div id="ref-zou2005regularization" class="csl-entry">
+Zou, Hui, and Trevor Hastie. 2005. “Regularization and Variable Selection via the Elastic Net.” <em>Journal of the Royal Statistical Society Series B: Statistical Methodology</em> 67 (2): 301–20. <a href="https://doi.org/10.1111/j.1467-9868.2005.00527.x" class="external-link uri">https://doi.org/10.1111/j.1467-9868.2005.00527.x</a>.
+</div>
+</div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

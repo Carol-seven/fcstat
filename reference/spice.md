@@ -95,10 +95,10 @@ spice(
 - lambda.min.ratio:
 
   A numeric value \> 0 (default = 0.01) specifying the fraction of the
-  maximum `lambda` value \\\lambda\_{max}\\ to generate the minimum
-  `lambda` \\\lambda\_{min}\\. If `lambda = NULL`, a `lambda` grid of
+  maximum `lambda` value \\\lambda\_{\max}\\ to generate the minimum
+  `lambda` \\\lambda\_{\min}\\. If `lambda = NULL`, a `lambda` grid of
   length `nlambda` is automatically generated on a log scale, ranging
-  from \\\lambda\_{max}\\ down to \\\lambda\_{min}\\.
+  from \\\lambda\_{\max}\\ down to \\\lambda\_{\min}\\.
 
 - gamma:
 
