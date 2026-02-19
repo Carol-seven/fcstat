@@ -28,12 +28,13 @@
 #' \item "scad": 3.7
 #' }
 #'
-#' @importFrom Rdpack reprompt
-#'
-#' @return A numeric matrix.
+#' @return
+#' A numeric matrix.
 #'
 #' @references
 #' \insertAllCited{}
+#'
+#' @importFrom Rdpack reprompt
 #'
 #' @export
 

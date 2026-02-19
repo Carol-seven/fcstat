@@ -76,7 +76,7 @@
 #' \eqn{\lvert\tilde{\omega}_{ij}\rvert^{-\gamma}},
 #' where \eqn{\tilde{\Omega} := (\tilde{\omega}_{ij})}.
 #' Some options are also offered when a character string is provided
-#' (default "glasso"), including:
+#' (default = "glasso"), including:
 #' \itemize{
 #' \item "glasso": Use the precision matrix estimate derived from the graphical
 #' lasso.
@@ -136,24 +136,8 @@
 #' @param cores An integer (default = 1) specifying the number of cores to use
 #' for parallel execution.
 #'
-#' @note
-#' For the method \code{tiger}, the estimation process solely relies on the raw
-#' \eqn{n \times p} data \code{X} and does not utilize the argument \code{base}.
-#' This argument is not applicable for \code{tiger} and will have no effect
-#' if provided.
-#'
-#' @import foreach
-#' @importFrom doParallel registerDoParallel
-#' @importFrom glasso glasso
-#' @importFrom GLassoElnetFast gelnet
-#' @importFrom glassoFast glassoFast
-#' @importFrom parallel detectCores
-#' @importFrom parallel makeCluster
-#' @importFrom parallel stopCluster
-#' @importFrom Rdpack reprompt
-#'
-#' @return An object with S3 class "spice_internal" containing the following
-#' components:
+#' @return
+#' An object with S3 class "spice_internal" containing the following components:
 #' \describe{
 #' \item{hatOmega}{A list of estimated precision matrices for \code{lambda} grid
 #' and \code{gamma} grid.}
@@ -165,8 +149,24 @@
 #' \item{S}{The \eqn{p \times p} calculation base matrix used in the program.}
 #' }
 #'
+#' @note
+#' For the method \code{tiger}, the estimation process solely relies on the raw
+#' \eqn{n \times p} data \code{X} and does not utilize the argument \code{base}.
+#' This argument is not applicable for \code{tiger} and will have no effect
+#' if provided.
+#'
 #' @references
 #' \insertAllCited{}
+#'
+#' @import foreach
+#' @importFrom doParallel registerDoParallel
+#' @importFrom glasso glasso
+#' @importFrom GLassoElnetFast gelnet
+#' @importFrom glassoFast glassoFast
+#' @importFrom parallel detectCores
+#' @importFrom parallel makeCluster
+#' @importFrom parallel stopCluster
+#' @importFrom Rdpack reprompt
 #'
 #' @autoglobal
 #'

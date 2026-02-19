@@ -19,14 +19,15 @@
 #' to be obtained, either the covariance matrix ("cov") or the correlation
 #' matrix ("cor").
 #'
-#' @importFrom nlshrink linshrink_cov nlshrink_cov
-#' @importFrom stats cov2cor
-#' @importFrom Rdpack reprompt
-#'
-#' @return A numeric matrix.
+#' @return
+#' A numeric matrix.
 #'
 #' @references
 #' \insertAllCited{}
+#'
+#' @importFrom nlshrink linshrink_cov nlshrink_cov
+#' @importFrom stats cov2cor
+#' @importFrom Rdpack reprompt
 #'
 #' @export
 

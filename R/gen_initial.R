@@ -51,11 +51,11 @@
 #' @param lambda A non-negative numeric vector specifying the grid for
 #' the regularization parameter.
 #'
-#' @importFrom glassoFast glassoFast
-#' @importFrom methods is
-#'
 #' @return
 #' The initial estimate or \eqn{\tilde{\Omega}} of the adaptive weight.
+#'
+#' @importFrom glassoFast glassoFast
+#' @importFrom methods is
 #'
 #' @noRd
 

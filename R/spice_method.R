@@ -61,6 +61,8 @@
 #' }
 #' }
 #'
+#' @return Estimated precision matrix.
+#'
 #' @import RBGL
 #' @import graph
 #' @importFrom ADMMsigma ADMMsigma
@@ -78,8 +80,6 @@
 #' @importFrom flare sugm
 #' @importFrom huge huge.tiger
 #' @importFrom Rdpack reprompt
-#'
-#' @return Estimated precision matrix.
 #'
 #' @noRd
 
