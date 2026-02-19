@@ -266,7 +266,7 @@ spice <- function(
         }
       }
 
-      CV.loss[!is.finite(loss)] <- Inf
+      CV.loss[!is.finite(CV.loss)] <- Inf
 
       ## the mean and sd of the k-fold loss for each parameter grid value
       loss.mean <- apply(CV.loss, 2, mean)
