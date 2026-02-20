@@ -5,9 +5,9 @@
 
 ## Sparse Precision (Inverse Covariance) Estimation
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/Carol-seven/fcstat)](https://github.com/Carol-seven/fcstat/commits/master)
-[![R-CMD-check](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Carol-seven/fcstat/actions/workflows/R-CMD-check.yaml)
-[![GitHub License](https://img.shields.io/github/license/Carol-seven/fcstat?color=blue)](https://github.com/Carol-seven/fcstat/blob/master/LICENSE.md)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Carol-seven/spice)](https://github.com/Carol-seven/spice/commits/master)
+[![R-CMD-check](https://github.com/Carol-seven/spice/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Carol-seven/spice/actions/workflows/R-CMD-check.yaml)
+[![GitHub License](https://img.shields.io/github/license/Carol-seven/spice?color=blue)](https://github.com/Carol-seven/spice/blob/master/LICENSE.md)
 
 The goal of **spice** is to provide classical statistical methods for estimating
 sparse precision (inverse covariance) matrix for functional connectivity
